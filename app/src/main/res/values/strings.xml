@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FoodMood</string>
+    <string name="matches_header">swipe up to see your matches!</string>
 </resources>
