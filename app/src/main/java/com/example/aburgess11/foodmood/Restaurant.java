@@ -4,11 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by aburgess11 on 7/12/17.
+ * Created by aburgess11 on 7/17/17.
  */
 
-
-public class Profile {
+public class Restaurant {
 
     @SerializedName("name")
     @Expose
@@ -18,17 +17,17 @@ public class Profile {
     @Expose
     private String imageUrl;
 
-    @SerializedName("age")
-    @Expose
-    private Integer age;
-
     @SerializedName("location")
     @Expose
     private String location;
 
-    @SerializedName("allergens")
+    @SerializedName("open_time")
     @Expose
-    private String[] allergens;
+    private String openTime;
+
+    @SerializedName("close_time")
+    @Expose
+    private String closeTime;
 
     public String getName() {
         return name;
@@ -46,14 +45,6 @@ public class Profile {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
     public String getLocation() {
         return location;
     }
@@ -62,4 +53,3 @@ public class Profile {
         this.location = location;
     }
 }
-

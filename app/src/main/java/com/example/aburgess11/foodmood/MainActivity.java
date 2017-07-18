@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
+    public int swipeCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mSwipeView.doSwipe(false);
+
             }
         });
 
@@ -47,7 +50,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mSwipeView.doSwipe(true);
+                swipeCount++;
+                popUpList();
             }
         });
     }
+
+    public void popUpList(){
+        if (swipeCount == 10){
+            Toast.makeText(mContext, "pop up list", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }
