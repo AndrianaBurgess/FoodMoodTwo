@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mSwipeView.doSwipe(true);
                 swipeCount++;
+                reOrder();
                 popUpList();
             }
         });
@@ -60,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
         if (swipeCount == 10){
             Toast.makeText(mContext, "pop up list", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void reOrder(){
+        return;
     }
 
 
