@@ -1,7 +1,6 @@
 package com.example.aburgess11.foodmood;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,81 +9,97 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.aburgess11.foodmood.models.Config;
+import com.example.aburgess11.foodmood.models.Match;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by liangelali on 7/12/17.
  */
 
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHolder> {
-    private List<Match> mMatches;
-    private Context mContext;
+    // list of matches
+    ArrayList<Match> matches;
+    // config needed for image urls
+    Config config;
+    // context for rendering
+    Context context;
 
-    // View lookup cache
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView ivMatchImage;
-        public TextView tvMatchName;
-        public TextView tvMatchDetails;
+    // init with list
+    public MatchesAdapter(ArrayList<Match> matches) {
 
-        public ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
-            super(itemView);
-
-            ivMatchImage = (ImageView) itemView.findViewById(R.id.ivMatchImage);
-            tvMatchName = (TextView) itemView.findViewById(R.id.tvMatchName);
-            tvMatchDetails = (TextView) itemView.findViewById(R.id.tvMatchDetails);
-
-        }
+        this.matches = matches;
     }
 
-    public MatchesAdapter(Context context, ArrayList<Match> matchesArrayList) {
-        mMatches = matchesArrayList;
-        mContext = context;
+    public Config getConfig() {
+        return config;
     }
 
-    // create and inflate a new view
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    // creates and inflates a new view
     @Override
-    public MatchesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // get the context and create the inflater
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        // Inflate the custom layout
-        View matchView = inflater.inflate(R.layout.activity_matches_list, parent, false);
-
-        // Return a new holder instance
-        MatchesAdapter.ViewHolder viewHolder = new MatchesAdapter.ViewHolder(matchView);
+        // create the view using the item_movie layout
+        View matchView = inflater.inflate(R.layout.item_match, parent, false);
+        // return a new ViewHolder
+        ViewHolder viewHolder = new ViewHolder(matchView);
         return viewHolder;
     }
 
-
-    // Involves populating data into the item through holder
+    // binds an inflated view to a new item
     @Override
-    public void onBindViewHolder(MatchesAdapter.ViewHolder viewHolder, int position) {
-        // Get the data model based on position
-        Match match = mMatches.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        // get the movie data at the specified position
+        Match match = matches.get(position);
+        //populate the view with the movie data
+        holder.tvMatchName.setText(match.getMatchName());
+        holder.tvMatchDetails.setText(match.getMatchDetails());
+        holder.tvPercentMatch.setText(match.getPercentMatch() + "%  •");
 
-        // Populate data into the template view using the data object
-        viewHolder.tvMatchName.setText(match.getMatchName());
-        viewHolder.tvMatchDetails.setText(match.getMatchDetails());
 
-        Glide.with(getContext())
-                .load(Uri.parse(match.getMatchImageUrl()))
-                .into(viewHolder.ivMatchImage);
-        // Return the completed view to render on screen
+        // load backdrop
+        String imageUrl = config.getImageUrl(config.getBackdropSize(), match.getBackdropPath());
+
+
+        // load the poster
+        ImageView imageview = holder.ivMatchImage;
+
+        // load image using glide
+        Glide.with(context)
+                .load(imageUrl)
+                .centerCrop()
+                .into(imageview);
     }
 
-    // Returns the total count of items in the list
+    // returns the total number of items in the list
     @Override
     public int getItemCount() {
-        return mMatches.size();
+        return matches.size();
     }
 
-    // Easy access to the context object in the recyclerview
-    private Context getContext() {
-        return mContext;
-    }
+    // create the viewholder as a static inner class
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        // track view objects
+        ImageView ivMatchImage;
+        TextView tvMatchName;
+        TextView tvMatchDetails;
+        TextView tvPercentMatch;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            // lookup view objects by id
+            ivMatchImage = (ImageView) itemView.findViewById(R.id.ivMatchImage);
+            tvMatchName = (TextView) itemView.findViewById(R.id.tvMatchName);
+            tvMatchDetails = (TextView) itemView.findViewById(R.id.tvMatchDetails);
+            tvPercentMatch = (TextView) itemView.findViewById(R.id.tvPercentMatch);
+        }
+    }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file is used to create an overlaid gradient over an image so that white text can be
+ displayed below it -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+
+    <gradient
+        android:startColor="@android:color/transparent"
+        android:centerColor="#32000000"
+        android:endColor="#96000000"
+        android:angle="270"/>
+
+</shape>
