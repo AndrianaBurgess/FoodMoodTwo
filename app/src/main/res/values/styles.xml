@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="RedHUGEText" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textColor">@color/cardview_dark_background</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

@@ -1,13 +1,17 @@
 package com.example.aburgess11.foodmood;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aburgess11.foodmood.models.Config;
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.example.aburgess11.foodmood.R.id.appbar;
 import static com.loopj.android.http.AsyncHttpClient.log;
 
 /**
@@ -53,7 +58,8 @@ public class MatchesListActivity extends AppCompatActivity {
     // formatting the toolbar items
     CollapsingToolbarLayout collapsingToolbar;
     AppBarLayout appBarLayout;
-    Toolbar toolbar;
+    TextView matchesHeader;
+    ImageView upArrow;
     boolean appBarExpanded = false;
 
 
@@ -78,12 +84,15 @@ public class MatchesListActivity extends AppCompatActivity {
 
 
         // toolbar
-        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout = (AppBarLayout) findViewById(appbar);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        matchesHeader = (TextView) findViewById(R.id.tvMatchesHeader);
+        upArrow = (ImageView) findViewById(R.id.ivUpArrow);
+
         collapsingToolbar.setTitleEnabled(false);
 
-        toolbar.setTitle("start");
+        matchesHeader.setText(getString(R.string.matches_header_collapsed));
+        upArrow.setVisibility(ImageView.VISIBLE);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -92,24 +101,42 @@ public class MatchesListActivity extends AppCompatActivity {
 
                 //  Vertical offset == 0 indicates appBar is collapsed.
 
-                int vertOff = Math.abs(verticalOffset);
+                if (verticalOffset < -10) {
+                    appBarExpanded = true;
+                    matchesHeader.setText(getString(R.string.matches_header_expanded));
+                    matchesHeader.setTextAppearance(R.style.TextAppearance_AppCompat_Menu);
+                    matchesHeader.setTypeface(Typeface.DEFAULT_BOLD);
+                    upArrow.setVisibility(ImageView.GONE);
 
-                if (vertOff != 0) {
-                    Toast.makeText(getApplicationContext(), "the thing should be expanded", Toast.LENGTH_SHORT).show();
-                    collapsingToolbar.setTitle(getString(R.string.matches_header_expanded));
-                }
-                if (vertOff == 0) {
-                    Toast.makeText(getApplicationContext(), "the thing should be collapsed", Toast.LENGTH_SHORT).show();
-                    collapsingToolbar.setTitle(getString(R.string.matches_header_collapsed));
-                }
+//                    appBarLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+//                    lp.height *= 2;
 
-                if (Math.abs(verticalOffset) == 0) {
-                    appBarExpanded = true;Toast.makeText(getApplicationContext(), "A", Toast.LENGTH_SHORT).show();
-//                    collapsingToolbar.setTitle(getString(R.string.matches_header_collapsed));
+                }else {
+                    appBarExpanded = false;
+                    matchesHeader.setText(getString(R.string.matches_header_collapsed));
+                    matchesHeader.setTypeface(Typeface.DEFAULT);
+                    matchesHeader.setTextAppearance(R.style.TextAppearance_AppCompat);
+                    matchesHeader.setTypeface(Typeface.DEFAULT);
+                    upArrow.setVisibility(ImageView.VISIBLE);
+
+//                    CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+//                    lp.height *= 0.5;
+                }
+            }
+        });
+
+        collapsingToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (appBarExpanded == false) {
+                    appBarExpanded = true;
+                    appBarLayout.setExpanded(false);
+                    appBarLayout.setFitsSystemWindows(true);
                 } else {
                     appBarExpanded = false;
-//                    Toast.makeText(getApplicationContext(), "B", Toast.LENGTH_SHORT).show();
-//                    collapsingToolbar.setTitle(getString(R.string.matches_header_expanded));
+                    Toast.makeText(getApplicationContext(),"please collapse", Toast.LENGTH_LONG);
+                    appBarLayout.setExpanded(true);
+                    appBarLayout.setFitsSystemWindows(false);
                 }
             }
         });
