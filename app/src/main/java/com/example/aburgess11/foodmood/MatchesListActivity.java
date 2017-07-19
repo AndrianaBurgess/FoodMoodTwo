@@ -55,12 +55,14 @@ public class MatchesListActivity extends AppCompatActivity {
     // image config
     Config config;
 
-    // formatting the toolbar items
-    CollapsingToolbarLayout collapsingToolbar;
+    // toolbar items
     AppBarLayout appBarLayout;
+    CollapsingToolbarLayout collapsingToolbar;
     TextView matchesHeader;
     ImageView upArrow;
-    boolean appBarExpanded = false;
+
+    // boolean to keep track of whether the matches page is expanded or collapsed
+    boolean isAppBarExpanded = false;
 
 
     @Override
@@ -74,67 +76,82 @@ public class MatchesListActivity extends AppCompatActivity {
         // initialize the adapter -- movies array cannot be reinitialized after this point
         adapter = new MatchesAdapter(matches);
 
-        // resolve the recycler view and connect a layout manager and the adapter
+        // resolve the recycler view and connect a layout manager
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
         rvMatches.setLayoutManager(new LinearLayoutManager(this));
+        // configure recycler view to allow for smooth scrolling
         rvMatches.setNestedScrollingEnabled(false);
         rvMatches.setHasFixedSize(false);
         rvMatches.getLayoutManager().setAutoMeasureEnabled(true);
+        // connect recycler view to adapter
         rvMatches.setAdapter(adapter);
 
 
-        // toolbar
+        // resolve toolbar items
         appBarLayout = (AppBarLayout) findViewById(appbar);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         matchesHeader = (TextView) findViewById(R.id.tvMatchesHeader);
         upArrow = (ImageView) findViewById(R.id.ivUpArrow);
 
-        collapsingToolbar.setTitleEnabled(false);
-
+        // initialize the header and upArrow to the default collapsed layout
         matchesHeader.setText(getString(R.string.matches_header_collapsed));
         upArrow.setVisibility(ImageView.VISIBLE);
 
+        // offsetChangedListener detects when there is a change in vertical offset (i.e. change from
+        // collapsed to expanded, and vice versa)
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 Log.d(MatchesListActivity.class.getSimpleName(), "onOffsetChanged: verticalOffset: " + verticalOffset);
 
-                //  Vertical offset == 0 indicates appBar is collapsed.
+                //  Vertical offset == 0 indicates appBar is collapsed
+                //  Range of vertical offset is from 0 to -1*(appBarLayout.getTotalScrollRange())
 
                 if (verticalOffset < -10) {
-                    appBarExpanded = true;
+                    // if the appbar goes from collapsed to expanded, change the state of isAppExpanded,
+                    // the content and layout of matchesHeader, and remove the upArrow
+                    isAppBarExpanded = true;
                     matchesHeader.setText(getString(R.string.matches_header_expanded));
-                    matchesHeader.setTextAppearance(R.style.TextAppearance_AppCompat_Menu);
-                    matchesHeader.setTypeface(Typeface.DEFAULT_BOLD);
+                    matchesHeader.setTextAppearance(R.style.TextAppearance_AppCompat_Medium);
+                    matchesHeader.setTextColor(Color.GRAY);
                     upArrow.setVisibility(ImageView.GONE);
 
-//                    appBarLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
-//                    lp.height *= 2;
-
                 }else {
-                    appBarExpanded = false;
+                    // if the appbar goes back to collapsed, change the state of isAppExpanded,
+                    // the content and layout of matchesHeader, and reinstate the upArrow
+                    isAppBarExpanded = false;
                     matchesHeader.setText(getString(R.string.matches_header_collapsed));
                     matchesHeader.setTypeface(Typeface.DEFAULT);
                     matchesHeader.setTextAppearance(R.style.TextAppearance_AppCompat);
-                    matchesHeader.setTypeface(Typeface.DEFAULT);
+                    matchesHeader.setTextColor(Color.GRAY);
                     upArrow.setVisibility(ImageView.VISIBLE);
 
-//                    CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
-//                    lp.height *= 0.5;
                 }
             }
         });
 
+        // onClickListener for expanding and collapsing after clicking the appbar
         collapsingToolbar.setOnClickListener(new View.OnClickListener() {
+
+            /* IMPORTANT NOTE:
+
+            tl;dr the built-in features for expanded and collapsed are opposite of what they actually are
+                  (app:expanded="true" means collapsed, setExpanded(true) sets the window to collapsed)
+
+            CollapsingToolbarLayout is designed to expand from the top, but because
+            this CollapsingToolbarLayout needs to expand from the bottom, the built-in attributes for
+            app:expanded / app:collapsed describe the opposite of what this CollapsingToolbarLayout
+            shows (i.e. app:expanded="true" is the collapsed view of this CollapsingToolbarLayout) */
+
             @Override
             public void onClick(View v) {
-                if (appBarExpanded == false) {
-                    appBarExpanded = true;
+                // if clicked while appbar is collapsed, expand the appbar, and vice versa
+                if (isAppBarExpanded == false) {
+                    isAppBarExpanded = true;
                     appBarLayout.setExpanded(false);
                     appBarLayout.setFitsSystemWindows(true);
                 } else {
-                    appBarExpanded = false;
-                    Toast.makeText(getApplicationContext(),"please collapse", Toast.LENGTH_LONG);
+                    isAppBarExpanded = false;
                     appBarLayout.setExpanded(true);
                     appBarLayout.setFitsSystemWindows(false);
                 }

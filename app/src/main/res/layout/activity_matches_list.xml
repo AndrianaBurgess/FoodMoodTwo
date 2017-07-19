@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Created by liangelali on 7/13/17. Layout xml file to host the recyclerView of matches as well
+     as the dynamic header for the matches popup. -->
+
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true">
 
+    <!-- NestedScrollView hosts the recyclerview within the popup -->
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,6 +35,14 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+    <!-- AppBarLayout hosts the header and creates the space for the popup -->
+
+    <!-- IMPORTANT NOTE: CollapsingToolbarLayout is designed to expand from the top, but because
+         this CollapsingToolbarLayout needs to expand from the bottom, the built-in attributes for
+         app:expanded / app:collapsed describe the opposite of what this CollapsingToolbarLayout
+         shows (i.e. app:expanded="true" is the collapsed view of this CollapsingToolbarLayout) -->
+
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -42,17 +54,16 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="541dp"
+            android:layout_height="540dp"
             android:layout_gravity="bottom"
             android:background="@drawable/final_border"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed|snap"
-            app:title="Swipe Up">
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed|snap">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/transparent">
+                android:background="@android:color/transparent"
+                android:paddingTop="5dp">
 
                 <ImageView
                     android:id="@+id/ivUpArrow"
@@ -71,8 +82,8 @@
                     android:layout_below="@id/ivUpArrow"
                     android:text="matches header goes here"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="@android:color/darker_gray"
+                    android:textAppearance="@style/TextAppearance.AppCompat" />
 
             </RelativeLayout>
 
