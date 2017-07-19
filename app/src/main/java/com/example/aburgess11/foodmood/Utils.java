@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,22 +24,30 @@ public class Utils {
 
     private static final String TAG = "Utils";
 
-    public static List<Profile> loadProfiles(Context context){
-        try{
+    public static List<Profile> loadProfiles(Context context) {
+        try {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            JSONArray array = new JSONArray(loadJSONFromAsset(context, "foods.json"));
             List<Profile> profileList = new ArrayList<>();
-            for(int i=0;i<array.length();i++){
-                Profile profile = gson.fromJson(array.getString(i), Profile.class);
-                profileList.add(profile);
+            //JSONArray array = new JSONArray(loadJSONFromAsset(context, "foods.json"));
+
+            String jsonString = loadJSONFromAsset(context, "foods.json");
+            JSONObject obj = new JSONObject(jsonString);
+            JSONArray array = obj.getJSONArray("food");
+
+            for (int i = 0; i < array.length(); i++) {
+                    Profile profile = gson.fromJson(array.getString(i), Profile.class);
+                    profileList.add(profile);
+
             }
             return profileList;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+
 
     private static String loadJSONFromAsset(Context context, String jsonFileName) {
         String json = null;

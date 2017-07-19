@@ -21,13 +21,16 @@ public class Restaurant {
     @Expose
     private String location;
 
-    @SerializedName("open_time")
+    @SerializedName("openTime")
     @Expose
     private String openTime;
 
-    @SerializedName("close_time")
+    @SerializedName("closeTime")
     @Expose
     private String closeTime;
+
+    @SerializedName("rank")
+    @Expose int rank ;
 
     public String getName() {
         return name;

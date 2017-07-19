@@ -3,6 +3,7 @@ package com.example.aburgess11.foodmood;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
-    public int swipeCount;
+    public int swipeCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mSwipeView.doSwipe(false);
+                Log.d("EVENT",  "swipeCount" );
 
             }
         });
@@ -50,16 +52,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mSwipeView.doSwipe(true);
-                swipeCount++;
-                reOrder();
+                Log.d("EVENT", "swipeCount");
+               // reOrder();
                 popUpList();
             }
         });
     }
 
     public void popUpList(){
+        swipeCount++;
         if (swipeCount == 10){
-            Toast.makeText(mContext, "pop up list", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "pop up list", Toast.LENGTH_LONG).show();
+            Log.d("EVENT", swipeCount + "" );
         }
     }
 

@@ -18,17 +18,33 @@ public class Profile {
     @Expose
     private String imageUrl;
 
-    @SerializedName("age")
-    @Expose
-    private Integer age;
-
     @SerializedName("location")
     @Expose
     private String location;
 
-    @SerializedName("allergens")
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public String getTimeofday() {
+        return timeofday;
+    }
+
+    @SerializedName("ingredients")
     @Expose
-    private String[] allergens;
+    private String ingredients;
+
+    @SerializedName("timeofday")
+    @Expose
+    private String timeofday;
+
+    public String getAge() {
+        return age;
+    }
+
+    @SerializedName("age")
+    @Expose
+    private String age;
 
     public String getName() {
         return name;
@@ -44,14 +60,6 @@ public class Profile {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
     }
 
     public String getLocation() {
