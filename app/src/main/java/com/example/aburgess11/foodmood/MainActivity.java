@@ -1,5 +1,8 @@
 package com.example.aburgess11.foodmood;
 
+import android.support.v7.app.AppCompatActivity;
+
+import com.mindorks.placeholderview.SwipePlaceHolderView;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -71,4 +74,7 @@ public class MainActivity extends AppCompatActivity {
     public void reOrder(){
         return;
     }
+
+
+
 }
