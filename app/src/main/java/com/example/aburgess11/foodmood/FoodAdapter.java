@@ -35,6 +35,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        //placeholder until we create the data
         String imageUrl = "http://lorempixel.com/1600/1000/food";
 
         Glide.with(context)
@@ -59,6 +60,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
             itemView.setOnClickListener(this);
         }
 
+        //TODO: not used yet
         @Override
         public void onClick(View v) {
             // gets item position

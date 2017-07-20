@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvFood"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorSecondary"
+        android:paddingBottom="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.AppBarLayout
@@ -21,42 +23,47 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" >
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+                <RelativeLayout
+                    android:layout_width="386dp"
+                    android:layout_height="match_parent">
 
-                <ImageButton
-                    android:id="@+id/ibEatOut"
-                    style="@android:style/Widget.DeviceDefault.ImageButton"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/ic_eat_out" />
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="?attr/colorPrimary">
 
-                <ImageButton
+                    </android.support.v7.widget.Toolbar>
+
+                    <ImageButton
+                        android:id="@+id/ibEatOut"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@android:color/transparent"
+                        app:srcCompat="@drawable/ic_eat_out"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <ImageButton
                     android:id="@+id/ibProfile"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
+                        android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/ic_profile" />
+                        android:background="@android:color/transparent"
+                        app:srcCompat="@drawable/ic_profile" />
 
-            </android.support.v7.widget.Toolbar>
+                </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
+
+
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/lowerAppbar"
@@ -74,42 +81,51 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/lowerToolbar"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:background="?attr/colorPrimary">
+                android:layout_height="match_parent">
 
-                <ImageButton
-                    android:id="@+id/ibCamera"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/lowerToolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="100dp"
-                    android:background="@android:color/transparent"
-                    android:text="Camera"
-                    app:srcCompat="@drawable/ic_camera" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:background="?attr/colorPrimary">
+
+                </android.support.v7.widget.Toolbar>
 
                 <ImageButton
                     android:id="@+id/ibFridge"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
                     android:layout_marginLeft="100dp"
                     android:background="@android:color/transparent"
                     android:text="Fridge"
-                    app:srcCompat="@drawable/ic_fridge" />
+                    app:layout_anchor="@id/lowerToolbar"
+                    app:layout_anchorGravity="bottom|right|end"
+                    app:srcCompat="@drawable/ic_fridge"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
 
-            </android.support.v7.widget.Toolbar>
+                <ImageButton
+                    android:id="@+id/ibCamera"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginRight="1dp"
+                    android:background="@android:color/transparent"
+                    android:cropToPadding="true"
+                    android:text="Camera"
+                    app:layout_anchor="@id/lowerToolbar"
+                    app:layout_anchorGravity="bottom|left|start"
+                    app:srcCompat="@drawable/ic_camera"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
+
+            </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

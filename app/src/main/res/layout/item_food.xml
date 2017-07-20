@@ -53,25 +53,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
-            <ImageButton
-                android:id="@+id/ibBookmark"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="16dp"
-                android:adjustViewBounds="false"
-                android:background="@android:color/transparent"
-                android:cropToPadding="false"
-                android:elevation="10dp"
-                android:padding="0dp"
-                android:paddingTop="-10dp"
-                android:scaleType="fitXY"
-                android:tint="@color/colorSecondary"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_turned_in_48px" />
-
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

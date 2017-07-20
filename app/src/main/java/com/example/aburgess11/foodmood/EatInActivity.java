@@ -15,18 +15,13 @@ import butterknife.ButterKnife;
 public class EatInActivity  extends AppCompatActivity {
 
     FoodAdapter foodAdapter;
-    @BindView(R.id.rvFood)
-    RecyclerView rvFood;
-
-
+    @BindView(R.id.rvFood) RecyclerView rvFood;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eat_in);
         ButterKnife.bind(this);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 
         // construct the adapter from this data source
         foodAdapter = new FoodAdapter();
