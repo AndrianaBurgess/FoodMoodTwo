@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
@@ -15,6 +16,8 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeIn;
 import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
+
+import static com.example.aburgess11.foodmood.MainActivity.swipeCount;
 
 /**
  * Created by aburgess11 on 7/12/17.
@@ -62,8 +65,19 @@ public class TinderCard {
     }
 
     @SwipeIn
-    private void onSwipeIn(){
-        Log.d("EVENT", "onSwipedIn");
+    public void onSwipeIn(){
+        //swipeCount++;
+        popUpList();
+        Log.d("EVENT", "onSwipedIn" + swipeCount);
+    }
+
+    public void popUpList(){
+        swipeCount++;
+        if (swipeCount == 10){
+            Toast.makeText(mContext, "pop up list", Toast.LENGTH_LONG).show();
+            Log.d("EVENT", swipeCount + "" );
+            swipeCount=0;
+        }
     }
 
     @SwipeInState
@@ -76,3 +90,4 @@ public class TinderCard {
         Log.d("EVENT", "onSwipeOutState");
     }
 }
+

@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
-    public int swipeCount=0;
+    public static int swipeCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         if (swipeCount == 10){
             Toast.makeText(mContext, "pop up list", Toast.LENGTH_LONG).show();
             Log.d("EVENT", swipeCount + "" );
+            swipeCount=0;
         }
     }
 
