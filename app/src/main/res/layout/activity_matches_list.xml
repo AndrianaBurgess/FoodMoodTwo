@@ -6,33 +6,33 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <!-- NestedScrollView hosts the recyclerview within the popup -->
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@android:color/background_light"
         android:fillViewport="true"
-        android:paddingBottom="610dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvMatches"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingBottom="40dp"
-                android:layout_alignParentTop="true"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical"
+                android:layout_marginBottom="650dp"/>
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
@@ -84,8 +84,8 @@
                     android:layout_below="@id/ivUpArrow"
                     android:text="matches header goes here"
                     android:textAlignment="center"
-                    android:textColor="@android:color/darker_gray"
-                    android:textAppearance="@style/TextAppearance.AppCompat" />
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="@android:color/darker_gray" />
 
             </RelativeLayout>
 
