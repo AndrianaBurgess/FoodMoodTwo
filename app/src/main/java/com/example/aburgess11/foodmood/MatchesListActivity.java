@@ -5,8 +5,10 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -50,6 +52,8 @@ public class MatchesListActivity extends AppCompatActivity {
     ArrayList<Match> matches;
     // the recycler view
     RecyclerView rvMatches;
+    // the nested scroll view
+    NestedScrollView nestedScrollView;
     // the adapter wired to the recycler view
     MatchesAdapter adapter;
     // image config
@@ -86,6 +90,16 @@ public class MatchesListActivity extends AppCompatActivity {
         // connect recycler view to adapter
         rvMatches.setAdapter(adapter);
 
+        nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
+
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
+            @Override protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
+        smoothScroller.setTargetPosition(0);
+
 
         // resolve toolbar items
         appBarLayout = (AppBarLayout) findViewById(appbar);
@@ -117,9 +131,10 @@ public class MatchesListActivity extends AppCompatActivity {
                     upArrow.setVisibility(ImageView.GONE);
 
                 }else {
-                    // if the appbar goes back to collapsed, change the state of isAppExpanded,
+                    // if the appbar goes back to collapsed, scroll to top, change the state of isAppExpanded,
                     // the content and layout of matchesHeader, and reinstate the upArrow
                     isAppBarExpanded = false;
+                    nestedScrollView.setScrollY(0);
                     matchesHeader.setText(getString(R.string.matches_header_collapsed));
                     matchesHeader.setTypeface(Typeface.DEFAULT);
                     matchesHeader.setTextAppearance(R.style.TextAppearance_AppCompat);
