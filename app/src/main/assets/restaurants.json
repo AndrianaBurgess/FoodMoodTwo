@@ -1,0 +1,42 @@
+[
+  {
+    url: "https://static.pexels.com/photos/27714/pexels-photo-27714.jpg",
+    name: "Teddy's",
+    location: "New York"
+  },
+  {
+    url: "http://lorempixel.com/400/200/food/",
+    name: "Epic",
+    location: "MPK 11"
+  },
+  {
+    url: "http://oddpad.com/wp-content/uploads/2015/05/pretty_girls_51.jpg",
+    name: "Banh Appetit",
+    location: "MPK 15"
+  },
+  {
+    url: "http://oddpad.com/wp-content/uploads/2014/12/pretty_girls_13.jpg",
+    name: "Noodle Bar",
+    location: "MPK 10"
+  },
+  {
+    url: "http://www.spyderonlines.com/images/wallpapers/pretty-girls-pictures/pretty-girls-pictures-16.jpg",
+    name: "Pizzeria",
+    location: "MPK 18"
+  },
+  {
+    url: "http://www.spyderonlines.com/images/wallpapers/pretty-girls-pictures/pretty-girls-pictures-16.jpg",
+    name: "Burger Shack",
+    location: "MPK 18"
+  },
+  {
+    url: "http://www.spyderonlines.com/images/wallpapers/pretty-girls-pictures/pretty-girls-pictures-16.jpg",
+    name: "Livin the Dream",
+    location: "MPK 18"
+  },
+  {
+    url: "http://www.spyderonlines.com/images/wallpapers/pretty-girls-pictures/pretty-girls-pictures-16.jpg",
+    name: "The Sweet Stop",
+    location: "MPK 18"
+  }
+]
