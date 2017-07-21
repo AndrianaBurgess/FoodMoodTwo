@@ -42,7 +42,7 @@
         android:gravity="center">
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/eatInBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_home" />
@@ -67,7 +67,7 @@
             android:layout_weight="1.43" />
 
         <ImageButton
-            android:id="@+id/imageButton4"
+            android:id="@+id/messagesBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_message" />
