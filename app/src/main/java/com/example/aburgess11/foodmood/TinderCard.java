@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
@@ -67,20 +66,21 @@ public class TinderCard {
 
     @SwipeIn
     public void onSwipeIn(){
-        //swipeCount++;
-        popUpList1();
+        popUpList();
         Log.d("EVENT", "onSwipedIn" + swipeCount);
     }
 
-    public void popUpList1(){
+    public void popUpList(){
+        // after every swipe, increment the swipeCount
         swipeCount++;
+
+        // after 10 swipes, automatically pop up the matches page
         if (swipeCount == 10){
 
             MatchesListActivity.isAppBarExpanded = true;
             appBarLayout.setExpanded(false);
             appBarLayout.setFitsSystemWindows(true);
 
-            Toast.makeText(mContext, "pop up list", Toast.LENGTH_LONG).show();
             Log.d("EVENT", swipeCount + "" );
             swipeCount=0;
         }

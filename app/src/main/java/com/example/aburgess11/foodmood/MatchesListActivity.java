@@ -212,20 +212,9 @@ public class MatchesListActivity extends AppCompatActivity {
                     mSwipeView.doSwipe(true);
                     Log.d("EVENT", "swipeCount");
                     // reOrder();
-//                    popUpList();
                 }
             });
 
-    }
-
-    public void popUpList(){
-        swipeCount+=1;
-        if (swipeCount == 10){
-
-            Toast.makeText(mContext, "pop up list", Toast.LENGTH_LONG).show();
-            Log.d("EVENT", swipeCount + "" );
-            swipeCount=0;
-        }
     }
 
 
