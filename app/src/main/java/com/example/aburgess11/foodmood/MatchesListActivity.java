@@ -1,5 +1,6 @@
 package com.example.aburgess11.foodmood;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,7 +9,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +21,8 @@ import com.example.aburgess11.foodmood.models.Match;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.mindorks.placeholderview.SwipeDecor;
+import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,19 +62,27 @@ public class MatchesListActivity extends AppCompatActivity {
     Config config;
 
     // toolbar items
-    AppBarLayout appBarLayout;
+    static AppBarLayout appBarLayout;
     CollapsingToolbarLayout collapsingToolbar;
     TextView matchesHeader;
     ImageView upArrow;
 
     // boolean to keep track of whether the matches page is expanded or collapsed
-    boolean isAppBarExpanded = false;
+    static boolean isAppBarExpanded = false;
+
+
+
+    private SwipePlaceHolderView mSwipeView;
+    private Context mContext;
+    public static int swipeCount=0;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_matches_list);
+        setContentView(R.layout.activity_main);
         // initialize the client
         client = new AsyncHttpClient();
         // init the list of matches
@@ -91,14 +101,6 @@ public class MatchesListActivity extends AppCompatActivity {
         rvMatches.setAdapter(adapter);
 
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
-
-        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
-            @Override protected int getVerticalSnapPreference() {
-                return LinearSmoothScroller.SNAP_TO_START;
-            }
-        };
-
-        smoothScroller.setTargetPosition(0);
 
 
         // resolve toolbar items
@@ -173,8 +175,57 @@ public class MatchesListActivity extends AppCompatActivity {
             }
         });
 
+
         // get the configuration on app creation
         getConfiguration();
+
+
+
+            mSwipeView = (SwipePlaceHolderView)findViewById(R.id.swipeView);
+            mContext = getApplicationContext();
+
+            mSwipeView.getBuilder()
+                    .setDisplayViewCount(3)
+                    .setSwipeDecor(new SwipeDecor()
+                            .setPaddingTop(20)
+                            .setRelativeScale(0.01f)
+                            .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
+                            .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
+
+            for(Profile profile : Utils.loadProfiles(this.getApplicationContext())){
+                mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
+            }
+
+            findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSwipeView.doSwipe(false);
+                    Log.d("EVENT",  "swipeCount" );
+
+                }
+            });
+
+            findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSwipeView.doSwipe(true);
+                    Log.d("EVENT", "swipeCount");
+                    // reOrder();
+//                    popUpList();
+                }
+            });
+
+    }
+
+    public void popUpList(){
+        swipeCount+=1;
+        if (swipeCount == 10){
+
+            Toast.makeText(mContext, "pop up list", Toast.LENGTH_LONG).show();
+            Log.d("EVENT", swipeCount + "" );
+            swipeCount=0;
+        }
     }
 
 

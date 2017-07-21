@@ -17,7 +17,8 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
-import static com.example.aburgess11.foodmood.MainActivity.swipeCount;
+import static com.example.aburgess11.foodmood.MatchesListActivity.appBarLayout;
+import static com.example.aburgess11.foodmood.MatchesListActivity.swipeCount;
 
 /**
  * Created by aburgess11 on 7/12/17.
@@ -67,13 +68,18 @@ public class TinderCard {
     @SwipeIn
     public void onSwipeIn(){
         //swipeCount++;
-        popUpList();
+        popUpList1();
         Log.d("EVENT", "onSwipedIn" + swipeCount);
     }
 
-    public void popUpList(){
+    public void popUpList1(){
         swipeCount++;
         if (swipeCount == 10){
+
+            MatchesListActivity.isAppBarExpanded = true;
+            appBarLayout.setExpanded(false);
+            appBarLayout.setFitsSystemWindows(true);
+
             Toast.makeText(mContext, "pop up list", Toast.LENGTH_LONG).show();
             Log.d("EVENT", swipeCount + "" );
             swipeCount=0;
