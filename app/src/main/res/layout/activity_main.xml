@@ -7,23 +7,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="90dp"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/collapsed_matches_window_size">
+
         <ImageButton
             android:id="@+id/rejectBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/ic_cancel"/>
+            android:background="@drawable/ic_cancel" />
+
         <ImageButton
             android:id="@+id/acceptBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
-            android:background="@drawable/ic_heart"/>
+            android:background="@drawable/ic_heart" />
     </LinearLayout>
     <com.mindorks.placeholderview.SwipePlaceHolderView
         android:id="@+id/swipeView"
@@ -67,4 +72,6 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_message" />
     </LinearLayout>
+
+    <include layout="@layout/activity_matches_list" />
 </FrameLayout>

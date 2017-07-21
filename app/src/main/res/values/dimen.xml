@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="collapsed_matches_window_size">40dp</dimen>
+    <dimen name="expanded_matches_window_size">565dp</dimen>
+</resources>
