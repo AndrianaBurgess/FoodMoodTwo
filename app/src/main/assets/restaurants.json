@@ -1,42 +1,21 @@
-[
-  {
-    url: "https://static.pexels.com/photos/27714/pexels-photo-27714.jpg",
-    name: "Teddy's",
-    location: "New York"
-  },
-  {
-    url: "http://lorempixel.com/400/200/food/",
-    name: "Epic",
-    location: "MPK 11"
-  },
-  {
-    url: "http://oddpad.com/wp-content/uploads/2015/05/pretty_girls_51.jpg",
-    name: "Banh Appetit",
-    location: "MPK 15"
-  },
-  {
-    url: "http://oddpad.com/wp-content/uploads/2014/12/pretty_girls_13.jpg",
-    name: "Noodle Bar",
-    location: "MPK 10"
-  },
-  {
-    url: "http://www.spyderonlines.com/images/wallpapers/pretty-girls-pictures/pretty-girls-pictures-16.jpg",
-    name: "Pizzeria",
-    location: "MPK 18"
-  },
-  {
-    url: "http://www.spyderonlines.com/images/wallpapers/pretty-girls-pictures/pretty-girls-pictures-16.jpg",
-    name: "Burger Shack",
-    location: "MPK 18"
-  },
-  {
-    url: "http://www.spyderonlines.com/images/wallpapers/pretty-girls-pictures/pretty-girls-pictures-16.jpg",
-    name: "Livin the Dream",
-    location: "MPK 18"
-  },
-  {
-    url: "http://www.spyderonlines.com/images/wallpapers/pretty-girls-pictures/pretty-girls-pictures-16.jpg",
-    name: "The Sweet Stop",
-    location: "MPK 18"
-  }
-]
+{
+  "restaurant": [
+    {
+      url: "https://s-media-cache-ak0.pinimg.com/736x/c1/ce/16/c1ce1665c7298d98ac71eb0bb00275b1--beef-ribs-beef-short-ribs.jpg",
+      name: "BBQ Shack",
+      location: "MPK 12",
+    },
+    {
+      url: "http://www.seriouseats.com/recipes/assets_c/2009/09/20090827-mexican-roadside-chicken-thumb-625xauto-32225.jpg",
+      name: "EPIC Cafe",
+      location: "MPK 11",
+
+    },
+    {
+      url: "http://chicago.seriouseats.com/images/20120605-sausage-city-smoques-hot-links-3.jpg",
+      name: "Beef and Pork Hot Link Sausage",
+      location: "BBQ Shack",
+
+    }
+  ]
+}
