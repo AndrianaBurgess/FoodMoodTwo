@@ -21,7 +21,7 @@
         </activity>
         <activity android:name=".EatInActivity"></activity>
         <activity
-            android:name=".MatchesListActivity"
+            android:name=".EatOutActivity"
             android:label="Matches Detail" >
         </activity>
     </application>
