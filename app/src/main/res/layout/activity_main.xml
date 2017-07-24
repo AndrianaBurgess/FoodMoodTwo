@@ -42,10 +42,11 @@
         android:gravity="center">
 
         <ImageButton
-            android:id="@+id/eatInBtn"
+            android:id="@+id/profileBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_home" />
+            android:tint="@android:color/holo_red_dark"
+            app:srcCompat="@drawable/ic_profile" />
 
         <Space
             android:layout_width="wrap_content"

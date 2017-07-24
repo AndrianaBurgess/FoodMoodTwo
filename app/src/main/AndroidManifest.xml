@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.aburgess11.foodmood">
 
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -16,14 +15,15 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EatInActivity"></activity>
+        <activity android:name=".EatInActivity" />
         <activity
             android:name=".EatOutActivity"
-            android:label="Matches Detail" >
-        </activity>
+            android:label="Matches Detail" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

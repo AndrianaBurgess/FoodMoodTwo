@@ -1,5 +1,24 @@
 <resources>
     <string name="app_name">FoodMood</string>
+    <string name="preferences_category_one">Category 1</string>
+    <string name="preferences_category_two">Category 2</string>
+
     <string name="matches_header_collapsed">swipe up to see your matches!</string>
     <string name="matches_header_expanded">great restaurants for you</string>
+
+    <string name="preferences_switch_title">Switch Preference</string>
+    <string name="preferences_switch_summ">Switch Summary</string>
+
+    <string name="preferences_edittext_title">EditText Preference</string>
+    <string name="preferences_edittext_summ">EditText Summary</string>
+    <string name="preferences_edittext_default">Default value</string>
+    <string name="preferences_edittext_message">Dialog Message</string>
+
+    <string name="preferences_time_title">Time Preference</string>
+    <string name="preferences_time_summ">Time Summary</string>
+
+    <string name="preferences_checkbox_title">CheckBox Preference</string>
+    <string name="preferences_checkbox_summ">CheckBox Summary</string>
+
+    <string name="btn_custom">Button in custom layout</string>
 </resources>

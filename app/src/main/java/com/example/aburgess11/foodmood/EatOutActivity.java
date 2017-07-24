@@ -73,7 +73,7 @@ public class EatOutActivity extends AppCompatActivity {
     static boolean isAppBarExpanded = false;
 
     // top toolbar items
-    ImageButton eatInBtn;
+    ImageButton profileBtn;
     ImageButton messagesBtn;
 
 
@@ -81,7 +81,6 @@ public class EatOutActivity extends AppCompatActivity {
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
     public static int swipeCount=0;
-
 
 
 
@@ -121,7 +120,7 @@ public class EatOutActivity extends AppCompatActivity {
 
 
         // resolve upper toolbar items
-        eatInBtn = (ImageButton) findViewById(R.id.eatInBtn);
+        profileBtn = (ImageButton) findViewById(R.id.profileBtn);
         messagesBtn = (ImageButton) findViewById(R.id.messagesBtn);
 
 
@@ -235,11 +234,11 @@ public class EatOutActivity extends AppCompatActivity {
 
 
 
-        eatInBtn.setOnClickListener(new View.OnClickListener() {
+        profileBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(EatOutActivity.this, EatInActivity.class);
+                Intent i = new Intent(EatOutActivity.this, SettingsActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.enter_from_left_to_right, R.anim.exit_from_right_to_left);
             }
