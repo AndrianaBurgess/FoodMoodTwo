@@ -22,22 +22,15 @@ import com.example.aburgess11.foodmood.models.Match;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 import static com.example.aburgess11.foodmood.R.id.appbar;
 import static com.loopj.android.http.AsyncHttpClient.log;
@@ -46,14 +39,14 @@ import static com.loopj.android.http.AsyncHttpClient.log;
  * Created by liangelali on 7/13/17.
  */
 
-public class MatchesListActivity extends AppCompatActivity {
+public class EatOutActivity extends AppCompatActivity {
     // constants
     // the base URL for the API
     public final static String API_BASE_URL = "https://api.themoviedb.org/3";
     // the parameter name for the API key
     public final static String API_KEY_PARAM = "api_key";
     // tag for logging from this activity
-    public final static String TAG = "MatchesListActivity";
+    public final static String TAG = "EatOutActivity";
 
     // instance fields
     AsyncHttpClient client;
@@ -125,7 +118,7 @@ public class MatchesListActivity extends AppCompatActivity {
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                Log.d(MatchesListActivity.class.getSimpleName(), "onOffsetChanged: verticalOffset: " + verticalOffset);
+                Log.d(EatOutActivity.class.getSimpleName(), "onOffsetChanged: verticalOffset: " + verticalOffset);
 
                 //  Vertical offset == 0 indicates appBar is collapsed
                 //  Range of vertical offset is from 0 to -1*(appBarLayout.getTotalScrollRange())
