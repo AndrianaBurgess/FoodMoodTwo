@@ -1,6 +1,7 @@
 package com.example.aburgess11.foodmood;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -28,7 +31,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -51,13 +58,13 @@ public class MatchesListActivity extends AppCompatActivity {
     // instance fields
     AsyncHttpClient client;
     // the list of currently playing movies
-    ArrayList<Match> matches;
+    public static ArrayList<Match> matches;
     // the recycler view
     RecyclerView rvMatches;
     // the nested scroll view
     NestedScrollView nestedScrollView;
     // the adapter wired to the recycler view
-    MatchesAdapter adapter;
+    public static MatchesAdapter adapter;
     // image config
     Config config;
 
@@ -177,7 +184,8 @@ public class MatchesListActivity extends AppCompatActivity {
 
 
         // get the configuration on app creation
-        getConfiguration();
+        //getConfiguration();
+        loadMatches(this.getApplicationContext(), matches);
 
 
 
@@ -220,72 +228,121 @@ public class MatchesListActivity extends AppCompatActivity {
 
 
     // get the list of currently playing movies from the API
-    private void getNowPlaying() {
-        // create the url
-        String url = API_BASE_URL + "/movie/now_playing";
-        // set the request parameters
-        RequestParams params = new RequestParams();
-        params.put(API_KEY_PARAM, "0bed49764dcc012c08bb5b9dc334e476"); // API key, always required
-        // execute a GET request expecting a JSON object response
-        client.get(url, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                //super.onSuccess(statusCode, headers, response);
-                try {
-                    JSONArray results = response.getJSONArray("results");
-                    // iterate through result set and create Movie objects
-                    for (int i = 0; i < results.length(); i++) {
-                       Match match = new Match(results.getJSONObject(i));
-                        matches.add(match);
-                        // notify adapter that a row was added
-                        adapter.notifyItemInserted(matches.size() - 1);
-                    }
-                    Log.i(TAG, String.format("Loaded %s matches", results.length()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+//    private void getNowPlaying() {
+//        // create the url
+////        String url = API_BASE_URL + "/movie/now_playing";
+////        // set the request parameters
+////        RequestParams params = new RequestParams();
+////        params.put(API_KEY_PARAM, "0bed49764dcc012c08bb5b9dc334e476"); // API key, always required
+////        // execute a GET request expecting a JSON object response
+////        client.get(url, params, new JsonHttpResponseHandler() {
+////            @Override
+////            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+////                //super.onSuccess(statusCode, headers, response);
+////                try {
+////                    JSONArray results = response.getJSONArray("results");
+////                    // iterate through result set and create Movie objects
+////                    for (int i = 0; i < results.length(); i++) {
+////                       Match match = new Match(results.getJSONObject(i));
+////                        matches.add(match);
+////                        // notify adapter that a row was added
+////                        adapter.notifyItemInserted(matches.size() - 1);
+////                    }
+////                    Log.i(TAG, String.format("Loaded %s matches", results.length()));
+////                } catch (JSONException e) {
+////                    e.printStackTrace();
+////                }
+////            }
+////
+////            @Override
+////            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+////                logError("Failed to get data from now playing endpoint", throwable, true);
+////            }
+////        });
+//
+//
+//
+//
+//
+//
+//    }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                logError("Failed to get data from now playing endpoint", throwable, true);
+    public void loadMatches(Context context , ArrayList<Match> list) {
+        try {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            //JSONArray array = new JSONArray(loadJSONFromAsset(context, "foods.json"));
+
+            String jsonString = loadJSONFromAsset(context, "restaurants.json");
+            JSONObject obj = new JSONObject(jsonString);
+            JSONArray array = obj.getJSONArray("restaurants");
+
+            for (int i = 0; i < array.length(); i++) {
+                Match match = gson.fromJson(array.getString(i), Match.class);
+                list.add(match);
+                adapter.notifyItemInserted(list.size() - 1);
+
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ;
+        }
     }
+
+
+    private static String loadJSONFromAsset(Context context, String jsonFileName) {
+        String json = null;
+        InputStream is=null;
+        try {
+            AssetManager manager = context.getAssets();
+            Log.d(TAG,"path "+jsonFileName);
+            is = manager.open(jsonFileName);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
 
     // get the configuration free from the API
-    private void getConfiguration() {
-        // create the url
-        String url = API_BASE_URL + "/configuration";
-        // set the request parameters
-        RequestParams params = new RequestParams();
-        params.put(API_KEY_PARAM, "0bed49764dcc012c08bb5b9dc334e476"); // API key, always required
-        // execute a GET request expecting a JSON object response
-        client.get(url, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // get the image base url
-                try {
-                    config = new Config(response);
-                    Log.i(TAG,
-                            String.format("Loaded configuration with imageBaseUrl %s and posterSize %s",
-                                    config.getImageBaseUrl(),
-                                    config.getBackdropSize()));
-                    // pass config to adapter
-                    adapter.setConfig(config);
-                    // get the now playing movie list
-                    getNowPlaying();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                logError("Failed getting configuration", throwable, true);
-            }
-        });
-    }
+//    private void getConfiguration() {
+//        // create the url
+//        String url = API_BASE_URL + "/configuration";
+//        // set the request parameters
+//        RequestParams params = new RequestParams();
+//        params.put(API_KEY_PARAM, "0bed49764dcc012c08bb5b9dc334e476"); // API key, always required
+//        // execute a GET request expecting a JSON object response
+//        client.get(url, params, new JsonHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                // get the image base url
+//                try {
+//                    config = new Config(response);
+//                    Log.i(TAG,
+//                            String.format("Loaded configuration with imageBaseUrl %s and posterSize %s",
+//                                    config.getImageBaseUrl(),
+//                                    config.getBackdropSize()));
+//                    // pass config to adapter
+//                    adapter.setConfig(config);
+//                    // get the now playing movie list
+//                    getNowPlaying();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                logError("Failed getting configuration", throwable, true);
+//            }
+//        });
+//    }
 
     // handle errors, log and alert user
     private void logError(String message, Throwable error, boolean alertUser) {
