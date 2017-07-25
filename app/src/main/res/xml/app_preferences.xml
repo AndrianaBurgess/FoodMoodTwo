@@ -38,6 +38,11 @@
             android:summary="@string/preferences_time_summ"
             android:title="@string/preferences_time_title"/>
 
+        <com.example.aburgess11.foodmood.PreferenceSeekbar
+            android:defaultValue="90"
+            android:key="pref_pref5"
+            android:title="Max Distance" />
+
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>
