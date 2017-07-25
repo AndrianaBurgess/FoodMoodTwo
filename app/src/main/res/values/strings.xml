@@ -2,4 +2,6 @@
     <string name="app_name">FoodMood</string>
     <string name="matches_header_collapsed">swipe up to see your matches!</string>
     <string name="matches_header_expanded">great restaurants for you</string>
+    <string name="facebook_app_id">1935398440033236</string>
+    <string name="fb_login_protocol_scheme">fb1935398440033236</string>
 </resources>

@@ -21,6 +21,11 @@ public class Profile {
     @SerializedName("location")
     @Expose
     private String location;
+//    private static BackStackEntry currentProfile;
+//
+//    public static BackStackEntry getCurrentProfile() {
+//        return currentProfile;
+//    }
 
     public String getIngredients() {
         return ingredients;

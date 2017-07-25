@@ -53,6 +53,16 @@ public class EatInActivity  extends AppCompatActivity {
                 overridePendingTransition(R.anim.enter_from_right_to_left, R.anim.exit_from_left_to_right);
             }
         });
+
+        //TODO: REPLACE WITH ACTUAL PROFILE PAGEø
+        ibProfile.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EatInActivity.this, LoginActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
 }
