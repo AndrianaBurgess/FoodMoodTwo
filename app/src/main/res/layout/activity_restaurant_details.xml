@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.aburgess11.foodmood.MainActivity">
 
+    <ImageView
+        android:id="@+id/ivBackdrop"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:srcCompat="@android:color/transparent" />
+
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
@@ -54,28 +60,36 @@
         android:layout_below="@+id/ratingBar"
         android:text="Hours Today:" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mvMap"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvHours" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvHours">
 
-    <TextView
-        android:id="@+id/tvAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="777 Hamilton Ave, Menlo Park, CA 94025"
-        android:layout_below="@+id/mvMap"
-        android:layout_alignParentStart="true" />
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:id="@+id/map"
+            android:layout_above="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-    <Button
-        android:id="@+id/btnOpenMaps"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvAddress"
-        android:layout_centerHorizontal="true"
-        android:text="Directions" />
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="777 Hamilton Ave, Menlo Park, CA 94025"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="46dp" />
+
+        <Button
+            android:id="@+id/btnOpenMaps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Directions"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

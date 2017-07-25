@@ -1,6 +1,7 @@
 package com.example.aburgess11.foodmood;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -85,7 +88,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     }
 
     // create the viewholder as a static inner class
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         // track view objects
         ImageView ivMatchImage;
@@ -100,6 +103,24 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
             tvMatchName = (TextView) itemView.findViewById(R.id.tvMatchName);
             tvMatchDetails = (TextView) itemView.findViewById(R.id.tvMatchDetails);
             tvPercentMatch = (TextView) itemView.findViewById(R.id.tvPercentMatch);
+        }
+
+        // when the user clicks on a row, show RestaurantDetailsActivity for the selected match
+        @Override
+        public void onClick(View v) {
+            // gets item position
+            int position = getAdapterPosition();
+            // make sure the position is valid, i.e. actually exists in the view
+            if (position != RecyclerView.NO_POSITION) {
+                // get the match at the position, this won't work if the class is static
+                Match match = matches.get(position);
+                // create intent for the new activity
+                Intent intent = new Intent(context, RestaurantDetailsActivity.class);
+                // serialize the movie using parceler, use its short name as a key
+                intent.putExtra(match.getMatchName(), Parcels.wrap(match));
+                // show the activity
+                context.startActivity(intent);
+            }
         }
     }
 }

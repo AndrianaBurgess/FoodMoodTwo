@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">FoodMood</string>
 
+    //MAPS
+    <string name="api_key">AIzaSyCHfceufwTNTXPi0GUCXg2cuGmCjKImon8</string>
+
     //PREFERENCES
     <string name="preferences_category_one">Category 1</string>
     <string name="preferences_category_two">Category 2</string>
