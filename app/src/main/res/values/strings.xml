@@ -4,6 +4,8 @@
     //PREFERENCES
     <string name="preferences_category_one">Category 1</string>
     <string name="preferences_category_two">Category 2</string>
+    <string name="preferences_category_three">Listed Restaurants</string>
+
 
     <string name="matches_header_collapsed">swipe up to see your matches!</string>
     <string name="matches_header_expanded">great restaurants for you</string>
@@ -21,6 +23,11 @@
 
     <string name="preferences_checkbox_title">CheckBox Preference</string>
     <string name="preferences_checkbox_summ">CheckBox Summary</string>
+    <string name="preferences_checkbox_epic">Cafe Epic</string>
+    <string name="preferences_checkbox_bbq">BBQ Shack</string>
+    <string name="preferences_checkbox_burger">Burger Shack</string>
+    <string name="preferences_checkbox_pizza">Big Tony/s Pizzeria</string>
+    <string name="preferences_checkbox_harvest">Harvest</string>
 
     <string name="btn_custom">Button in custom layout</string>
 

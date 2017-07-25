@@ -45,4 +45,41 @@
 
     </android.support.v7.preference.PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/preferences_category_three">
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_pref6"
+            android:summary="@string/preferences_checkbox_summ"
+            android:title="@string/preferences_checkbox_epic"/>
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_pref7"
+            android:summary="@string/preferences_checkbox_summ"
+            android:title="@string/preferences_checkbox_bbq"/>
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_pref8"
+            android:summary="@string/preferences_checkbox_summ"
+            android:title="@string/preferences_checkbox_harvest"/>
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_pref9"
+            android:summary="@string/preferences_checkbox_summ"
+            android:title="@string/preferences_checkbox_pizza"/>
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_pref10"
+            android:summary="@string/preferences_checkbox_summ"
+            android:title="@string/preferences_checkbox_burger"/>
+
+
+    </android.support.v7.preference.PreferenceCategory>
+
+
+    </android.support.v7.preference.PreferenceScreen>

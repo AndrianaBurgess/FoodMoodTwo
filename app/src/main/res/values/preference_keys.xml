@@ -5,4 +5,10 @@
     <string name="pref_pref3" translatable="false">pref_pref3</string>
     <string name="pref_pref4" translatable="false">pref_pref4</string>
     <string name="pref_pref5" translatable="false">pref_pref5</string>
+    <string name="pref_pref6" translatable="false">pref_pref6</string>
+    <string name="pref_pref7" translatable="false">pref_pref7</string>
+    <string name="pref_pref8" translatable="false">pref_pref8</string>
+    <string name="pref_pref9" translatable="false">pref_pref9</string>
+    <string name="pref_pref10" translatable="false">pref_pref10</string>
+
 </resources>
