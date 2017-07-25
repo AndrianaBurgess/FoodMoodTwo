@@ -1,44 +1,51 @@
 package com.example.aburgess11.foodmood.models;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.support.annotation.NonNull;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by liangelali on 7/12/17.
  */
 
 
-public class Match {
+public class Match implements Comparable<Match>{
 
-    // values from API
-    private String matchName;
-    private String matchDetails;
-    private String backdropPath;
-    private Double double_percentMatch;
-    private String percentMatch;
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+    @SerializedName("url")
+    @Expose
+    private String imageUrl;
+
+    @SerializedName("location")
+    @Expose
+    private String location;
+
+
+    public int rank;
 
     // initialize from JSON data
-    public Match(JSONObject object) throws JSONException {
-        matchName = object.getString("title");
-        matchDetails = object.getString("overview");
-        backdropPath = object.getString("backdrop_path");
 
-        double_percentMatch = object.getDouble("vote_average");
-        percentMatch = Double.toString(double_percentMatch);
 
+    public String getName() {
+        return name;
     }
 
-    public String getMatchName() {
-        return matchName;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public String getMatchDetails() {
-        return matchDetails;
+    public String getLocation() {
+        return location;
     }
 
-    public String getBackdropPath() {
-        return backdropPath;
-    }
 
-    public String getPercentMatch() { return percentMatch; }
+    @Override
+    public int compareTo(@NonNull Match match) {
+        return Integer.compare(match.rank, this.rank);
+    }
 }

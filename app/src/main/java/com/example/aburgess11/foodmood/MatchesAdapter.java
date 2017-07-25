@@ -59,13 +59,13 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         // get the movie data at the specified position
         Match match = matches.get(position);
         //populate the view with the movie data
-        holder.tvMatchName.setText(match.getMatchName());
-        holder.tvMatchDetails.setText(match.getMatchDetails());
-        holder.tvPercentMatch.setText(match.getPercentMatch() + "%  •");
+        holder.tvMatchName.setText(match.getName());
+        holder.tvMatchDetails.setText(match.getLocation());
+       // holder.tvPercentMatch.setText(match.getRank() + "%  •");
 
 
         // load backdrop
-        String imageUrl = config.getImageUrl(config.getBackdropSize(), match.getBackdropPath());
+        String imageUrl = match.getImageUrl();
 
 
         // load the poster
