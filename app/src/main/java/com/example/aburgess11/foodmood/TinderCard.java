@@ -18,11 +18,17 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
+<<<<<<< HEAD
 import java.util.Collections;
 
+import static com.example.aburgess11.foodmood.EatOutActivity.matches;
 import static com.example.aburgess11.foodmood.MatchesListActivity.appBarLayout;
 import static com.example.aburgess11.foodmood.MatchesListActivity.matches;
 import static com.example.aburgess11.foodmood.MatchesListActivity.swipeCount;
+=======
+import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
+import static com.example.aburgess11.foodmood.EatOutActivity.swipeCount;
+>>>>>>> 62ca32371a5ec9fe8d5ac5c5be58fe796472a060
 
 /**
  * Created by aburgess11 on 7/12/17.
@@ -100,7 +106,7 @@ public class TinderCard {
         // after 10 swipes, automatically pop up the matches page
         if (swipeCount == 10){
 
-            MatchesListActivity.isAppBarExpanded = true;
+            EatOutActivity.isAppBarExpanded = true;
             appBarLayout.setExpanded(false);
             appBarLayout.setFitsSystemWindows(true);
 

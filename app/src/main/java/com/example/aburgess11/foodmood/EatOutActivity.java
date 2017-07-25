@@ -1,7 +1,10 @@
 package com.example.aburgess11.foodmood;
 
 import android.content.Context;
+
 import android.content.res.AssetManager;
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,14 +50,14 @@ import static com.loopj.android.http.AsyncHttpClient.log;
  * Created by liangelali on 7/13/17.
  */
 
-public class MatchesListActivity extends AppCompatActivity {
+public class EatOutActivity extends AppCompatActivity {
     // constants
     // the base URL for the API
     public final static String API_BASE_URL = "https://api.themoviedb.org/3";
     // the parameter name for the API key
     public final static String API_KEY_PARAM = "api_key";
     // tag for logging from this activity
-    public final static String TAG = "MatchesListActivity";
+    public final static String TAG = "EatOutActivity";
 
     // instance fields
     AsyncHttpClient client;
@@ -68,7 +72,7 @@ public class MatchesListActivity extends AppCompatActivity {
     // image config
     Config config;
 
-    // toolbar items
+    // matches window items
     static AppBarLayout appBarLayout;
     CollapsingToolbarLayout collapsingToolbar;
     TextView matchesHeader;
@@ -76,6 +80,10 @@ public class MatchesListActivity extends AppCompatActivity {
 
     // boolean to keep track of whether the matches page is expanded or collapsed
     static boolean isAppBarExpanded = false;
+
+    // top toolbar items
+    ImageButton eatInBtn;
+    ImageButton messagesBtn;
 
 
 
@@ -110,7 +118,7 @@ public class MatchesListActivity extends AppCompatActivity {
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
 
 
-        // resolve toolbar items
+        // resolve matches window items
         appBarLayout = (AppBarLayout) findViewById(appbar);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         matchesHeader = (TextView) findViewById(R.id.tvMatchesHeader);
@@ -120,12 +128,22 @@ public class MatchesListActivity extends AppCompatActivity {
         matchesHeader.setText(getString(R.string.matches_header_collapsed));
         upArrow.setVisibility(ImageView.VISIBLE);
 
+
+        // resolve upper toolbar items
+        eatInBtn = (ImageButton) findViewById(R.id.eatInBtn);
+        messagesBtn = (ImageButton) findViewById(R.id.messagesBtn);
+
+
+
+
+
+
         // offsetChangedListener detects when there is a change in vertical offset (i.e. change from
         // collapsed to expanded, and vice versa)
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                Log.d(MatchesListActivity.class.getSimpleName(), "onOffsetChanged: verticalOffset: " + verticalOffset);
+                Log.d(EatOutActivity.class.getSimpleName(), "onOffsetChanged: verticalOffset: " + verticalOffset);
 
                 //  Vertical offset == 0 indicates appBar is collapsed
                 //  Range of vertical offset is from 0 to -1*(appBarLayout.getTotalScrollRange())
@@ -222,6 +240,21 @@ public class MatchesListActivity extends AppCompatActivity {
                     // reOrder();
                 }
             });
+
+
+
+
+
+        eatInBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EatOutActivity.this, EatInActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.enter_from_left_to_right, R.anim.exit_from_right_to_left);
+            }
+        });
+
 
     }
 
