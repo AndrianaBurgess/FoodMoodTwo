@@ -1,21 +1,67 @@
 {
-  "restaurant": [
+  "restaurants": [
     {
-      url: "https://s-media-cache-ak0.pinimg.com/736x/c1/ce/16/c1ce1665c7298d98ac71eb0bb00275b1--beef-ribs-beef-short-ribs.jpg",
-      name: "BBQ Shack",
-      location: "MPK 12",
-    },
-    {
-      url: "http://www.seriouseats.com/recipes/assets_c/2009/09/20090827-mexican-roadside-chicken-thumb-625xauto-32225.jpg",
-      name: "EPIC Cafe",
-      location: "MPK 11",
+      url: "http://www.letsintern.com/blog/wp-content/uploads/2014/07/epic.jpg",
+      name: "Cafe Epic",
+      location: "MPK 11"
 
     },
     {
       url: "http://chicago.seriouseats.com/images/20120605-sausage-city-smoques-hot-links-3.jpg",
-      name: "Beef and Pork Hot Link Sausage",
-      location: "BBQ Shack",
+      name: "Banh Appetit",
+      location: "MPK 15"
 
+    },
+    {
+      url: "https://s-media-cache-ak0.pinimg.com/originals/f1/db/c4/f1dbc47bf5065fd78bcf991fde61f256.jpg",
+      name: "Harvest",
+      location: "MPK 18"
+
+    },
+    {
+      url: "https://paulhenson.files.wordpress.com/2014/02/fb-diner.jpg",
+      name: "Teddy's Nacho Royale",
+      location: "MPK 12"
+    },
+    {
+      url: "http://www.seriouseats.com/recipes/assets_c/2009/09/20090827-mexican-roadside-chicken-thumb-625xauto-32225.jpg",
+      name: "Livin the Dream Cafe",
+      location: "MPK 18"
+
+    },
+    {
+      url: "https://i0.wp.com/pureglutton.com/wp-content/uploads/2017/01/burger-shack.jpg?resize=733%2C977",
+      name: "Burger Shack",
+      location: "MPK 18"
+
+    },
+    {
+      url: "http://chicago.seriouseats.com/images/20120605-sausage-city-smoques-hot-links-3.jpg",
+      name: "Noodle Bar",
+      location: "MPK 10"
+
+    },
+    {
+      url: "https://s-media-cache-ak0.pinimg.com/736x/c1/ce/16/c1ce1665c7298d98ac71eb0bb00275b1--beef-ribs-beef-short-ribs.jpg",
+      name: "Big Tony's Pizzeria",
+      location: "MPK 18"
+    },
+    {
+      url: "http://www.seriouseats.com/recipes/assets_c/2009/09/20090827-mexican-roadside-chicken-thumb-625xauto-32225.jpg",
+      name: "Naan Stop",
+      location: "MPK 11"
+
+    },
+    {
+      url: "http://chicago.seriouseats.com/images/20120605-sausage-city-smoques-hot-links-3.jpg",
+      name: "Juice Badger",
+      location: "MPK 11"
+
+    },
+    {
+      url: "https://fbnewsroomus.files.wordpress.com/2014/05/bbq-shack.jpg",
+      name: "BBQ Shack",
+      location: "MPK 11"
     }
   ]
 }

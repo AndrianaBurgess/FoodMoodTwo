@@ -45,12 +45,12 @@ public class RestaurantDetailsActivity extends FragmentActivity implements OnMap
         mapFragment.getMapAsync(this);
 
         restaurant = (Match) Parcels.unwrap(getIntent().getParcelableExtra(Match.class.getSimpleName()));
-        Log.d("RestDetailsActivity", String.format("Showing details for '%s'", restaurant.getMatchName()));
+        Log.d("RestDetailsActivity", String.format("Showing details for '%s'", restaurant.getName()));
 
-        tvName.setText(restaurant.getMatchName());
+        tvName.setText(restaurant.getName());
 
         Glide.with(ivBackDrop.getContext())
-                .load(restaurant.getBackdropPath())
+                .load(restaurant.getImageUrl())
                 .centerCrop()
                 .into(ivBackDrop);
     }
