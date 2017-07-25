@@ -2,6 +2,10 @@
     <string name="app_name">FoodMood</string>
     <string name="matches_header_collapsed">swipe up to see your matches!</string>
     <string name="matches_header_expanded">great restaurants for you</string>
+
+    <string name="facebook_app_id">1935398440033236</string>
+    <string name="fb_login_protocol_scheme">fb1935398440033236</string>
+
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -16,7 +20,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="facebook_app_id">250167778830026</string>
-    <string name="fb_login_protocol_scheme">fb250167778830026</string>
+
+
 
 </resources>

@@ -22,6 +22,7 @@ public class Profile {
     @Expose
     private String location;
 
+
     public String getIngredients() {
         return ingredients;
     }

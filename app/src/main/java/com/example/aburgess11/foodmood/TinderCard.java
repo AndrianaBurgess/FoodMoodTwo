@@ -18,11 +18,7 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
-
 import java.util.Collections;
-import static com.example.aburgess11.foodmood.EatOutActivity.matches;
-import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
-import static com.example.aburgess11.foodmood.EatOutActivity.swipeCount;
 
 import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
 import static com.example.aburgess11.foodmood.EatOutActivity.matches;

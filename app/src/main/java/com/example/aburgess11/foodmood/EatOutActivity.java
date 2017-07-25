@@ -1,10 +1,8 @@
 package com.example.aburgess11.foodmood;
 
 import android.content.Context;
-
-import android.content.res.AssetManager;
-
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
