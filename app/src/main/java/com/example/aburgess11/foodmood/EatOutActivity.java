@@ -29,6 +29,7 @@ import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,17 +43,14 @@ import static com.loopj.android.http.AsyncHttpClient.log;
  */
 
 public class EatOutActivity extends AppCompatActivity {
-    // constants
-    // the base URL for the API
-    public final static String API_BASE_URL = "https://api.themoviedb.org/3";
-    // the parameter name for the API key
-    public final static String API_KEY_PARAM = "api_key";
+
     // tag for logging from this activity
     public final static String TAG = "EatOutActivity";
 
     // instance fields
     AsyncHttpClient client;
     // the list of currently playing movies
+
     public static ArrayList<Match> matches;
     // the recycler view
     RecyclerView rvMatches;
@@ -60,8 +58,8 @@ public class EatOutActivity extends AppCompatActivity {
     NestedScrollView nestedScrollView;
     // the adapter wired to the recycler view
     public static MatchesAdapter adapter;
-    // image config
-    Config config;
+
+
 
     // matches window items
     static AppBarLayout appBarLayout;
@@ -88,6 +86,15 @@ public class EatOutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            matches = savedInstanceState.getParcelableArrayList("arraylist");
+            adapter.notifyDataSetChanged();
+
+        }
+
+
         // initialize the client
         client = new AsyncHttpClient();
         // init the list of matches
@@ -122,8 +129,6 @@ public class EatOutActivity extends AppCompatActivity {
         // resolve upper toolbar items
         profileBtn = (ImageButton) findViewById(R.id.profileBtn);
         messagesBtn = (ImageButton) findViewById(R.id.messagesBtn);
-
-
 
 
 
@@ -246,55 +251,33 @@ public class EatOutActivity extends AppCompatActivity {
         });
 
 
+
+
+    }
+    //end of onCreate()
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putParcelableArrayList("arraylist" ,  matches);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
+    @Override
+    public void onBackPressed() {
 
+            EatOutActivity.isAppBarExpanded = false;
+            appBarLayout.setExpanded(true);
+            appBarLayout.setFitsSystemWindows(false);
 
-    // get the list of currently playing movies from the API
-//    private void getNowPlaying() {
-//        // create the url
-////        String url = API_BASE_URL + "/movie/now_playing";
-////        // set the request parameters
-////        RequestParams params = new RequestParams();
-////        params.put(API_KEY_PARAM, "0bed49764dcc012c08bb5b9dc334e476"); // API key, always required
-////        // execute a GET request expecting a JSON object response
-////        client.get(url, params, new JsonHttpResponseHandler() {
-////            @Override
-////            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-////                //super.onSuccess(statusCode, headers, response);
-////                try {
-////                    JSONArray results = response.getJSONArray("results");
-////                    // iterate through result set and create Movie objects
-////                    for (int i = 0; i < results.length(); i++) {
-////                       Match match = new Match(results.getJSONObject(i));
-////                        matches.add(match);
-////                        // notify adapter that a row was added
-////                        adapter.notifyItemInserted(matches.size() - 1);
-////                    }
-////                    Log.i(TAG, String.format("Loaded %s matches", results.length()));
-////                } catch (JSONException e) {
-////                    e.printStackTrace();
-////                }
-////            }
-////
-////            @Override
-////            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-////                logError("Failed to get data from now playing endpoint", throwable, true);
-////            }
-////        });
-//
-//
-//
-//
-//
-//
-//    }
+    }
 
     public void loadMatches(Context context , ArrayList<Match> list) {
         try {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            //JSONArray array = new JSONArray(loadJSONFromAsset(context, "foods.json"));
 
             String jsonString = loadJSONFromAsset(context, "restaurants.json");
             JSONObject obj = new JSONObject(jsonString);
@@ -333,41 +316,6 @@ public class EatOutActivity extends AppCompatActivity {
     }
 
 
-    // get the configuration free from the API
-//    private void getConfiguration() {
-//        // create the url
-//        String url = API_BASE_URL + "/configuration";
-//        // set the request parameters
-//        RequestParams params = new RequestParams();
-//        params.put(API_KEY_PARAM, "0bed49764dcc012c08bb5b9dc334e476"); // API key, always required
-//        // execute a GET request expecting a JSON object response
-//        client.get(url, params, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                // get the image base url
-//                try {
-//                    config = new Config(response);
-//                    Log.i(TAG,
-//                            String.format("Loaded configuration with imageBaseUrl %s and posterSize %s",
-//                                    config.getImageBaseUrl(),
-//                                    config.getBackdropSize()));
-//                    // pass config to adapter
-//                    adapter.setConfig(config);
-//                    // get the now playing movie list
-//                    getNowPlaying();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                logError("Failed getting configuration", throwable, true);
-//            }
-//        });
-//    }
-
-    // handle errors, log and alert user
     private void logError(String message, Throwable error, boolean alertUser) {
         // always log the error
         log.e(TAG, message, error);

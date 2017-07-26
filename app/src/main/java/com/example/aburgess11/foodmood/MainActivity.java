@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         com.facebook.Profile profile = Profile.getCurrentProfile();
 
         if (profile == null) {
@@ -31,14 +32,14 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.startActivity(i);
         }
 
+
+
     }
 
 
 
 
-    public void reOrder(){
-        return;
-    }
+
 
 
 }
