@@ -87,13 +87,8 @@ public class EatOutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            matches = savedInstanceState.getParcelableArrayList("arraylist");
-            adapter.notifyDataSetChanged();
 
-        }
-
+        Toast.makeText(getApplicationContext(),"created", Toast.LENGTH_SHORT).show();
 
         // initialize the client
         client = new AsyncHttpClient();
@@ -256,14 +251,7 @@ public class EatOutActivity extends AppCompatActivity {
     }
     //end of onCreate()
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
-        savedInstanceState.putParcelableArrayList("arraylist" ,  matches);
 
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
 
     @Override
     public void onBackPressed() {
@@ -316,13 +304,4 @@ public class EatOutActivity extends AppCompatActivity {
     }
 
 
-    private void logError(String message, Throwable error, boolean alertUser) {
-        // always log the error
-        log.e(TAG, message, error);
-        //alert the user to avoid silent errors
-        if (alertUser) {
-            // show a long toast with the error message
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        }
-    }
 }
