@@ -26,11 +26,11 @@
         android:layout_height="300dp"
         android:layout_alignBottom="@+id/ivMatchImage"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/image_overlay"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/image_overlay" />
 
     <!-- Details for each match. TBD later (i.e. breakfast/lunch/dinner options, distance, etc) -->
     <TextView

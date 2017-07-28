@@ -89,6 +89,7 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SettingsActivity.this, EatOutActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(i);
                 overridePendingTransition(R.anim.enter_from_right_to_left, R.anim.exit_from_left_to_right);
             }

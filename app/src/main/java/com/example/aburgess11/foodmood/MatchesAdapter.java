@@ -3,6 +3,7 @@ package com.example.aburgess11.foodmood;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,17 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.facebook.login.widget.ProfilePictureView.TAG;
+
 /**
  * Created by liangelali on 7/12/17.
  */
 
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHolder> {
+
     // list of matches
     ArrayList<Match> matches;
     // config needed for image urls
@@ -52,20 +59,38 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         // create the view using the item_movie layout
         View matchView = inflater.inflate(R.layout.item_match, parent, false);
         // return a new ViewHolder
-        ViewHolder viewHolder = new ViewHolder(matchView);
+        final ViewHolder viewHolder = new ViewHolder(matchView);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = viewHolder.getAdapterPosition();
+                Log.d(TAG, "onClick: " + position);
+                // make sure the position is valid, i.e. actually exists in the view
+//            if (position2 != RecyclerView.NO_POSITION) {
+                // get the match at the position, this won't work if the class is static
+                Match match = matches.get(position);
+                // create intent for the new activity
+                Intent intent = new Intent(context, RestaurantDetailsActivity.class);
+//                // serialize the movie using parceler, use its short name as a key
+                intent.putExtra("data", Parcels.wrap(match));
+                // show the activity
+                context.startActivity(intent);
+//            }
+            }
+        });
+
         return viewHolder;
     }
 
     // binds an inflated view to a new item
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         // get the movie data at the specified position
         Match match = matches.get(position);
         //populate the view with the movie data
         holder.tvMatchName.setText(match.getName());
         holder.tvMatchDetails.setText(match.getLocation());
        // holder.tvPercentMatch.setText(match.getRank() + "%  •");
-
 
         // load backdrop
         String imageUrl = match.getImageUrl();
@@ -87,40 +112,20 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         return matches.size();
     }
 
-    // create the viewholder as a static inner class
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    // create the viewholder as an inner class
+    // class *cannot* be static
+    // implements View.OnClickListener
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         // track view objects
-        ImageView ivMatchImage;
-        TextView tvMatchName;
-        TextView tvMatchDetails;
-        TextView tvPercentMatch;
+        @BindView(R.id.ivMatchImage) ImageView ivMatchImage;
+        @BindView(R.id.tvMatchName) TextView tvMatchName;
+        @BindView(R.id.tvMatchDetails) TextView tvMatchDetails;
+        @BindView(R.id.tvPercentMatch) TextView tvPercentMatch;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            // lookup view objects by id
-            ivMatchImage = (ImageView) itemView.findViewById(R.id.ivMatchImage);
-            tvMatchName = (TextView) itemView.findViewById(R.id.tvMatchName);
-            tvMatchDetails = (TextView) itemView.findViewById(R.id.tvMatchDetails);
-            tvPercentMatch = (TextView) itemView.findViewById(R.id.tvPercentMatch);
-        }
-
-        // when the user clicks on a row, show RestaurantDetailsActivity for the selected match
-        @Override
-        public void onClick(View v) {
-            // gets item position
-            int position = getAdapterPosition();
-            // make sure the position is valid, i.e. actually exists in the view
-            if (position != RecyclerView.NO_POSITION) {
-                // get the match at the position, this won't work if the class is static
-                Match match = matches.get(position);
-                // create intent for the new activity
-                Intent intent = new Intent(context, RestaurantDetailsActivity.class);
-                // serialize the movie using parceler, use its short name as a key
-                intent.putExtra(match.getName(), Parcels.wrap(match));
-                // show the activity
-                context.startActivity(intent);
-            }
+            ButterKnife.bind(this, itemView);
         }
     }
 }

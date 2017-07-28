@@ -5,30 +5,42 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.parceler.Parcel;
+
 /**
  * Created by liangelali on 7/12/17.
  */
 
-
+@Parcel // annotation indicates class is Parcelable
 public class Match implements Comparable<Match>{
 
 
     @SerializedName("name")
     @Expose
-    private String name;
+    String name;
 
     @SerializedName("url")
     @Expose
-    private String imageUrl;
+    String imageUrl;
 
     @SerializedName("location")
     @Expose
-    private String location;
+    String location;
 
 
     public int rank;
 
+    // no-arg, empty constructor required for Parceler
+    public Match() {}
+
     // initialize from JSON data
+    public Match(JSONObject object) throws JSONException {
+        name = object.getString("name");
+        imageUrl = object.getString("imageUrl");
+        location = object.getString("location");
+    }
 
 
     public String getName() {

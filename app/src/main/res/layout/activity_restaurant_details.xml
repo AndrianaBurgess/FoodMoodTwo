@@ -65,12 +65,12 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tvHours">
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:id="@+id/map"
-            android:layout_above="@+id/tvAddress"
+        <FrameLayout
+            android:id="@+id/framelayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tvAddress"

@@ -1,8 +1,8 @@
 package com.example.aburgess11.foodmood;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +19,7 @@ import org.parceler.Parcels;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RestaurantDetailsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class RestaurantDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     // the restaurant to display
     Match restaurant;
@@ -37,15 +37,23 @@ public class RestaurantDetailsActivity extends FragmentActivity implements OnMap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
         setContentView(R.layout.activity_restaurant_details);
+        ButterKnife.bind(this);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+//        MapFragment mapFragment = (MapFragment) getFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
 
-        restaurant = (Match) Parcels.unwrap(getIntent().getParcelableExtra(Match.class.getSimpleName()));
-        Log.d("RestDetailsActivity", String.format("Showing details for '%s'", restaurant.getName()));
+        MapFragment mMapFragment = MapFragment.newInstance();
+        FragmentTransaction fragmentTransaction =
+                getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.framelayout, mMapFragment);
+        fragmentTransaction.commit();
+
+        mMapFragment.getMapAsync(this);
+
+        restaurant = Parcels.unwrap(getIntent().getParcelableExtra("data"));
+//        Log.d("RestDetailsActivity", String.format("Showing details for '%s'", restaurant.getName()));
 
         tvName.setText(restaurant.getName());
 

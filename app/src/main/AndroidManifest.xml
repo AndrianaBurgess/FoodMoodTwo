@@ -59,7 +59,6 @@
             android:name=".EatOutActivity"
             android:label="Matches Detail" />
 
-
         <activity android:name=".SettingsActivity" />
 
         <activity android:name=".RestaurantDetailsActivity"></activity>

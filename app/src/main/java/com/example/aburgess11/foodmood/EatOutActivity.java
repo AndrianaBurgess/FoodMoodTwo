@@ -82,11 +82,25 @@ public class EatOutActivity extends AppCompatActivity {
     private Context mContext;
     public static int swipeCount=0;
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("onSaveInstanceState", 1);
+        Log.d("Sean", "onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+    }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("Sean", "onRestoreInstanceState: " + savedInstanceState.getInt("saved"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            Log.d("Sean", "onCreate: " + savedInstanceState.getInt("saved"));
+        }
         setContentView(R.layout.activity_main);
         // initialize the client
         client = new AsyncHttpClient();
