@@ -54,14 +54,18 @@
             android:layout_weight="1.34" />
 
         <Switch
-            android:id="@+id/switch1"
-            style="@android:style/Widget.Holo.Light.CompoundButton.Switch"
+            android:id="@+id/groupToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:switchMinWidth="20dp"
+            android:checked="false"
             android:showText="true"
+            android:switchTextAppearance="@style/SwitchTextAppearance"
             android:textOff="Just Me"
             android:textOn="Group"
-            android:thumbTint="@color/colorSecondary" />
+            android:thumb="@drawable/switchthumb"
+            android:thumbTextPadding="10dp"
+            android:track="@drawable/switchtrack" />
 
         <Space
             android:layout_width="wrap_content"

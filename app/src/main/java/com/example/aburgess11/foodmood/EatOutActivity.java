@@ -1,5 +1,6 @@
 package com.example.aburgess11.foodmood;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -14,13 +15,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
+import com.facebook.Profile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -34,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import static com.example.aburgess11.foodmood.R.id.appbar;
 import static com.loopj.android.http.AsyncHttpClient.log;
 
 /**
@@ -42,6 +45,7 @@ import static com.loopj.android.http.AsyncHttpClient.log;
  */
 
 public class EatOutActivity extends AppCompatActivity {
+    private static final int LOGIN = 1000;
     // constants
     // the base URL for the API
     public final static String API_BASE_URL = "https://api.themoviedb.org/3";
@@ -74,6 +78,7 @@ public class EatOutActivity extends AppCompatActivity {
 
     // top toolbar items
     ImageButton profileBtn;
+    Switch groupToggle;
     ImageButton messagesBtn;
 
 
@@ -109,7 +114,7 @@ public class EatOutActivity extends AppCompatActivity {
 
 
         // resolve matches window items
-        appBarLayout = (AppBarLayout) findViewById(appbar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         matchesHeader = (TextView) findViewById(R.id.tvMatchesHeader);
         upArrow = (ImageView) findViewById(R.id.ivUpArrow);
@@ -121,16 +126,15 @@ public class EatOutActivity extends AppCompatActivity {
 
         // resolve upper toolbar items
         profileBtn = (ImageButton) findViewById(R.id.profileBtn);
+        groupToggle = (Switch) findViewById(R.id.groupToggle);
+        groupToggle.setShowText(true);
         messagesBtn = (ImageButton) findViewById(R.id.messagesBtn);
-
-
-
-
 
 
         // offsetChangedListener detects when there is a change in vertical offset (i.e. change from
         // collapsed to expanded, and vice versa)
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @SuppressLint("NewApi")
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 Log.d(EatOutActivity.class.getSimpleName(), "onOffsetChanged: verticalOffset: " + verticalOffset);
@@ -209,7 +213,7 @@ public class EatOutActivity extends AppCompatActivity {
                             .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
 
 
-            for(Profile profile : Utils.loadProfiles(this.getApplicationContext())){
+            for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
                 mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
             }
 
@@ -231,8 +235,25 @@ public class EatOutActivity extends AppCompatActivity {
                 }
             });
 
+        // TODO: groupToggle login on checked is being created here BUT NOTHING IS WORKING
+        groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                com.facebook.Profile profile = Profile.getCurrentProfile();
+
+                if (profile == null && isChecked) {
+                    Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
+                    Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
+                    EatOutActivity.this.startActivityForResult(i, LOGIN);
+
+                } else if (isChecked){
+                    Log.d("LOGIN STATUS:", "user was already logged in");
+                    Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 
         profileBtn.setOnClickListener(new View.OnClickListener() {
@@ -248,7 +269,22 @@ public class EatOutActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN) {
+            if (resultCode != RESULT_OK) {
+                groupToggle.setChecked(false);
+                return;
+            }
 
+            boolean isDismissed = data.getBooleanExtra("isDismissed", false);
+            if (isDismissed) {
+                groupToggle.setChecked(false);
+                return;
+            }
+        }
+    }
 
     // get the list of currently playing movies from the API
 //    private void getNowPlaying() {
@@ -290,7 +326,7 @@ public class EatOutActivity extends AppCompatActivity {
 //
 //    }
 
-    public void loadMatches(Context context , ArrayList<Match> list) {
+    public static void loadMatches(Context context , ArrayList<Match> list) {
         try {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
@@ -377,4 +413,13 @@ public class EatOutActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent i = new Intent(EatOutActivity.this, EatOutActivity.class);
+        startActivity(i);
+    }
+
+    // TODO: going from profile to eat out resets the eat out matches list
 }
