@@ -81,8 +81,6 @@ public class EatOutActivity extends AppCompatActivity {
     Switch groupToggle;
     ImageButton messagesBtn;
 
-
-
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
     public static int swipeCount=0;
@@ -112,7 +110,11 @@ public class EatOutActivity extends AppCompatActivity {
         // init the list of matches
         matches = new ArrayList<>();
         // initialize the adapter -- movies array cannot be reinitialized after this point
-        adapter = new MatchesAdapter(matches);
+        try {
+            adapter = new MatchesAdapter(matches);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // resolve the recycler view and connect a layout manager
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);

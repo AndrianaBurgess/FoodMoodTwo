@@ -24,10 +24,6 @@ import butterknife.ButterKnife;
 
 import static com.facebook.login.widget.ProfilePictureView.TAG;
 
-<<<<<<<HEAD
-        =======
-        >>>>>>>5a8d7d8b7b85632fb7f0344a321a5beec6dfd408
-
 /**
  * Created by liangelali on 7/12/17.
  */
