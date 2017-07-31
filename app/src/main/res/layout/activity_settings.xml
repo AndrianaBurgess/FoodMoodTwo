@@ -17,6 +17,12 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary">
 
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/settings_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true" />
+
         </android.support.v7.widget.Toolbar>
 
         <ImageButton

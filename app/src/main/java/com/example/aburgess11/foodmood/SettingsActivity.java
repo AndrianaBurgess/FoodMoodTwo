@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -42,6 +43,8 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
+    @BindView(R.id.settings_login_button)
+    LoginButton settings_login_button;
     @BindView(R.id.ibEatOut) ImageButton ibEatOut;
     @BindView(R.id.add_geofences_button) Button mAddGeofencesButton;
     @BindView(R.id.remove_geofences_button) Button mRemoveGeofencesButton;
@@ -92,6 +95,16 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
                 i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(i);
                 overridePendingTransition(R.anim.enter_from_right_to_left, R.anim.exit_from_left_to_right);
+            }
+        });
+
+        // create onClick for Login Button
+        settings_login_button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
+                startActivity(i);
             }
         });
 

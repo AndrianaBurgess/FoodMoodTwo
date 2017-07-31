@@ -52,4 +52,11 @@
         <item name="colorPrimaryDark">#c6c6c6</item>
     </style>
 
+    <style name="SwitchTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textColor">@android:color/background_light</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:showText">true</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
 </resources>

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-public class Profile {
+public class SwipeProfile {
 
     @SerializedName("name")
     @Expose

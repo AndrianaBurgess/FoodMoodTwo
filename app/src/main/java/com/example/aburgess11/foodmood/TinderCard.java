@@ -42,21 +42,21 @@ public class TinderCard {
     @View(R.id.locationNameTxt)
     private TextView locationNameTxt;
 
-    private Profile mProfile;
+    private SwipeProfile mSwipeProfile;
     private Context mContext;
     private SwipePlaceHolderView mSwipeView;
 
-    public TinderCard(Context context, Profile profile, SwipePlaceHolderView swipeView) {
+    public TinderCard(Context context, SwipeProfile swipeProfile, SwipePlaceHolderView swipeView) {
         mContext = context;
-        mProfile = profile;
+        mSwipeProfile = swipeProfile;
         mSwipeView = swipeView;
     }
 
     @Resolve
     private void onResolved(){
-        Glide.with(mContext).load(mProfile.getImageUrl()).into(profileImageView);
-        nameAgeTxt.setText(mProfile.getName() + ", " + mProfile.getTimeofday());
-        locationNameTxt.setText(mProfile.getLocation());
+        Glide.with(mContext).load(mSwipeProfile.getImageUrl()).into(profileImageView);
+        nameAgeTxt.setText(mSwipeProfile.getName() + ", " + mSwipeProfile.getTimeofday());
+        locationNameTxt.setText(mSwipeProfile.getLocation());
     }
 
     @SwipeOut
@@ -73,8 +73,8 @@ public class TinderCard {
     @SwipeIn
     public void onSwipeIn(){
         popUpList();
-       // Toast.makeText(mContext, this.mProfile.getLocation(), Toast.LENGTH_SHORT ).show();
-        findRestAndIncr(this.mProfile.getLocation());
+       // Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
+        findRestAndIncr(this.mSwipeProfile.getLocation());
         Collections.sort(matches);
         EatOutActivity.adapter.notifyDataSetChanged();
         Log.d("EVENT", "onSwipedIn" + swipeCount);

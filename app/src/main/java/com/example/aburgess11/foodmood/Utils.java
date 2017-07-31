@@ -24,11 +24,11 @@ public class Utils {
 
     private static final String TAG = "Utils";
 
-    public static List<Profile> loadProfiles(Context context) {
+    public static List<SwipeProfile> loadProfiles(Context context) {
         try {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            List<Profile> profileList = new ArrayList<>();
+            List<SwipeProfile> swipeProfileList = new ArrayList<>();
             //JSONArray array = new JSONArray(loadJSONFromAsset(context, "foods.json"));
 
             String jsonString = loadJSONFromAsset(context, "foods.json");
@@ -36,11 +36,11 @@ public class Utils {
             JSONArray array = obj.getJSONArray("food");
 
             for (int i = 0; i < array.length(); i++) {
-                    Profile profile = gson.fromJson(array.getString(i), Profile.class);
-                    profileList.add(profile);
+                    SwipeProfile swipeProfile = gson.fromJson(array.getString(i), SwipeProfile.class);
+                    swipeProfileList.add(swipeProfile);
 
             }
-            return profileList;
+            return swipeProfileList;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
