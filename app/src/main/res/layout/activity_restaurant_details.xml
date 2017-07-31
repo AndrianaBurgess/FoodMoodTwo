@@ -9,24 +9,24 @@
     <ImageView
         android:id="@+id/ivBackdrop"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="170dp"
         app:srcCompat="@android:color/transparent" />
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:text="Restaurant Name"
-        android:textAppearance="@android:style/TextAppearance.Material.Title" />
+        android:textAppearance="@android:style/TextAppearance.Material.Title"
+        android:layout_above="@+id/ratingBar"
+        android:layout_alignParentStart="true" />
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvName" />
+        android:layout_above="@+id/tvHours"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/tvReviews"
@@ -40,9 +40,9 @@
         android:id="@+id/tvDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:text="0.5 mi" />
+        android:text="0.5 mi"
+        android:layout_alignTop="@+id/tvName"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/tvCost"
@@ -56,19 +56,22 @@
         android:id="@+id/tvHours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/ratingBar"
-        android:text="Hours Today:" />
+        android:text="Hours Today:"
+        android:layout_alignBottom="@+id/ivBackdrop"
+        android:layout_alignParentStart="true" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tvHours">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ivBackdrop">
 
         <FrameLayout
             android:id="@+id/framelayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="200dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
 
         </FrameLayout>
 
@@ -76,19 +79,19 @@
             android:id="@+id/tvAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="777 Hamilton Ave, Menlo Park, CA 94025"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="46dp" />
+            android:layout_below="@+id/framelayout"
+            android:layout_weight="1"
+            android:text="777 Hamilton Ave, Menlo Park, CA 94025" />
 
         <Button
             android:id="@+id/btnOpenMaps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Directions"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/framelayout"
+            android:layout_marginTop="25dp"
+            android:text="Directions" />
 
     </RelativeLayout>
 

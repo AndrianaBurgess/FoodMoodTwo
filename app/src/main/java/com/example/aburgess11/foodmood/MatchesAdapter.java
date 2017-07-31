@@ -16,6 +16,7 @@ import com.example.aburgess11.foodmood.models.Match;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -29,6 +30,9 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHolder> {
 
+    private static final String clientId = "FJbrnaXwVmgGJTk1xd2jwA";
+    private static final String clientSecret = "fAwIdrHUUvrHpbMbyOp4gVASjtH0TvJzj56TGgrXeyg3q994Nb6HWRgFGNWXTQ7z";
+
     // list of matches
     ArrayList<Match> matches;
     // config needed for image urls
@@ -37,9 +41,11 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     Context context;
 
     // init with list
-    public MatchesAdapter(ArrayList<Match> matches) {
+    public MatchesAdapter(ArrayList<Match> matches) throws IOException {
 
         this.matches = matches;
+//        this.businesses = businesses;
+
     }
 
     public Config getConfig() {
@@ -69,6 +75,8 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
 //            if (position2 != RecyclerView.NO_POSITION) {
                 // get the match at the position, this won't work if the class is static
                 Match match = matches.get(position);
+//                TODO YELPED STUFF
+//                Business business = businesses.get(position);
                 // create intent for the new activity
                 Intent intent = new Intent(context, RestaurantDetailsActivity.class);
 //                // serialize the movie using parceler, use its short name as a key
@@ -87,13 +95,18 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, final int position) {
         // get the movie data at the specified position
         Match match = matches.get(position);
+//        Business business = businesses.get(position);
         //populate the view with the movie data
         holder.tvMatchName.setText(match.getName());
+//        holder.tvMatchName.setText(business.getName());
+
         holder.tvMatchDetails.setText(match.getLocation());
+//        holder.tvMatchDetails.setText(business.getText());
        // holder.tvPercentMatch.setText(match.getRank() + "%  •");
 
         // load backdrop
         String imageUrl = match.getImageUrl();
+//        String imageUrl = business.getImageUrl();
 
 
         // load the poster

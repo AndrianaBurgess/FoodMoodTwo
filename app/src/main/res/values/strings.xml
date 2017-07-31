@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">FoodMood</string>
 
+    //YELP
+    <string name="client_id">FJbrnaXwVmgGJTk1xd2jwA</string>
+    <string name="client_secret">fAwIdrHUUvrHpbMbyOp4gVASjtH0TvJzj56TGgrXeyg3q994Nb6HWRgFGNWXTQ7z</string>
+
     //MAPS
     <string name="api_key">AIzaSyCHfceufwTNTXPi0GUCXg2cuGmCjKImon8</string>
 
