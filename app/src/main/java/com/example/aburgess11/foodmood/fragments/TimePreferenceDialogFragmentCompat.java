@@ -1,4 +1,4 @@
-package com.example.aburgess11.foodmood;
+package com.example.aburgess11.foodmood.fragments;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.TimePicker;
+
+import com.example.aburgess11.foodmood.R;
+import com.example.aburgess11.foodmood.models.TimePreference;
 
 /**
  * The Dialog for the {@link TimePreference}.

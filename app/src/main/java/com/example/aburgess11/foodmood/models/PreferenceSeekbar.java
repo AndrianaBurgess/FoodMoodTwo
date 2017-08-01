@@ -1,9 +1,11 @@
-package com.example.aburgess11.foodmood;
+package com.example.aburgess11.foodmood.models;
 
 import android.content.Context;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
+
+import com.example.aburgess11.foodmood.R;
 
 /**
  * Created by snhoward on 7/24/17.

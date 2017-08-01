@@ -1,4 +1,4 @@
-package com.example.aburgess11.foodmood;
+package com.example.aburgess11.foodmood.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -70,5 +70,7 @@ public class SwipeProfile {
     public void setLocation(String location) {
         this.location = location;
     }
+
+
 }
 

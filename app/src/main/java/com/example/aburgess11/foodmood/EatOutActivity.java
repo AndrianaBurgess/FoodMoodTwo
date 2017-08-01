@@ -22,14 +22,20 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aburgess11.foodmood.adapters.MatchesAdapter;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.SwipeProfile;
 import com.facebook.Profile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
+import com.yelp.fusion.client.connection.YelpFusionApi;
+import com.yelp.fusion.client.connection.YelpFusionApiFactory;
+import com.yelp.fusion.client.models.Business;
+import com.yelp.fusion.client.models.SearchResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,6 +43,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
@@ -47,10 +58,7 @@ import static com.loopj.android.http.AsyncHttpClient.log;
 public class EatOutActivity extends AppCompatActivity {
     private static final int LOGIN = 1000;
     // constants
-    // the base URL for the API
-    public final static String API_BASE_URL = "https://api.themoviedb.org/3";
-    // the parameter name for the API key
-    public final static String API_KEY_PARAM = "api_key";
+
     // tag for logging from this activity
     public final static String TAG = "EatOutActivity";
 
@@ -66,6 +74,9 @@ public class EatOutActivity extends AppCompatActivity {
     public static MatchesAdapter adapter;
     // image config
     Config config;
+    //the client for Yelp
+    YelpClient yelpClient;
+    public static ArrayList<Business> businesses;
 
     // matches window items
     static AppBarLayout appBarLayout;
@@ -84,6 +95,11 @@ public class EatOutActivity extends AppCompatActivity {
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
     public static int swipeCount=0;
+    private final static String clientId = "FJbrnaXwVmgGJTk1xd2jwA";
+    private final static String clientSecret = "fAwIdrHUUvrHpbMbyOp4gVASjtH0TvJzj56TGgrXeyg3q994Nb6HWRgFGNWXTQ7z";
+
+    public EatOutActivity() throws IOException {
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -107,11 +123,42 @@ public class EatOutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // initialize the client
         client = new AsyncHttpClient();
+//        yelpClient = new YelpClient("2000","37.479733","-122.154078");
+
+        YelpFusionApiFactory apiFactory = new YelpFusionApiFactory();
+        YelpFusionApi yelpFusionApi = null;
+        try {
+            yelpFusionApi = apiFactory.createAPI(clientId, clientSecret);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Map<String, String> params = new HashMap<>();
+
+        String radius = "2000";
+        String latitude = "37.479733";
+        String longitude = "-122.154078";
+
+        // general params
+        params.put("radius", radius);
+        params.put("latitude", latitude);
+        params.put("longitude", longitude);
+
+        Call<SearchResponse> call = yelpFusionApi.getBusinessSearch(params);
+        Response<SearchResponse> response = null;
+        try {
+            response = call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SearchResponse searchResponse = response.body();
+        int totalNumberOfResult = searchResponse.getTotal();  // i.e. 3
+        businesses = searchResponse.getBusinesses();
         // init the list of matches
         matches = new ArrayList<>();
+        businesses = yelpClient.getBusinesses();
         // initialize the adapter -- movies array cannot be reinitialized after this point
         try {
-            adapter = new MatchesAdapter(matches);
+            adapter = new MatchesAdapter(businesses);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -213,7 +260,7 @@ public class EatOutActivity extends AppCompatActivity {
 
         // get the configuration on app creation
         //getConfiguration();
-        loadMatches(this.getApplicationContext(), matches);
+        loadMatches(this.getApplicationContext(), businesses);
 
 
 
@@ -281,6 +328,28 @@ public class EatOutActivity extends AppCompatActivity {
             }
         });
 
+        //TODO FIREBASE
+//        // Write a message to the database
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("message");
+//        myRef.setValue("Hello, World!");
+//
+//        // Read from the database
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                String value = dataSnapshot.getValue(String.class);
+//                Log.d(TAG, "Value is: " + value);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                // Failed to read value
+//                Log.w(TAG, "Failed to read value.", error.toException());
+//            }
+//        });
 
     }
 
@@ -301,7 +370,7 @@ public class EatOutActivity extends AppCompatActivity {
         }
     }
 
-    public static void loadMatches(Context context , ArrayList<Match> list) {
+    public static void loadMatches(Context context , ArrayList<Business> list) {
         try {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
@@ -311,9 +380,13 @@ public class EatOutActivity extends AppCompatActivity {
             JSONObject obj = new JSONObject(jsonString);
             JSONArray array = obj.getJSONArray("restaurants");
 
-            for (int i = 0; i < array.length(); i++) {
-                Match match = gson.fromJson(array.getString(i), Match.class);
-                list.add(match);
+            for (int i = 0; i < businesses.size(); i++) {
+//                Match match = gson.fromJson(array.getString(i), Match.class);
+//                list.add(match);
+//                adapter.notifyItemInserted(list.size() - 1);
+
+                Business business = gson.fromJson(array.getString(i), Business.class);
+                list.add(business);
                 adapter.notifyItemInserted(list.size() - 1);
 
             }

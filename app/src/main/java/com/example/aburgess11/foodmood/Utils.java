@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import com.example.aburgess11.foodmood.models.SwipeProfile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.yelp.fusion.client.models.Business;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,10 +37,14 @@ public class Utils {
             JSONObject obj = new JSONObject(jsonString);
             JSONArray array = obj.getJSONArray("food");
 
-            for (int i = 0; i < array.length(); i++) {
-                    SwipeProfile swipeProfile = gson.fromJson(array.getString(i), SwipeProfile.class);
-                    swipeProfileList.add(swipeProfile);
+            YelpClient yelpClient = new YelpClient("2000","37.479733","-122.154078");
+            ArrayList<Business> businesses = yelpClient.getBusinesses();
 
+            for (int i = 0; i < yelpClient.getTotalNumberOfResult(); i++) {
+                for(int j = 0; j < businesses.get(i).getPhotos().size(); j++) {
+                    SwipeProfile swipeProfile = gson.fromJson(businesses.get(i).getPhotos().get(j).toString(), SwipeProfile.class);
+                    swipeProfileList.add(swipeProfile);
+                }
             }
             return swipeProfileList;
         } catch (Exception e) {

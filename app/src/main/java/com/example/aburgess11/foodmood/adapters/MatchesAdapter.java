@@ -1,4 +1,4 @@
-package com.example.aburgess11.foodmood;
+package com.example.aburgess11.foodmood.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.aburgess11.foodmood.R;
+import com.example.aburgess11.foodmood.RestaurantDetailsActivity;
 import com.example.aburgess11.foodmood.models.Config;
-import com.example.aburgess11.foodmood.models.Match;
+import com.yelp.fusion.client.models.Business;
 
 import org.parceler.Parcels;
 
@@ -30,18 +32,15 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHolder> {
 
-    private static final String clientId = "FJbrnaXwVmgGJTk1xd2jwA";
-    private static final String clientSecret = "fAwIdrHUUvrHpbMbyOp4gVASjtH0TvJzj56TGgrXeyg3q994Nb6HWRgFGNWXTQ7z";
-
     // list of matches
-    ArrayList<Match> matches;
+    ArrayList<Business> matches;
     // config needed for image urls
     Config config;
     // context for rendering
     Context context;
 
     // init with list
-    public MatchesAdapter(ArrayList<Match> matches) throws IOException {
+    public MatchesAdapter(ArrayList<Business> matches) throws IOException {
 
         this.matches = matches;
 //        this.businesses = businesses;
@@ -74,7 +73,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
                 // make sure the position is valid, i.e. actually exists in the view
 //            if (position2 != RecyclerView.NO_POSITION) {
                 // get the match at the position, this won't work if the class is static
-                Match match = matches.get(position);
+                Business match = matches.get(position);
 //                TODO YELPED STUFF
 //                Business business = businesses.get(position);
                 // create intent for the new activity
@@ -94,13 +93,13 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         // get the movie data at the specified position
-        Match match = matches.get(position);
+        Business match = matches.get(position);
 //        Business business = businesses.get(position);
         //populate the view with the movie data
         holder.tvMatchName.setText(match.getName());
 //        holder.tvMatchName.setText(business.getName());
 
-        holder.tvMatchDetails.setText(match.getLocation());
+        holder.tvMatchDetails.setText(match.getLocation().getAddress1());
 //        holder.tvMatchDetails.setText(business.getText());
        // holder.tvPercentMatch.setText(match.getRank() + "%  •");
 

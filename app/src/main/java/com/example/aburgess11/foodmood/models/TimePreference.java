@@ -1,9 +1,11 @@
-package com.example.aburgess11.foodmood;
+package com.example.aburgess11.foodmood.models;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
+
+import com.example.aburgess11.foodmood.R;
 
 /**
  * A Preference to select a specific Time with a {@link android.widget.TimePicker}.

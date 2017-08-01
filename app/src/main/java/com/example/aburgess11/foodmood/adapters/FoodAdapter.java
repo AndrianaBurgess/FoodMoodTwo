@@ -1,4 +1,4 @@
-package com.example.aburgess11.foodmood;
+package com.example.aburgess11.foodmood.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.aburgess11.foodmood.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

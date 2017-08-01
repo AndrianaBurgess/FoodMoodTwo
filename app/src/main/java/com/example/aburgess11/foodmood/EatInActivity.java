@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.example.aburgess11.foodmood.adapters.FoodAdapter;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

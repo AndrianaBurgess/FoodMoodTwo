@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.SwipeProfile;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
