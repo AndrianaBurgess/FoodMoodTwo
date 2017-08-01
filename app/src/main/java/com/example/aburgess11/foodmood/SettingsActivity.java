@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 
 public class SettingsActivity extends AppCompatActivity implements OnCompleteListener<Void> {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = EatOutActivity.class.getSimpleName();
     public static final String ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION";
 
 
@@ -97,6 +97,8 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
                 overridePendingTransition(R.anim.enter_from_right_to_left, R.anim.exit_from_left_to_right);
             }
         });
+
+        settings_login_button.setToolTipMode(LoginButton.ToolTipMode.NEVER_DISPLAY);
 
         // create onClick for Login Button
         settings_login_button.setOnClickListener(new View.OnClickListener() {

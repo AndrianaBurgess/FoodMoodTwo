@@ -47,11 +47,7 @@ import static com.loopj.android.http.AsyncHttpClient.log;
 public class EatOutActivity extends AppCompatActivity {
     private static final int LOGIN = 1000;
     // constants
-    // the base URL for the API
-    public final static String API_BASE_URL = "https://api.themoviedb.org/3";
-    // the parameter name for the API key
-    public final static String API_KEY_PARAM = "api_key";
-    // tag for logging from this activity
+
     public final static String TAG = "EatOutActivity";
 
     // instance fields
@@ -147,6 +143,7 @@ public class EatOutActivity extends AppCompatActivity {
         groupToggle = (Switch) findViewById(R.id.groupToggle);
         groupToggle.setShowText(true);
         messagesBtn = (ImageButton) findViewById(R.id.messagesBtn);
+        
 
 
         // offsetChangedListener detects when there is a change in vertical offset (i.e. change from
@@ -253,7 +250,19 @@ public class EatOutActivity extends AppCompatActivity {
                 }
             });
 
-        // TODO: groupToggle login on checked is being created here BUT NOTHING IS WORKING
+
+
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EatOutActivity.this, SettingsActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.enter_from_left_to_right, R.anim.exit_from_right_to_left);
+            }
+        });
+
+
         groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -272,19 +281,6 @@ public class EatOutActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-        profileBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(EatOutActivity.this, SettingsActivity.class);
-                startActivity(i);
-                overridePendingTransition(R.anim.enter_from_left_to_right, R.anim.exit_from_right_to_left);
-            }
-        });
-
-
     }
 
     @Override
@@ -304,51 +300,11 @@ public class EatOutActivity extends AppCompatActivity {
         }
     }
 
-    // get the list of currently playing movies from the API
-//    private void getNowPlaying() {
-//        // create the url
-////        String url = API_BASE_URL + "/movie/now_playing";
-////        // set the request parameters
-////        RequestParams params = new RequestParams();
-////        params.put(API_KEY_PARAM, "0bed49764dcc012c08bb5b9dc334e476"); // API key, always required
-////        // execute a GET request expecting a JSON object response
-////        client.get(url, params, new JsonHttpResponseHandler() {
-////            @Override
-////            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-////                //super.onSuccess(statusCode, headers, response);
-////                try {
-////                    JSONArray results = response.getJSONArray("results");
-////                    // iterate through result set and create Movie objects
-////                    for (int i = 0; i < results.length(); i++) {
-////                       Match match = new Match(results.getJSONObject(i));
-////                        matches.add(match);
-////                        // notify adapter that a row was added
-////                        adapter.notifyItemInserted(matches.size() - 1);
-////                    }
-////                    Log.i(TAG, String.format("Loaded %s matches", results.length()));
-////                } catch (JSONException e) {
-////                    e.printStackTrace();
-////                }
-////            }
-////
-////            @Override
-////            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-////                logError("Failed to get data from now playing endpoint", throwable, true);
-////            }
-////        });
-//
-//
-//
-//
-//
-//
-//    }
 
     public static void loadMatches(Context context , ArrayList<Match> list) {
         try {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            //JSONArray array = new JSONArray(loadJSONFromAsset(context, "foods.json"));
 
             String jsonString = loadJSONFromAsset(context, "restaurants.json");
             JSONObject obj = new JSONObject(jsonString);
@@ -365,6 +321,8 @@ public class EatOutActivity extends AppCompatActivity {
             return ;
         }
     }
+
+
 
 
     private static String loadJSONFromAsset(Context context, String jsonFileName) {
@@ -387,39 +345,7 @@ public class EatOutActivity extends AppCompatActivity {
     }
 
 
-    // get the configuration free from the API
-//    private void getConfiguration() {
-//        // create the url
-//        String url = API_BASE_URL + "/configuration";
-//        // set the request parameters
-//        RequestParams params = new RequestParams();
-//        params.put(API_KEY_PARAM, "0bed49764dcc012c08bb5b9dc334e476"); // API key, always required
-//        // execute a GET request expecting a JSON object response
-//        client.get(url, params, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                // get the image base url
-//                try {
-//                    config = new Config(response);
-//                    Log.i(TAG,
-//                            String.format("Loaded configuration with imageBaseUrl %s and posterSize %s",
-//                                    config.getImageBaseUrl(),
-//                                    config.getBackdropSize()));
-//                    // pass config to adapter
-//                    adapter.setConfig(config);
-//                    // get the now playing movie list
-//                    getNowPlaying();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                logError("Failed getting configuration", throwable, true);
-//            }
-//        });
-//    }
+
 
     // handle errors, log and alert user
     private void logError(String message, Throwable error, boolean alertUser) {
@@ -438,6 +364,4 @@ public class EatOutActivity extends AppCompatActivity {
         Intent i = new Intent(EatOutActivity.this, EatOutActivity.class);
         startActivity(i);
     }
-
-    // TODO: going from profile to eat out resets the eat out matches list
 }

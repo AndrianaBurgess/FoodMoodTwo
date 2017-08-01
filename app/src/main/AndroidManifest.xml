@@ -38,13 +38,7 @@
             android:name=".LoginActivity"
             android:label="Login with Facebook"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".EatInActivity" />
 
         <meta-data
@@ -56,7 +50,14 @@
 
         <activity
             android:name=".EatOutActivity"
-            android:label="Matches Detail" />
+            android:label="Matches Detail">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+
         <activity android:name=".SettingsActivity" />
         <activity android:name=".RestaurantDetailsActivity" />
 
