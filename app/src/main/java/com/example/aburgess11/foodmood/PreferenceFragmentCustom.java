@@ -5,6 +5,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+import com.example.aburgess11.foodmood.fragments.TimePreferenceDialogFragmentCompat;
+
 /**
  * The Preference Fragment which shows the Preferences as a List and handles the Dialogs for the
  * Preferences.

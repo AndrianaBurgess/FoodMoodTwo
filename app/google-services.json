@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "54125843606-qs5nuvr668fk1e2cu1av6k49cu49ps2f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aburgess11.foodmood",
+            "certificate_hash": "8a4255014313d77d27db5d5e94d53184c69d4640"
+          }
+        },
+        {
           "client_id": "54125843606-v5pkj06js2o8g52crv03n894oe0843oo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
