@@ -246,7 +246,6 @@ public class EatOutActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     mSwipeView.doSwipe(true);
                     Log.d("EVENT", "swipeCount");
-                    // reOrder();
                 }
             });
 
@@ -346,7 +345,6 @@ public class EatOutActivity extends AppCompatActivity {
 
 
 
-
     // handle errors, log and alert user
     private void logError(String message, Throwable error, boolean alertUser) {
         // always log the error
@@ -361,7 +359,12 @@ public class EatOutActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        Intent i = new Intent(EatOutActivity.this, EatOutActivity.class);
-        startActivity(i);
+
+        EatOutActivity.isAppBarExpanded = false;
+        appBarLayout.setExpanded(true);
+        appBarLayout.setFitsSystemWindows(false);
+
+//        Intent i = new Intent(EatOutActivity.this, EatOutActivity.class);
+//        startActivity(i);
     }
 }
