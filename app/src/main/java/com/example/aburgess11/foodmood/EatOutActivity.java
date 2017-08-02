@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -80,6 +82,9 @@ public class EatOutActivity extends AppCompatActivity {
     ImageButton messagesBtn;
     TextView tvGroupSwipingBar;
 
+    // load current profile
+    private com.facebook.Profile fbProfile = Profile.getCurrentProfile();
+    private AccessTokenTracker accessTokenTracker;
 
     private SwipePlaceHolderView mySwipeView;
     private SwipePlaceHolderView groupSwipeView;
@@ -120,7 +125,6 @@ public class EatOutActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         // resolve the recycler view and connect a layout manager
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
@@ -231,6 +235,9 @@ public class EatOutActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
+
+
+        // init the myMatches and groupMatches cards
         mySwipeView.getBuilder()
                 .setDisplayViewCount(3)
                 .setSwipeDecor(new SwipeDecor()
@@ -238,6 +245,10 @@ public class EatOutActivity extends AppCompatActivity {
                         .setRelativeScale(0.01f)
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
+        for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
+            mySwipeView.addView(new TinderCard(mContext, profile, mySwipeView, myMatches));
+        }
 
         groupSwipeView.getBuilder()
                 .setDisplayViewCount(3)
@@ -247,45 +258,42 @@ public class EatOutActivity extends AppCompatActivity {
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
 
-
-        for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
-            mySwipeView.addView(new TinderCard(mContext, profile, mySwipeView, myMatches));
-        }
-
         for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
             groupSwipeView.addView(new TinderCard(mContext, profile, groupSwipeView, groupMatches));
         }
 
-            findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!groupToggle.isChecked()) {
-                        mySwipeView.doSwipe(false);
-                        Log.d("EVENT",  "swipeCount" );
-                    } else {
-                        groupSwipeView.doSwipe(false);
-                        Log.d("EVENT",  "swipeCount" );
-                    }
+
+
+        // listeners for swiping and pressing the accept / reject buttons
+        findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!groupToggle.isChecked()) {
+                    mySwipeView.doSwipe(false);
+                    Log.d("EVENT",  "swipeCount" );
+                } else {
+                    groupSwipeView.doSwipe(false);
+                    Log.d("EVENT",  "swipeCount" );
                 }
-            });
+            }
+        });
 
-            findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!groupToggle.isChecked()) {
-                        mySwipeView.doSwipe(true);
-                        Log.d("EVENT",  "swipeCount" );
-                    } else {
-                        groupSwipeView.doSwipe(true);
-                        Log.d("EVENT",  "swipeCount" );
-                    }
+        findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!groupToggle.isChecked()) {
+                    mySwipeView.doSwipe(true);
+                    Log.d("EVENT",  "swipeCount" );
+                } else {
+                    groupSwipeView.doSwipe(true);
+                    Log.d("EVENT",  "swipeCount" );
                 }
-            });
+            }
+        });
 
 
-
+        // sets listener for profile button to go to settings page
         profileBtn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(EatOutActivity.this, SettingsActivity.class);
@@ -295,14 +303,30 @@ public class EatOutActivity extends AppCompatActivity {
         });
 
 
-        groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        // tracks if there are changes to the login / logout status
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken2) {
+                Log.d(TAG, "onCurrentAccessTokenChanged()");
+                if (accessToken == null) {
+                    Log.d(TAG, "user logged in");
+                } else if (accessToken2 == null) {
+                    Log.d(TAG, "user logged out");
+                    if (groupToggle.isChecked()) {
+                        // if the user logged out from the settings page, make sure that the groupToggle
+                        // toggles back to individual swiping mode
+                        groupToggle.setChecked(false);
+                    }
+                }
+            }
+        };
 
+        // tracks if there are any changes to the groupToggle status
+        groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                com.facebook.Profile profile = Profile.getCurrentProfile();
-
-                if (profile == null && isChecked) {
+                if (fbProfile == null && isChecked) {
                     Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
                     Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
                     EatOutActivity.this.startActivityForResult(i, LOGIN);
@@ -311,7 +335,7 @@ public class EatOutActivity extends AppCompatActivity {
                     Log.d("LOGIN STATUS:", "user was already logged in");
                     tvGroupSwipingBar.setVisibility(TextView.VISIBLE);
                     reloadMatches(getApplicationContext(), groupMatches);
-                    Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + fbProfile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
                 } else if (!isChecked) {
                     reloadMatches(getApplicationContext(), myMatches);
                     tvGroupSwipingBar.setVisibility(TextView.GONE);
@@ -325,12 +349,14 @@ public class EatOutActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LOGIN) {
             if (resultCode != RESULT_OK) {
+                // login failed
                 groupToggle.setChecked(false);
                 return;
             }
 
             boolean isDismissed = data.getBooleanExtra("isDismissed", false);
             if (isDismissed) {
+                // login canceled
                 groupToggle.setChecked(false);
                 return;
             }
@@ -338,7 +364,6 @@ public class EatOutActivity extends AppCompatActivity {
             else if (resultCode == RESULT_OK && !isDismissed){
                 groupToggle.setChecked(true);
                 reloadMatches(this.getApplicationContext(), groupMatches);
-
             }
         }
     }
@@ -383,7 +408,7 @@ public class EatOutActivity extends AppCompatActivity {
 
     private static String loadJSONFromAsset(Context context, String jsonFileName) {
         String json = null;
-        InputStream is=null;
+        InputStream is = null;
         try {
             AssetManager manager = context.getAssets();
             Log.d(TAG,"path "+jsonFileName);

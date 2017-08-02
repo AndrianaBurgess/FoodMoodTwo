@@ -37,6 +37,7 @@ import butterknife.ButterKnife;
 
 public class SettingsActivity extends AppCompatActivity implements OnCompleteListener<Void> {
 
+    private static final int LOGIN = 1000;
     private static final String TAG = EatOutActivity.class.getSimpleName();
     public static final String ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION";
 
@@ -106,7 +107,7 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
-                startActivity(i);
+                SettingsActivity.this.startActivityForResult(i, LOGIN);
             }
         });
 
