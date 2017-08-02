@@ -5,6 +5,7 @@
 
     <SeekBar
         android:id="@+id/seekbar"
+        android:key="pleaseWork"
         android:layout_width="170dp"
         android:layout_height="match_parent" />
 

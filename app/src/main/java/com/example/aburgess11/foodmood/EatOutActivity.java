@@ -25,18 +25,26 @@ import android.widget.Toast;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
 import com.facebook.Profile;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
@@ -85,6 +93,18 @@ public class EatOutActivity extends AppCompatActivity {
     private Context mContext;
     public static int swipeCount=0;
 
+    /*
+    ***************YELP****************
+     * ********************************
+      * *******************************
+     */
+
+    public static final String YELP_URL = "https://api.yelp.com/oauth2/token";
+    public static final String CLIENT_ID = "FJbrnaXwVmgGJTk1xd2jwA";
+    public static final String CLIENT_SECRET = "fAwIdrHUUvrHpbMbyOp4gVASjtH0TvJzj56TGgrXeyg3q994Nb6HWRgFGNWXTQ7z";
+    public static final String ACCESS_TOKEN = "e6_8STuqCEF8pTolcFSMfZ77G1NZoCkPwDpj1_FYRY7zBr1QJKcnqVM03lrjVZug2sk54KocecFRpxPjpnGukGUJJR_HgkiUsTXU_-N6HhlC9EVPjpJRgp5bNKR7WXYx";
+    public JSONArray businesses;
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt("onSaveInstanceState", 1);
@@ -105,6 +125,8 @@ public class EatOutActivity extends AppCompatActivity {
             Log.d("Sean", "onCreate: " + savedInstanceState.getInt("saved"));
         }
         setContentView(R.layout.activity_main);
+        //TODO YELP
+        getYelpToken();
         // initialize the client
         client = new AsyncHttpClient();
         // init the list of matches
@@ -215,8 +237,6 @@ public class EatOutActivity extends AppCompatActivity {
         //getConfiguration();
         loadMatches(this.getApplicationContext(), matches);
 
-
-
             mSwipeView = (SwipePlaceHolderView)findViewById(R.id.swipeView);
             mContext = getApplicationContext();
 
@@ -281,8 +301,138 @@ public class EatOutActivity extends AppCompatActivity {
             }
         });
 
+//        createSwipeArray(businesses);
 
     }
+
+//    private void createSwipeArray(JSONArray businesses) {
+//        ArrayList<String> photos = new ArrayList<>();
+//        for(int i = 0; i < businesses.length(); i++) {
+//            try {
+//                JSONObject restaurant = businesses.getJSONObject(i);
+////                String name = restaurant.get("name").toString();
+//                String imageUrl = restaurant.get("image_url").toString();
+//                photos.add(imageUrl);
+////                String[] location = restaurant.get("location.display_address");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
+    private void getYelpToken() {
+        Log.d("Sean", "get Yelp token");
+
+
+        final OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("grant_type", "client_credentials")
+                .addFormDataPart("client_id", CLIENT_ID)
+                .addFormDataPart("client_secret", CLIENT_SECRET)
+                .build();
+
+        Request request = new Request.Builder().url(YELP_URL).post(requestBody).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("Sean", "onResponse: " + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String jsonData = response.body().string();
+                    JSONObject body = new JSONObject(jsonData);
+                    String token = body.getString("access_token");
+//                    String tokenType = body.getString("token_type");
+
+                    Log.d("Sean", "onResponse: " + jsonData);
+                    Log.d("Sean", "Token: " + token);
+
+                    HttpUrl url = new HttpUrl.Builder()
+                            .scheme("https")
+                            .host("api.yelp.com")
+                            .addPathSegment("v3")
+                            .addPathSegment("businesses")
+                            .addPathSegment("search")
+                            .addQueryParameter("term", "food")
+                            .addQueryParameter("radius", "2000")
+                            .addQueryParameter("latitude", "37.479775")
+                            .addQueryParameter("longitude", "-122.154089")
+                            .build();
+
+                    Request getRequest = new Request.Builder()
+                            .url(url)
+                            .header("Authorization","Bearer " + token)
+                            .build();
+
+                    Log.d("Sean", "url: " + url.toString());
+
+                    client.newCall(getRequest).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.d("Sean", "onFailure: " + e.toString());
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            try {
+                                Log.d("Sean", "onResponse: " + response.toString());
+                                String jsonData = response.body().string();
+                                JSONObject body = new JSONObject(jsonData);
+                                businesses = body.getJSONArray("businesses");
+                                Log.d("Sean", "body: " + body.toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+//            Request getRequest = new Request.Builder()
+//                    .url("https://api.yelp.com/v3/businesses/search")
+//                    .header("bearer", ACCESS_TOKEN)
+//                    .build();
+
+//            client.newCall(getRequest).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(Call call, IOException e) {
+//                    Log.d("Sean", "onFailure: " + e.toString());
+//                }
+//
+//                @Override
+//                public void onResponse(Call call, Response response) throws IOException {
+//                    try {
+//                        Log.d("Sean", "onResponse: " + response.toString());
+//                        String jsonData = response.body().string();
+//                        JSONObject body = new JSONObject(jsonData);
+//                        JSONArray businesses = body.getJSONArray("businesses");
+//                        Log.d("Sean", "onResponse: " + businesses.toString());
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+    }
+//        try {
+//
+//            URL obj = new URL(YELP_URL);
+//            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+//            con.setRequestMethod("POST");
+//            con.setRequestProperty("grant_type", "client_credentials");
+//            con.setRequestProperty("client_id", CLIENT_ID);
+//            con.setRequestProperty("client_secret", CLIENT_SECRET);
+//            con.setDoOutput(true);
+//            int responseCode = con.getResponseCode();
+//            System.out.println("Response Code: " + responseCode);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -301,18 +451,21 @@ public class EatOutActivity extends AppCompatActivity {
         }
     }
 
-    public static void loadMatches(Context context , ArrayList<Match> list) {
+    public void loadMatches(Context context , ArrayList<Match> list) {
         try {
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.create();
-            //JSONArray array = new JSONArray(loadJSONFromAsset(context, "foods.json"));
+//            GsonBuilder builder = new GsonBuilder();
+//            Gson gson = builder.create();
+//
+//            String jsonString = loadJSONFromAsset(context, "restaurants.json");
+//            JSONObject obj = new JSONObject(jsonString);
+//            JSONArray array = obj.getJSONArray("restaurants");
 
-            String jsonString = loadJSONFromAsset(context, "restaurants.json");
-            JSONObject obj = new JSONObject(jsonString);
-            JSONArray array = obj.getJSONArray("restaurants");
 
-            for (int i = 0; i < array.length(); i++) {
-                Match match = gson.fromJson(array.getString(i), Match.class);
+            for (int i = 0; i < businesses.length(); i++) {
+//                Match match = gson.fromJson(array.getString(i), Match.class);
+                businesses.get(i);
+                Match match = new Match();
+                //match.setImageUrl();
                 list.add(match);
                 adapter.notifyItemInserted(list.size() - 1);
 

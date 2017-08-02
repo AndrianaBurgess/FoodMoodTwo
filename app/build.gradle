@@ -7,6 +7,7 @@ dependencies {
     })
 
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -23,12 +24,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:11.0.1'
     compile 'com.google.android.gms:play-services-location:11.0.1'
     compile 'com.google.android.gms:play-services-maps:11.0.1'
-
     compile 'com.mindorks:placeholderview:0.2.7'
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.parceler:parceler-api:1.1.6'
     compile 'com.google.firebase:firebase-auth:11.0.1'
     compile 'io.github.ranga543:yelp-fusion-client:0.1.2'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     annotationProcessor 'org.parceler:parceler:1.1.6'

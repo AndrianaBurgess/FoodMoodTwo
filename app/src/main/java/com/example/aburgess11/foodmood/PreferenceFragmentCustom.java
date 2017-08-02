@@ -1,9 +1,12 @@
 package com.example.aburgess11.foodmood;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * The Preference Fragment which shows the Preferences as a List and handles the Dialogs for the
@@ -13,6 +16,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
  */
 public class PreferenceFragmentCustom extends PreferenceFragmentCompat {
 
+    private int mZoomValue;
     /**
      * {@inheritDoc}
      */
@@ -20,6 +24,16 @@ public class PreferenceFragmentCustom extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle bundle, String s) {
         // Load the Preferences from the XML file
         addPreferencesFromResource(R.xml.app_preferences);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//                mZoomValue = sharedPreferences.getInt(key, -1);
+                Log.d("Sean", "key: " + key);
+                Log.d("Sean", "onSharedPreferenceChanged: " + mZoomValue);
+            }
+        });
     }
 
     /**
