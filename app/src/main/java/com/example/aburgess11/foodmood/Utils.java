@@ -40,6 +40,7 @@ public class Utils {
                     swipeProfileList.add(swipeProfile);
 
             }
+
             return swipeProfileList;
         } catch (Exception e) {
             e.printStackTrace();

@@ -70,7 +70,6 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".YelpClient" />
     </application>
 
 </manifest>

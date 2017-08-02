@@ -23,9 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aburgess11.foodmood.models.Config;
+import com.example.aburgess11.foodmood.models.FoodItem;
 import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.Restaurant;
 import com.facebook.Profile;
-import com.loopj.android.http.AsyncHttpClient;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 
@@ -62,8 +65,10 @@ public class EatOutActivity extends AppCompatActivity {
     // tag for logging from this activity
     public final static String TAG = "EatOutActivity";
 
+    Context context;
+
     // instance fields
-    AsyncHttpClient client;
+//    AsyncHttpClient client;
     // the list of currently playing movies
     public static ArrayList<Match> matches;
     // the recycler view
@@ -91,19 +96,18 @@ public class EatOutActivity extends AppCompatActivity {
 
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
-    public static int swipeCount=0;
+    public static int swipeCount = 0;
 
-    /*
-    ***************YELP****************
-     * ********************************
-      * *******************************
-     */
+    /* ***************YELP**************** */
 
     public static final String YELP_URL = "https://api.yelp.com/oauth2/token";
     public static final String CLIENT_ID = "FJbrnaXwVmgGJTk1xd2jwA";
     public static final String CLIENT_SECRET = "fAwIdrHUUvrHpbMbyOp4gVASjtH0TvJzj56TGgrXeyg3q994Nb6HWRgFGNWXTQ7z";
     public static final String ACCESS_TOKEN = "e6_8STuqCEF8pTolcFSMfZ77G1NZoCkPwDpj1_FYRY7zBr1QJKcnqVM03lrjVZug2sk54KocecFRpxPjpnGukGUJJR_HgkiUsTXU_-N6HhlC9EVPjpJRgp5bNKR7WXYx";
     public JSONArray businesses;
+    public ArrayList<FoodItem> tinderPhotos;
+    public ArrayList<Restaurant> restaurants;
+    public OkHttpClient client;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -119,21 +123,31 @@ public class EatOutActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             Log.d("Sean", "onCreate: " + savedInstanceState.getInt("saved"));
         }
         setContentView(R.layout.activity_main);
-        //TODO YELP
+
+        context = this.getApplicationContext();
+
+        // initialize lists
+        businesses = new JSONArray();
+        tinderPhotos = new ArrayList<>();
+        restaurants = new ArrayList<>();
+
+        //using a third party application to handle talking to API's
+        client = new OkHttpClient();
         getYelpToken();
         // initialize the client
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
+
         // init the list of matches
         matches = new ArrayList<>();
         // initialize the adapter -- movies array cannot be reinitialized after this point
         try {
-            adapter = new MatchesAdapter(matches);
+            adapter = new MatchesAdapter(restaurants);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -189,7 +203,7 @@ public class EatOutActivity extends AppCompatActivity {
                     matchesHeader.setTextColor(Color.GRAY);
                     upArrow.setVisibility(ImageView.GONE);
 
-                }else {
+                } else {
                     // if the appbar goes back to collapsed, scroll to top, change the state of isAppExpanded,
                     // the content and layout of matchesHeader, and reinstate the upArrow
                     isAppBarExpanded = false;
@@ -232,77 +246,156 @@ public class EatOutActivity extends AppCompatActivity {
             }
         });
 
-
-        // get the configuration on app creation
-        //getConfiguration();
-        loadMatches(this.getApplicationContext(), matches);
-
-            mSwipeView = (SwipePlaceHolderView)findViewById(R.id.swipeView);
-            mContext = getApplicationContext();
-
-            mSwipeView.getBuilder()
-                    .setDisplayViewCount(3)
-                    .setSwipeDecor(new SwipeDecor()
-                            .setPaddingTop(20)
-                            .setRelativeScale(0.01f)
-                            .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
-                            .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
-
-
-            for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
-                mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
-            }
-
-            findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSwipeView.doSwipe(false);
-                    Log.d("EVENT",  "swipeCount" );
-
-                }
-            });
-
-            findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSwipeView.doSwipe(true);
-                    Log.d("EVENT", "swipeCount");
-                }
-            });
-
-        // TODO: groupToggle login on checked is being created here BUT NOTHING IS WORKING
-        groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                com.facebook.Profile profile = Profile.getCurrentProfile();
-
-                if (profile == null && isChecked) {
-                    Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
-                    Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
-                    EatOutActivity.this.startActivityForResult(i, LOGIN);
-
-                } else if (isChecked){
-                    Log.d("LOGIN STATUS:", "user was already logged in");
-                    Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
-        profileBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(EatOutActivity.this, SettingsActivity.class);
-                startActivity(i);
-                overridePendingTransition(R.anim.enter_from_left_to_right, R.anim.exit_from_right_to_left);
-            }
-        });
-
 //        createSwipeArray(businesses);
 
+    }
+
+    private void doPostNetworkStuff() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // get the configuration on app creation
+                //getConfiguration();
+//        loadMatches(this.getApplicationContext(), matches);
+                loadMatches2(context, businesses);
+
+                mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
+                mContext = getApplicationContext();
+
+                mSwipeView.getBuilder()
+                        .setDisplayViewCount(3)
+                        .setSwipeDecor(new SwipeDecor()
+                                .setPaddingTop(20)
+                                .setRelativeScale(0.01f)
+                                .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
+                                .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
+
+//            for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
+//                mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
+//            }
+
+                for (FoodItem foodItem : tinderPhotos) {
+                    mSwipeView.addView(new TinderCard(mContext, foodItem, mSwipeView));
+                }
+
+                findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mSwipeView.doSwipe(false);
+                        Log.d("EVENT", "swipeCount");
+
+                    }
+                });
+
+                findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mSwipeView.doSwipe(true);
+                        Log.d("EVENT", "swipeCount");
+                    }
+                });
+
+                // TODO: groupToggle login on checked is being created here BUT NOTHING IS WORKING
+                groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                        com.facebook.Profile profile = Profile.getCurrentProfile();
+
+                        if (profile == null && isChecked) {
+                            Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
+                            Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
+                            EatOutActivity.this.startActivityForResult(i, LOGIN);
+
+                        } else if (isChecked) {
+                            Log.d("LOGIN STATUS:", "user was already logged in");
+                            Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+                profileBtn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(EatOutActivity.this, SettingsActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(R.anim.enter_from_left_to_right, R.anim.exit_from_right_to_left);
+                    }
+                });
+            }
+        });
+    }
+
+    private void populateTinderPhotos() {
+        //for each nearby restaurant, we want to get its photos and other information to display
+        Log.d("Sean", "businesses.length: " + businesses.length());
+        final int[] businessesLoaded = {0};
+        for (int i = 0; i < businesses.length(); i++) {
+            try {
+                JSONObject restaurant = businesses.getJSONObject(i);
+                Log.d("Sean", "restaurant: " + restaurant.get("name"));
+                final String businessId = restaurant.get("id").toString();
+
+//                HttpUrl businessUrl = new HttpUrl.Builder()
+//                        .scheme("https")
+//                        .host("api.yelp.com")
+//                        .addPathSegment("v3")
+//                        .addPathSegment("businesses")
+//                        .addPathSegment(businessId)
+//                        .build();
+
+                Request businessRequest = new Request.Builder()
+                        .url("https://api.yelp.com/v3/businesses/" + businessId)
+                        .header("Authorization", "Bearer " + ACCESS_TOKEN)
+                        .build();
+
+                client.newCall(businessRequest).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.d("Sean", "onFailure: " + e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            Log.d("Sean", "onResponse: " + response.toString());
+                            String jsonData = response.body().string();
+                            JSONObject body = new JSONObject(jsonData);
+                            JSONArray photos = body.getJSONArray("photos");
+
+                            //iterating through every photo that is associated with the restaurant
+                            for (int j = 0; j < photos.length(); j++) {
+                                // Creating a new food item that will be swiped on connected to its restaurant by id
+                                FoodItem foodItem = new FoodItem();
+
+                                //getting the imageUrl for the food item from the array of photos within the restaurant object
+                                String imageUrl = photos.get(j).toString();
+                                foodItem.setImageUrl(imageUrl);
+
+                                //setting the restaurant ID for the food item to be the same as the restaurant it is associated with
+                                foodItem.setRestaurantId(businessId);
+
+                                //adding the food item to the array of food items from all the nearby restaurants
+                                tinderPhotos.add(foodItem);
+                            }
+                            businessesLoaded[0]++;
+                            if (businessesLoaded[0] == businesses.length()) {
+                                doPostNetworkStuff();
+                            }
+                            // Log.d("Sean", "tinderPhotos: " + tinderPhotos.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 //    private void createSwipeArray(JSONArray businesses) {
@@ -320,12 +413,10 @@ public class EatOutActivity extends AppCompatActivity {
 //        }
 //    }
 
-    private void getYelpToken() {
+    public void getYelpToken() {
         Log.d("Sean", "get Yelp token");
 
-
-        final OkHttpClient client = new OkHttpClient();
-
+        //getting an access token to access the Yelp API
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("grant_type", "client_credentials")
@@ -334,6 +425,8 @@ public class EatOutActivity extends AppCompatActivity {
                 .build();
 
         Request request = new Request.Builder().url(YELP_URL).post(requestBody).build();
+
+        //using the access token to get an array of nearby restaurants using the Yelp API
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -358,14 +451,16 @@ public class EatOutActivity extends AppCompatActivity {
                             .addPathSegment("businesses")
                             .addPathSegment("search")
                             .addQueryParameter("term", "food")
+                            //radius is in meters
                             .addQueryParameter("radius", "2000")
+                            //TODO hard coded to Facebook for the time being
                             .addQueryParameter("latitude", "37.479775")
                             .addQueryParameter("longitude", "-122.154089")
                             .build();
 
                     Request getRequest = new Request.Builder()
                             .url(url)
-                            .header("Authorization","Bearer " + token)
+                            .header("Authorization", "Bearer " + token)
                             .build();
 
                     Log.d("Sean", "url: " + url.toString());
@@ -382,13 +477,16 @@ public class EatOutActivity extends AppCompatActivity {
                                 Log.d("Sean", "onResponse: " + response.toString());
                                 String jsonData = response.body().string();
                                 JSONObject body = new JSONObject(jsonData);
+                                //businesses is the JSON array of all of the nearby businesses based off of the given radius and location
                                 businesses = body.getJSONArray("businesses");
                                 Log.d("Sean", "body: " + body.toString());
+                                populateTinderPhotos();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
                     });
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -451,38 +549,50 @@ public class EatOutActivity extends AppCompatActivity {
         }
     }
 
-    public void loadMatches(Context context , ArrayList<Match> list) {
+    public void loadMatches(Context context, ArrayList<Match> list) {
         try {
-//            GsonBuilder builder = new GsonBuilder();
-//            Gson gson = builder.create();
-//
-//            String jsonString = loadJSONFromAsset(context, "restaurants.json");
-//            JSONObject obj = new JSONObject(jsonString);
-//            JSONArray array = obj.getJSONArray("restaurants");
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
 
+            String jsonString = loadJSONFromAsset(context, "restaurants.json");
+            JSONObject obj = new JSONObject(jsonString);
+            JSONArray array = obj.getJSONArray("restaurants");
+            JSONArray array2 = businesses;
 
-            for (int i = 0; i < businesses.length(); i++) {
-//                Match match = gson.fromJson(array.getString(i), Match.class);
-                businesses.get(i);
-                Match match = new Match();
-                //match.setImageUrl();
+            for (int i = 0; i < array.length(); i++) {
+                Match match = gson.fromJson(array.getString(i), Match.class);
+//                businesses.get(i);
+//                Match match = new Match();
+//                match.setImageUrl();
                 list.add(match);
                 adapter.notifyItemInserted(list.size() - 1);
-
             }
+
         } catch (Exception e) {
             e.printStackTrace();
-            return ;
+            return;
+        }
+    }
+
+    public void loadMatches2(Context context, JSONArray businesses) {
+        for (int i = 0; i < businesses.length(); i++) {
+            try {
+                Object business = businesses.get(0);
+                Restaurant restaurant = new Restaurant((JSONObject) business);
+                adapter.notifyItemInserted(businesses.length() - 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     private static String loadJSONFromAsset(Context context, String jsonFileName) {
         String json = null;
-        InputStream is=null;
+        InputStream is = null;
         try {
             AssetManager manager = context.getAssets();
-            Log.d(TAG,"path "+jsonFileName);
+            Log.d(TAG, "path " + jsonFileName);
             is = manager.open(jsonFileName);
             int size = is.available();
             byte[] buffer = new byte[size];
@@ -497,7 +607,6 @@ public class EatOutActivity extends AppCompatActivity {
     }
 
 
-
     // handle errors, log and alert user
     private void logError(String message, Throwable error, boolean alertUser) {
         // always log the error
@@ -510,8 +619,7 @@ public class EatOutActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
 
         EatOutActivity.isAppBarExpanded = false;
         appBarLayout.setExpanded(true);

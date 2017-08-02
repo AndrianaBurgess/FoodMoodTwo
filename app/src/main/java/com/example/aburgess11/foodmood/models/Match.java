@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.yelp.fusion.client.models.Business;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +14,7 @@ import org.parceler.Parcel;
  */
 
 @Parcel // annotation indicates class is Parcelable
-public class Match extends Business implements Comparable<Match>{
+public class Match implements Comparable<Match>{
 
 
     @SerializedName("name")
@@ -26,9 +25,9 @@ public class Match extends Business implements Comparable<Match>{
     @Expose
     String imageUrl;
 
-//    @SerializedName("location")
-//    @Expose
-//    String location;
+    @SerializedName("location")
+    @Expose
+    String location;
 
 
     public int rank;
@@ -40,17 +39,15 @@ public class Match extends Business implements Comparable<Match>{
     public Match(JSONObject object) throws JSONException {
         name = object.getString("name");
         imageUrl = object.getString("imageUrl");
-        //location = object.getString("location");
+        location = object.getString("location");
     }
 
-    @Override
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -61,13 +58,11 @@ public class Match extends Business implements Comparable<Match>{
         return imageUrl;
     }
 
-//    public String getLocation() {
-//        return location;
-//    }
-
+    public String getLocation() { return location; }
 
     @Override
     public int compareTo(@NonNull Match match) {
         return Integer.compare(match.rank, this.rank);
     }
+
 }

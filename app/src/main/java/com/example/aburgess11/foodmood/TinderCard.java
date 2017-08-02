@@ -7,7 +7,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.aburgess11.foodmood.models.FoodItem;
 import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.Restaurant;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
@@ -19,6 +21,7 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
 import java.util.Collections;
+import java.util.Map;
 
 import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
 import static com.example.aburgess11.foodmood.EatOutActivity.matches;
@@ -43,20 +46,29 @@ public class TinderCard {
     private TextView locationNameTxt;
 
     private SwipeProfile mSwipeProfile;
+    private FoodItem mFoodItem;
     private Context mContext;
     private SwipePlaceHolderView mSwipeView;
+    private Map<String, Restaurant> map;
 
-    public TinderCard(Context context, SwipeProfile swipeProfile, SwipePlaceHolderView swipeView) {
+//    public TinderCard(Context context, SwipeProfile swipeProfile, SwipePlaceHolderView swipeView) {
+//        mContext = context;
+//        mSwipeProfile = swipeProfile;
+//        mSwipeView = swipeView;
+//    }
+
+    public TinderCard(Context context, FoodItem foodItem, SwipePlaceHolderView swipeView) {
         mContext = context;
-        mSwipeProfile = swipeProfile;
+        mFoodItem = foodItem;
         mSwipeView = swipeView;
     }
 
     @Resolve
     private void onResolved(){
-        Glide.with(mContext).load(mSwipeProfile.getImageUrl()).into(profileImageView);
-        nameAgeTxt.setText(mSwipeProfile.getName() + ", " + mSwipeProfile.getTimeofday());
-        locationNameTxt.setText(mSwipeProfile.getLocation());
+//        Glide.with(mContext).load(mSwipeProfile.getImageUrl()).into(profileImageView);
+        Glide.with(mContext).load(mFoodItem.getImageUrl()).into(profileImageView);
+//        nameAgeTxt.setText(mSwipeProfile.getName() + ", " + mSwipeProfile.getTimeofday());
+//        locationNameTxt.setText(mSwipeProfile.getLocation());
     }
 
     @SwipeOut
@@ -72,9 +84,17 @@ public class TinderCard {
 
     @SwipeIn
     public void onSwipeIn(){
+        if(map.containsKey(this.mFoodItem.getRestaurantId())) {
+            Restaurant restaurant = map.get(this.mFoodItem.getRestaurantId());
+            restaurant.setCounter(restaurant.getCounter() + 1);
+            map.put(restaurant.getRestaurauntId(), restaurant);
+        } else {
+            Restaurant restaurant = new Restaurant(this.mFoodItem.getRestaurantId(), 1);
+            map.put(restaurant.getRestaurauntId(), restaurant);
+        }
         popUpList();
        // Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
-        findRestAndIncr(this.mSwipeProfile.getLocation());
+//        findRestAndIncr(this.mSwipeProfile.getLocation());
         Collections.sort(matches);
         EatOutActivity.adapter.notifyDataSetChanged();
         Log.d("EVENT", "onSwipedIn" + swipeCount);
@@ -90,7 +110,6 @@ public class TinderCard {
 
             }
         }
-
     }
 
     //Pops up the matches every

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.Restaurant;
 
 import org.parceler.Parcels;
 
@@ -30,23 +31,18 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHolder> {
 
-    private static final String clientId = "FJbrnaXwVmgGJTk1xd2jwA";
-    private static final String clientSecret = "fAwIdrHUUvrHpbMbyOp4gVASjtH0TvJzj56TGgrXeyg3q994Nb6HWRgFGNWXTQ7z";
-
     // list of matches
     ArrayList<Match> matches;
     // config needed for image urls
     Config config;
     // context for rendering
     Context context;
+    ArrayList<Restaurant> restaurants;
 
     // init with list
-    public MatchesAdapter(ArrayList<Match> matches) throws IOException {
+//    public MatchesAdapter(ArrayList<Match> matches) throws IOException { this.matches = matches; }
 
-        this.matches = matches;
-//        this.businesses = businesses;
-
-    }
+    public MatchesAdapter(ArrayList<Restaurant> restaurants) throws IOException { this.restaurants = restaurants; }
 
     public Config getConfig() {
         return config;
@@ -75,12 +71,12 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
 //            if (position2 != RecyclerView.NO_POSITION) {
                 // get the match at the position, this won't work if the class is static
                 Match match = matches.get(position);
-//                TODO YELPED STUFF
-//                Business business = businesses.get(position);
+                Restaurant restaurant = restaurants.get(position);
                 // create intent for the new activity
                 Intent intent = new Intent(context, RestaurantDetailsActivity.class);
 //                // serialize the movie using parceler, use its short name as a key
-                intent.putExtra("data", Parcels.wrap(match));
+//                intent.putExtra("data", Parcels.wrap(match));
+                intent.putExtra("data", Parcels.wrap(restaurant));
                 // show the activity
                 context.startActivity(intent);
 //            }
@@ -94,19 +90,23 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         // get the movie data at the specified position
-        Match match = matches.get(position);
+//        Match match = matches.get(position);
+        Restaurant restaurant = restaurants.get(position);
 //        Business business = businesses.get(position);
         //populate the view with the movie data
-        holder.tvMatchName.setText(match.getName());
+//        holder.tvMatchName.setText(match.getName());
+        holder.tvMatchName.setText(restaurant.getName());
 //        holder.tvMatchName.setText(business.getName());
 
-        holder.tvMatchDetails.setText(match.getLocation());
+//        holder.tvMatchDetails.setText(match.getLocation());
 //        holder.tvMatchDetails.setText(business.getText());
+        holder.tvMatchDetails.setText(restaurant.getAddress());
        // holder.tvPercentMatch.setText(match.getRank() + "%  •");
 
         // load backdrop
-        String imageUrl = match.getImageUrl();
+//        String imageUrl = match.getImageUrl();
 //        String imageUrl = business.getImageUrl();
+        String imageUrl = restaurant.getImageUrl();
 
 
         // load the poster
@@ -122,8 +122,10 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     // returns the total number of items in the list
     @Override
     public int getItemCount() {
-        return matches.size();
+//        return matches.size();
+        return restaurants.size();
     }
+
 
     // create the viewholder as an inner class
     // class *cannot* be static
