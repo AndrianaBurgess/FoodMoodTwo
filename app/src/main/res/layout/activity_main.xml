@@ -35,68 +35,70 @@
     <com.mindorks.placeholderview.SwipePlaceHolderView
         android:id="@+id/mySwipeView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingTop="25dp" />
 
     <com.mindorks.placeholderview.SwipePlaceHolderView
         android:id="@+id/groupSwipeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="25dp"
         android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    <LinearLayout
-        android:id="@+id/upperToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
-        android:gravity="center">
 
-        <ImageButton
-            android:id="@+id/profileBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tint="@android:color/holo_red_dark"
-            app:srcCompat="@drawable/ic_profile" />
+        <LinearLayout
+            android:id="@+id/upperToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.34" />
+            <ImageButton
+                android:id="@+id/profileBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@android:color/holo_red_dark"
+                app:srcCompat="@drawable/ic_profile" />
 
-        <Switch
-            android:id="@+id/groupToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:showText="true"
-            android:switchMinWidth="20dp"
-            android:switchTextAppearance="@style/SwitchTextAppearance"
-            android:textOff="Just Me"
-            android:textOn="Group"
-            android:thumb="@drawable/switchthumb"
-            android:thumbTextPadding="10dp"
-            android:track="@drawable/switchtrack" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.34" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.43" />
+            <Switch
+                android:id="@+id/groupToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:showText="true"
+                android:switchMinWidth="20dp"
+                android:switchTextAppearance="@style/SwitchTextAppearance"
+                android:textOff="Just Me"
+                android:textOn="Group"
+                android:thumb="@drawable/switchthumb"
+                android:thumbTextPadding="10dp"
+                android:track="@drawable/switchtrack" />
 
-        <ImageButton
-            android:id="@+id/messagesBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_message" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.43" />
 
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/messagesBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_message" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvGroupSwipingBar"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_below="@id/upperToolbar"
-            android:layout_weight="1"
             android:background="@color/colorSecondary"
             android:gravity="fill_vertical"
             android:text="GroupSwiping Session Text >"
