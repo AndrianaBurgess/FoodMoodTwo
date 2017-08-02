@@ -21,6 +21,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by liangelali on 7/24/17.
@@ -34,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     Switch groupToggle;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 data.putExtra("isDismissed", false);
                 setResult(RESULT_OK, data);
                 handleFacebookAccessToken(loginResult.getAccessToken());
+                FirebaseUser fbUser = mAuth.getCurrentUser();
                 finish();
             }
 

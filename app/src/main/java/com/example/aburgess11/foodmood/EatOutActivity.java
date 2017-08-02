@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
 import com.facebook.Profile;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -83,6 +85,8 @@ public class EatOutActivity extends AppCompatActivity {
     private Context mContext;
     public static int swipeCount=0;
 
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt("onSaveInstanceState", 1);
@@ -113,6 +117,11 @@ public class EatOutActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        DatabaseReference fbGroups = database.getReference("Groups");
+        DatabaseReference fbUsers = database.getReference("User");
+
 
         // resolve the recycler view and connect a layout manager
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
