@@ -52,8 +52,10 @@ public class EatOutActivity extends AppCompatActivity {
 
     // instance fields
     AsyncHttpClient client;
-    // the list of currently playing movies
-    public static ArrayList<Match> matches;
+    // the list of individual matches
+    private ArrayList<Match> myMatches;
+    // the list of group matches
+    private ArrayList<Match> groupMatches;
     // the recycler view
     RecyclerView rvMatches;
     // the nested scroll view
@@ -76,10 +78,12 @@ public class EatOutActivity extends AppCompatActivity {
     ImageButton profileBtn;
     Switch groupToggle;
     ImageButton messagesBtn;
+    TextView tvGroupSwipingBar;
 
 
+    private SwipePlaceHolderView mySwipeView;
+    private SwipePlaceHolderView groupSwipeView;
 
-    private SwipePlaceHolderView mSwipeView;
     private Context mContext;
     public static int swipeCount=0;
 
@@ -96,6 +100,7 @@ public class EatOutActivity extends AppCompatActivity {
         Log.d("Sean", "onRestoreInstanceState: " + savedInstanceState.getInt("saved"));
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,14 +110,17 @@ public class EatOutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // initialize the client
         client = new AsyncHttpClient();
-        // init the list of matches
-        matches = new ArrayList<>();
-        // initialize the adapter -- movies array cannot be reinitialized after this point
+        // init the list of individual matches
+        myMatches = new ArrayList<>();
+        // init the list of group matches
+        groupMatches = new ArrayList<>();
+        // initialize the adapter -- matches array cannot be reinitialized after this point
         try {
-            adapter = new MatchesAdapter(matches);
+            adapter = new MatchesAdapter(myMatches);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         // resolve the recycler view and connect a layout manager
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
@@ -143,7 +151,8 @@ public class EatOutActivity extends AppCompatActivity {
         groupToggle = (Switch) findViewById(R.id.groupToggle);
         groupToggle.setShowText(true);
         messagesBtn = (ImageButton) findViewById(R.id.messagesBtn);
-        
+        tvGroupSwipingBar = (TextView) findViewById(R.id.tvGroupSwipingBar);
+
 
 
         // offsetChangedListener detects when there is a change in vertical offset (i.e. change from
@@ -212,40 +221,64 @@ public class EatOutActivity extends AppCompatActivity {
 
         // get the configuration on app creation
         //getConfiguration();
-        loadMatches(this.getApplicationContext(), matches);
+
+        loadMatches(this.getApplicationContext(), myMatches);
+        loadMatches(this.getApplicationContext(), groupMatches);
 
 
+        mySwipeView = (SwipePlaceHolderView)findViewById(R.id.mySwipeView);
+        groupSwipeView = (SwipePlaceHolderView)findViewById(R.id.groupSwipeView);
 
-            mSwipeView = (SwipePlaceHolderView)findViewById(R.id.swipeView);
-            mContext = getApplicationContext();
+        mContext = getApplicationContext();
 
-            mSwipeView.getBuilder()
-                    .setDisplayViewCount(3)
-                    .setSwipeDecor(new SwipeDecor()
-                            .setPaddingTop(20)
-                            .setRelativeScale(0.01f)
-                            .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
-                            .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+        mySwipeView.getBuilder()
+                .setDisplayViewCount(3)
+                .setSwipeDecor(new SwipeDecor()
+                        .setPaddingTop(20)
+                        .setRelativeScale(0.01f)
+                        .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
+                        .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
+        groupSwipeView.getBuilder()
+                .setDisplayViewCount(3)
+                .setSwipeDecor(new SwipeDecor()
+                        .setPaddingTop(20)
+                        .setRelativeScale(0.01f)
+                        .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
+                        .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
 
 
-            for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
-                mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
-            }
+        for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
+            mySwipeView.addView(new TinderCard(mContext, profile, mySwipeView, myMatches));
+        }
+
+        for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
+            groupSwipeView.addView(new TinderCard(mContext, profile, groupSwipeView, groupMatches));
+        }
 
             findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mSwipeView.doSwipe(false);
-                    Log.d("EVENT",  "swipeCount" );
-
+                    if(!groupToggle.isChecked()) {
+                        mySwipeView.doSwipe(false);
+                        Log.d("EVENT",  "swipeCount" );
+                    } else {
+                        groupSwipeView.doSwipe(false);
+                        Log.d("EVENT",  "swipeCount" );
+                    }
                 }
             });
 
             findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mSwipeView.doSwipe(true);
-                    Log.d("EVENT", "swipeCount");
+                    if(!groupToggle.isChecked()) {
+                        mySwipeView.doSwipe(true);
+                        Log.d("EVENT",  "swipeCount" );
+                    } else {
+                        groupSwipeView.doSwipe(true);
+                        Log.d("EVENT",  "swipeCount" );
+                    }
                 }
             });
 
@@ -276,7 +309,12 @@ public class EatOutActivity extends AppCompatActivity {
 
                 } else if (isChecked){
                     Log.d("LOGIN STATUS:", "user was already logged in");
+                    tvGroupSwipingBar.setVisibility(TextView.VISIBLE);
+                    reloadMatches(getApplicationContext(), groupMatches);
                     Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
+                } else if (!isChecked) {
+                    reloadMatches(getApplicationContext(), myMatches);
+                    tvGroupSwipingBar.setVisibility(TextView.GONE);
                 }
             }
         });
@@ -296,9 +334,28 @@ public class EatOutActivity extends AppCompatActivity {
                 groupToggle.setChecked(false);
                 return;
             }
+
+            else if (resultCode == RESULT_OK && !isDismissed){
+                groupToggle.setChecked(true);
+                reloadMatches(this.getApplicationContext(), groupMatches);
+
+            }
         }
     }
 
+    public void reloadMatches(Context context, ArrayList<Match> matches) {
+
+        // set the adapter for the new matches
+        adapter.reloadMatches(matches);
+
+        if (mySwipeView.getVisibility() == View.VISIBLE) {
+            mySwipeView.setVisibility(View.GONE);
+            groupSwipeView.setVisibility(View.VISIBLE);
+        } else {
+            mySwipeView.setVisibility(View.VISIBLE);
+            groupSwipeView.setVisibility(View.GONE);
+        }
+    }
 
     public static void loadMatches(Context context , ArrayList<Match> list) {
         try {
@@ -359,12 +416,8 @@ public class EatOutActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-
         EatOutActivity.isAppBarExpanded = false;
         appBarLayout.setExpanded(true);
         appBarLayout.setFitsSystemWindows(false);
-
-//        Intent i = new Intent(EatOutActivity.this, EatOutActivity.class);
-//        startActivity(i);
     }
 }

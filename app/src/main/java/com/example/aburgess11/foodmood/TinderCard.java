@@ -18,10 +18,10 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
-import static com.example.aburgess11.foodmood.EatOutActivity.matches;
 import static com.example.aburgess11.foodmood.EatOutActivity.swipeCount;
 
 
@@ -45,11 +45,13 @@ public class TinderCard {
     private SwipeProfile mSwipeProfile;
     private Context mContext;
     private SwipePlaceHolderView mSwipeView;
+    private ArrayList<Match> mMatches;
 
-    public TinderCard(Context context, SwipeProfile swipeProfile, SwipePlaceHolderView swipeView) {
+    public TinderCard(Context context, SwipeProfile swipeProfile, SwipePlaceHolderView swipeView, ArrayList<Match> matches) {
         mContext = context;
         mSwipeProfile = swipeProfile;
         mSwipeView = swipeView;
+        mMatches = matches;
     }
 
     @Resolve
@@ -75,7 +77,7 @@ public class TinderCard {
         popUpList();
        // Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
         findRestAndIncr(this.mSwipeProfile.getLocation());
-        Collections.sort(matches);
+        Collections.sort(mMatches);
         EatOutActivity.adapter.notifyDataSetChanged();
         Log.d("EVENT", "onSwipedIn" + swipeCount);
     }
@@ -83,7 +85,7 @@ public class TinderCard {
 
     public void findRestAndIncr(String name){
 
-        for(Match m: matches){
+        for(Match m: mMatches){
             if ( m.getName().equals(name)){
                 m.rank++;
                 Toast.makeText(mContext,  m.rank + "" , Toast.LENGTH_SHORT ).show();

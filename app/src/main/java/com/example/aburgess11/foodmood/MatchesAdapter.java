@@ -49,6 +49,11 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
 
     }
 
+    public void reloadMatches(ArrayList<Match> matches) {
+        this.matches = matches;
+        notifyDataSetChanged();
+    }
+
     public Config getConfig() {
         return config;
     }

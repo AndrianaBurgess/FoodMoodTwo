@@ -3,6 +3,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,12 +31,23 @@
             android:layout_marginLeft="30dp"
             android:background="@drawable/ic_heart" />
     </LinearLayout>
+
     <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/swipeView"
+        android:id="@+id/mySwipeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <com.mindorks.placeholderview.SwipePlaceHolderView
+        android:id="@+id/groupSwipeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
     <LinearLayout
+        android:id="@+id/upperToolbar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
@@ -57,9 +69,8 @@
             android:id="@+id/groupToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:switchMinWidth="20dp"
-            android:checked="false"
             android:showText="true"
+            android:switchMinWidth="20dp"
             android:switchTextAppearance="@style/SwitchTextAppearance"
             android:textOff="Just Me"
             android:textOn="Group"
@@ -77,7 +88,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_message" />
+
     </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvGroupSwipingBar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/upperToolbar"
+            android:layout_weight="1"
+            android:background="@color/colorSecondary"
+            android:gravity="fill_vertical"
+            android:text="GroupSwiping Session Text >"
+            android:textAlignment="center"
+            android:textColor="@color/cardview_light_background"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
     <include layout="@layout/activity_matches_list" />
+
 </FrameLayout>
