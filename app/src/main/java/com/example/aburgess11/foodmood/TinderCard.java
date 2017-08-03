@@ -21,10 +21,10 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
 import java.util.Collections;
-import java.util.Map;
 
 import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
 import static com.example.aburgess11.foodmood.EatOutActivity.matches;
+import static com.example.aburgess11.foodmood.EatOutActivity.restaurantMap;
 import static com.example.aburgess11.foodmood.EatOutActivity.swipeCount;
 
 
@@ -49,7 +49,6 @@ public class TinderCard {
     private FoodItem mFoodItem;
     private Context mContext;
     private SwipePlaceHolderView mSwipeView;
-    private Map<String, Restaurant> map;
 
 //    public TinderCard(Context context, SwipeProfile swipeProfile, SwipePlaceHolderView swipeView) {
 //        mContext = context;
@@ -84,13 +83,13 @@ public class TinderCard {
 
     @SwipeIn
     public void onSwipeIn(){
-        if(map.containsKey(this.mFoodItem.getRestaurantId())) {
-            Restaurant restaurant = map.get(this.mFoodItem.getRestaurantId());
+        if(restaurantMap.containsKey(this.mFoodItem.getRestaurantId())) {
+            Restaurant restaurant = restaurantMap.get(this.mFoodItem.getRestaurantId());
             restaurant.setCounter(restaurant.getCounter() + 1);
-            map.put(restaurant.getRestaurauntId(), restaurant);
+            restaurantMap.put(restaurant.getRestaurauntId(), restaurant);
         } else {
             Restaurant restaurant = new Restaurant(this.mFoodItem.getRestaurantId(), 1);
-            map.put(restaurant.getRestaurauntId(), restaurant);
+            restaurantMap.put(restaurant.getRestaurauntId(), restaurant);
         }
         popUpList();
        // Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();

@@ -19,6 +19,7 @@ import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,11 +39,12 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     // context for rendering
     Context context;
     ArrayList<Restaurant> restaurants;
+    Map<String, Restaurant> restaurantMap;
 
     // init with list
 //    public MatchesAdapter(ArrayList<Match> matches) throws IOException { this.matches = matches; }
 
-    public MatchesAdapter(ArrayList<Restaurant> restaurants) throws IOException { this.restaurants = restaurants; }
+    public MatchesAdapter(Map<String, Restaurant> restaurantMap) throws IOException { this.restaurantMap = restaurantMap; }
 
     public Config getConfig() {
         return config;
@@ -55,6 +57,13 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     // creates and inflates a new view
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        for (Map.Entry<String, Restaurant> entry : restaurantMap.entrySet()) {
+            Restaurant restaurant = entry.getValue();
+            restaurants.add(restaurant);
+        }
+
+
         // get the context and create the inflater
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -70,7 +79,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
                 // make sure the position is valid, i.e. actually exists in the view
 //            if (position2 != RecyclerView.NO_POSITION) {
                 // get the match at the position, this won't work if the class is static
-                Match match = matches.get(position);
+//                Match match = matches.get(position);
                 Restaurant restaurant = restaurants.get(position);
                 // create intent for the new activity
                 Intent intent = new Intent(context, RestaurantDetailsActivity.class);

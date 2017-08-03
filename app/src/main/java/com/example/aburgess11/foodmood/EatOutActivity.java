@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -107,6 +108,7 @@ public class EatOutActivity extends AppCompatActivity {
     public JSONArray businesses;
     public ArrayList<FoodItem> tinderPhotos;
     public ArrayList<Restaurant> restaurants;
+    public static Map<String, Restaurant> restaurantMap;
     public OkHttpClient client;
 
     @Override
@@ -148,7 +150,7 @@ public class EatOutActivity extends AppCompatActivity {
         matches = new ArrayList<>();
         // initialize the adapter -- movies array cannot be reinitialized after this point
         try {
-            adapter = new MatchesAdapter(restaurants);
+            adapter = new MatchesAdapter(restaurantMap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -258,7 +260,7 @@ public class EatOutActivity extends AppCompatActivity {
                 // get the configuration on app creation
                 //getConfiguration();
 //        loadMatches(this.getApplicationContext(), matches);
-                loadMatches2(context, businesses);
+                loadMatches2(context, restaurantMap);
 
                 mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
                 mContext = getApplicationContext();
@@ -575,16 +577,14 @@ public class EatOutActivity extends AppCompatActivity {
         }
     }
 
-    public void loadMatches2(Context context, JSONArray businesses) {
-        for (int i = 0; i < businesses.length(); i++) {
-            try {
-                Object business = businesses.get(0);
-                Restaurant restaurant = new Restaurant((JSONObject) business);
-                adapter.notifyItemInserted(businesses.length() - 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+    public void loadMatches2(Context context, Map<String, Restaurant> restaurantMap) {
+
+        for(String restaurantId : restaurantMap.keySet()) {
+            Restaurant restaurant = restaurantMap.get(restaurantId);
+            restaurants.add(restaurant);
+            adapter.notifyItemInserted(restaurants.size() - 1);
         }
+
     }
 
 
