@@ -22,6 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Arrays;
+
 /**
  * Created by liangelali on 7/24/17.
  */
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setToolTipMode(LoginButton.ToolTipMode.NEVER_DISPLAY);
 
-        loginButton.setReadPermissions("email");
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -61,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 data.putExtra("isDismissed", false);
                 setResult(RESULT_OK, data);
                 handleFacebookAccessToken(loginResult.getAccessToken());
+
                 finish();
             }
 
