@@ -140,6 +140,7 @@ public class EatOutActivity extends AppCompatActivity {
         //using a third party application to handle talking to API's
         client = new OkHttpClient();
         getYelpToken();
+
         // initialize the client
 //        client = new AsyncHttpClient();
 
