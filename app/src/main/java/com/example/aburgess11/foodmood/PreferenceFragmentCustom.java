@@ -44,12 +44,6 @@ public class PreferenceFragmentCustom extends PreferenceFragmentCompat {
 
         // Try if the preference is one of our custom Preferences
         DialogFragment dialogFragment = null;
-        if (preference instanceof TimePreference) {
-            // Create a new instance of TimePreferenceDialogFragment with the key of the related
-            // Preference
-            dialogFragment = TimePreferenceDialogFragmentCompat.newInstance(preference.getKey());
-        }
-
 
         if (dialogFragment != null) {
             // The dialog was created (it was one of our custom Preferences), show the dialog for it
