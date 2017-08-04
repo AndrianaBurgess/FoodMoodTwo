@@ -63,9 +63,9 @@ public class EatOutActivity extends AppCompatActivity {
     Context context;
 
     // instance fields
+    @BindView(R.id.appbar) static AppBarLayout appBarLayout;
     @BindView(R.id.rvMatches) RecyclerView rvMatches;
     @BindView(R.id.nestedScrollView) NestedScrollView nestedScrollView;
-    @BindView(R.id.appbar) AppBarLayout appBarLayout;
     @BindView(R.id.profileBtn) ImageButton profileBtn;
     @BindView(R.id.groupToggle) Switch groupToggle;
     @BindView(R.id.tvMatchesHeader) TextView matchesHeader;

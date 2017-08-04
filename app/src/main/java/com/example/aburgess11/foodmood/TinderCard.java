@@ -122,7 +122,7 @@ public class TinderCard {
 
         // after 10 swipes, automatically pop up the matches page
         if (swipeCount == 10){
-            EatOutActivity.loadMatches2(mContext, restaurantMap);
+            EatOutActivity.loadMatches(mContext, restaurantMap);
             EatOutActivity.isAppBarExpanded = true;
             appBarLayout.setExpanded(false);
             appBarLayout.setFitsSystemWindows(true);
