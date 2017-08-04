@@ -82,7 +82,7 @@ public class TinderCard {
     }
 
     @SwipeIn
-    public void onSwipeIn(){
+    private void onSwipeIn() {
         if(restaurantMap.containsKey(this.mFoodItem.getRestaurantId())) {
             Restaurant restaurant = restaurantMap.get(this.mFoodItem.getRestaurantId());
             restaurant.setCounter(restaurant.getCounter() + 1);
@@ -92,7 +92,7 @@ public class TinderCard {
             restaurantMap.put(restaurant.getRestaurauntId(), restaurant);
         }
         popUpList();
-       // Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
+        // Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
 //        findRestAndIncr(this.mSwipeProfile.getLocation());
         Collections.sort(matches);
         EatOutActivity.adapter.notifyDataSetChanged();
@@ -118,7 +118,7 @@ public class TinderCard {
 
         // after 10 swipes, automatically pop up the matches page
         if (swipeCount == 10){
-
+            EatOutActivity.loadMatches2(mContext, restaurantMap);
             EatOutActivity.isAppBarExpanded = true;
             appBarLayout.setExpanded(false);
             appBarLayout.setFitsSystemWindows(true);

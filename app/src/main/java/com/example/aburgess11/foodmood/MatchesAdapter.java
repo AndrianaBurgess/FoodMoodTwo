@@ -38,7 +38,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     Config config;
     // context for rendering
     Context context;
-    ArrayList<Restaurant> restaurants;
+    public ArrayList<Restaurant> restaurants;
     Map<String, Restaurant> restaurantMap;
 
     // init with list
@@ -57,18 +57,18 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     // creates and inflates a new view
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        restaurants = new ArrayList<>();
+        // get the context and create the inflater
+        context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        // create the view using the item_movie layout
+        View matchView = inflater.inflate(R.layout.item_match, parent, false);
 
         for (Map.Entry<String, Restaurant> entry : restaurantMap.entrySet()) {
             Restaurant restaurant = entry.getValue();
             restaurants.add(restaurant);
         }
 
-
-        // get the context and create the inflater
-        context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        // create the view using the item_movie layout
-        View matchView = inflater.inflate(R.layout.item_match, parent, false);
         // return a new ViewHolder
         final ViewHolder viewHolder = new ViewHolder(matchView);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +132,11 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     @Override
     public int getItemCount() {
 //        return matches.size();
-        return restaurants.size();
+        if(restaurants == null) {
+            return 0;
+        } else {
+            return restaurants.size();
+        }
     }
 
 

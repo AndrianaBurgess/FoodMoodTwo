@@ -27,6 +27,8 @@ import com.example.aburgess11.foodmood.models.FoodItem;
 import com.example.aburgess11.foodmood.models.Match;
 import com.example.aburgess11.foodmood.models.Restaurant;
 import com.facebook.Profile;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mindorks.placeholderview.SwipeDecor;
@@ -39,6 +41,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -107,7 +110,7 @@ public class EatOutActivity extends AppCompatActivity {
     public static final String ACCESS_TOKEN = "e6_8STuqCEF8pTolcFSMfZ77G1NZoCkPwDpj1_FYRY7zBr1QJKcnqVM03lrjVZug2sk54KocecFRpxPjpnGukGUJJR_HgkiUsTXU_-N6HhlC9EVPjpJRgp5bNKR7WXYx";
     public JSONArray businesses;
     public ArrayList<FoodItem> tinderPhotos;
-    public ArrayList<Restaurant> restaurants;
+    public static ArrayList<Restaurant> restaurants;
     public static Map<String, Restaurant> restaurantMap;
     public OkHttpClient client;
 
@@ -138,6 +141,7 @@ public class EatOutActivity extends AppCompatActivity {
         businesses = new JSONArray();
         tinderPhotos = new ArrayList<>();
         restaurants = new ArrayList<>();
+        restaurantMap = new HashMap<>();
 
         //using a third party application to handle talking to API's
         client = new OkHttpClient();
@@ -260,7 +264,7 @@ public class EatOutActivity extends AppCompatActivity {
                 // get the configuration on app creation
                 //getConfiguration();
 //        loadMatches(this.getApplicationContext(), matches);
-                loadMatches2(context, restaurantMap);
+//                loadMatches2(context, restaurantMap);
 
                 mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
                 mContext = getApplicationContext();
@@ -277,6 +281,17 @@ public class EatOutActivity extends AppCompatActivity {
 //            for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
 //                mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
 //            }
+
+                for(int i = 0; i < tinderPhotos.size(); i++) {
+                    // Write a message to the database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("Food Items");
+
+                    myRef.child("" + i).child("restaurant").setValue(tinderPhotos.get(i).getRestaurantId());
+                    myRef.child("" + i).child("image_url").setValue(tinderPhotos.get(i).getImageUrl());
+                }
+
+
 
                 for (FoodItem foodItem : tinderPhotos) {
                     mSwipeView.addView(new TinderCard(mContext, foodItem, mSwipeView));
@@ -343,6 +358,14 @@ public class EatOutActivity extends AppCompatActivity {
                 Log.d("Sean", "restaurant: " + restaurant.get("name"));
                 final String businessId = restaurant.get("id").toString();
 
+
+                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DatabaseReference myRef = database.getReference("Restaurants");
+
+                Map<String, Object> map = new HashMap<>();
+                    map.put(businessId, restaurant.toString());
+                myRef.updateChildren(map);
+
 //                HttpUrl businessUrl = new HttpUrl.Builder()
 //                        .scheme("https")
 //                        .host("api.yelp.com")
@@ -370,6 +393,26 @@ public class EatOutActivity extends AppCompatActivity {
                             JSONObject body = new JSONObject(jsonData);
                             JSONArray photos = body.getJSONArray("photos");
 
+                            DatabaseReference restaurantRef = myRef.child(businessId);
+
+                            restaurantRef.child("counter").setValue("0");
+                            restaurantRef.child("id").setValue(businessId);
+                            restaurantRef.child("name").setValue(body.getString("name"));
+                            restaurantRef.child("image_url").setValue(body.getString("image_url"));
+                            restaurantRef.child("rating").setValue(body.getString("rating"));
+                            restaurantRef.child("review_count").setValue(body.getString("review_count"));
+                            restaurantRef.child("phone").setValue(body.getString("phone"));
+
+                            Map<String, Object> coordinatesMap = new HashMap<>();
+                            JSONObject coordinates = body.getJSONObject("coordinates");
+                            coordinatesMap.put("latitude", coordinates.get("latitude").toString());
+                            coordinatesMap.put("longitude", coordinates.get("longitude").toString());
+                            restaurantRef.child("coordinates").updateChildren(coordinatesMap);
+
+
+                            Map<String, Object> photosMap = new HashMap<>();
+                            restaurantRef.child("photos");
+
                             //iterating through every photo that is associated with the restaurant
                             for (int j = 0; j < photos.length(); j++) {
                                 // Creating a new food item that will be swiped on connected to its restaurant by id
@@ -384,7 +427,9 @@ public class EatOutActivity extends AppCompatActivity {
 
                                 //adding the food item to the array of food items from all the nearby restaurants
                                 tinderPhotos.add(foodItem);
+                                photosMap.put("" + j, imageUrl);
                             }
+                            restaurantRef.child("photos").updateChildren(photosMap);
                             businessesLoaded[0]++;
                             if (businessesLoaded[0] == businesses.length()) {
                                 doPostNetworkStuff();
@@ -455,7 +500,7 @@ public class EatOutActivity extends AppCompatActivity {
                             .addPathSegment("search")
                             .addQueryParameter("term", "food")
                             //radius is in meters
-                            .addQueryParameter("radius", "2000")
+                            .addQueryParameter("radius", "25000")
                             //TODO hard coded to Facebook for the time being
                             .addQueryParameter("latitude", "37.479775")
                             .addQueryParameter("longitude", "-122.154089")
@@ -577,14 +622,13 @@ public class EatOutActivity extends AppCompatActivity {
         }
     }
 
-    public void loadMatches2(Context context, Map<String, Restaurant> restaurantMap) {
+    public static void loadMatches2(Context context, Map<String, Restaurant> restaurantMap) {
 
         for(String restaurantId : restaurantMap.keySet()) {
             Restaurant restaurant = restaurantMap.get(restaurantId);
             restaurants.add(restaurant);
             adapter.notifyItemInserted(restaurants.size() - 1);
         }
-
     }
 
 
