@@ -20,29 +20,26 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.aburgess11.foodmood.models.City;
 import com.example.aburgess11.foodmood.models.FoodItem;
-import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.Group;
 import com.example.aburgess11.foodmood.models.Restaurant;
+import com.example.aburgess11.foodmood.models.Session;
+import com.example.aburgess11.foodmood.models.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
 
-import static com.example.aburgess11.foodmood.R.id.rejectBtn;
 import static com.example.aburgess11.foodmood.R.id.restaurantMap;
 
 /**
@@ -51,6 +48,7 @@ import static com.example.aburgess11.foodmood.R.id.restaurantMap;
 
 public class EatOutActivity extends AppCompatActivity {
 
+    private boolean isAlone;
     // the adapter wired to the recycler view
     public static MatchesAdapter adapter;
     // boolean to keep track of whether the matches page is expanded or collapsed
@@ -197,27 +195,50 @@ public class EatOutActivity extends AppCompatActivity {
     }
 
     private void initializeDatabase() {
-        // Write a message to the database
+        //getting an instance of the database and a reference to it
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference restaurantRef = database.getReference("Cities").child(CURRENT_CITY);
+        final DatabaseReference sessionRef;
 
-        // Read from the database
-        restaurantRef.addValueEventListener(new ValueEventListener() {
+        //getting reference to the session depending on if it is a group or single user
+        if(isAlone == true) {
+            String userId = "some_user_id";
+            User user = new User();
+            user.userId = userId;
+            database.getReference("Users").child(userId).setValue(user);
+
+            //getting the references to the user
+            sessionRef = database.getReference("Users").child(userId);
+
+        } else {
+            String groupId = "some_group_id";
+            Group group = new Group();
+            group.groupId = groupId;
+            database.getReference("Groups").child(groupId).setValue(group);
+
+            //getting the references to the group
+            sessionRef = database.getReference("Groups").child(groupId);
+        }
+
+        //getting the references to the data to populate it to the user/group
+        String city = "some_city_chosen";
+        DatabaseReference cityRef = database.getReference("Cities").child(city);
+        cityRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String data = dataSnapshot.toString();
-                if(dataSnapshot.getKey() == "counter") {
+                City city = dataSnapshot.getValue(City.class);
 
-                }
-                Log.d(TAG, "Value is: " + data);
+                DatabaseReference restaurantsRef = sessionRef.child("Restaurants");
+                restaurantsRef.setValue(city.restaurants);
+//                restaurantsRef.updateChildren(city.restaurants);
+
+                DatabaseReference foodItemsRef = sessionRef.child("Food Items");
+                foodItemsRef.setValue(city.foodItems);
+//                foodItemsRef.updateChildren(city.foodItems);
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("Database", "The database read failed: " + databaseError.getCode());
             }
         });
     }

@@ -40,10 +40,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnMa
         setContentView(R.layout.activity_restaurant_details);
         ButterKnife.bind(this);
 
-//        MapFragment mapFragment = (MapFragment) getFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
-
         MapFragment mMapFragment = MapFragment.newInstance();
         FragmentTransaction fragmentTransaction =
                 getFragmentManager().beginTransaction();

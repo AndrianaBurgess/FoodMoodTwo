@@ -1,8 +1,5 @@
 package com.example.aburgess11.foodmood.models;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
@@ -16,44 +13,19 @@ public class Restaurant extends Object{
 
     //List of Attributes
     int counter;
-    @SerializedName("restaurantId")
-            @Expose
     String restaurauntId;
-
-    @SerializedName("address")
-            @Expose
     String address;
-
-    @SerializedName("reviewCount")
-            @Expose
     String reviewCount;
-
-    @SerializedName("latitude")
-            @Expose
     String latitude;
-
-    @SerializedName("longitude")
-            @Expose
     String longitude;
-
-    @SerializedName("imageUrl")
-            @Expose
     String imageUrl;
-
-    @SerializedName("phoneNumber")
-            @Expose
     String phoneNumber;
-
-    @SerializedName("rating")
-            @Expose
     String rating;
-
-    @SerializedName("name")
-            @Expose
     String name;
 
-    public Restaurant() {}
-
+    public Restaurant() {
+        // Default constructor required for calls to DataSnapshot.getValue(Restaurant.class)
+    }
 
     public Restaurant(String restaurauntId, int counter) {
         this.restaurauntId = restaurauntId;

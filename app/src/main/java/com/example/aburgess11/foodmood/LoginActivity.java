@@ -14,16 +14,19 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import butterknife.BindView;
+
 /**
  * Created by liangelali on 7/24/17.
  */
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextView info;
-    private LoginButton loginButton;
+    @BindView(R.id.info) TextView info;
+    @BindView(R.id.login_button) LoginButton loginButton;
+    @BindView(R.id.groupToggle) Switch groupToggle;
+
     private CallbackManager callbackManager;
-    Switch groupToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +35,8 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_login);
-        info = (TextView)findViewById(R.id.info);
-        loginButton = (LoginButton)findViewById(R.id.login_button);
-        groupToggle = (Switch) findViewById(R.id.groupToggle);
 
         info.setText("To use FoodMood features like GroupSwiping, sign into your Facebook account!");
-
         loginButton.setToolTipMode(LoginButton.ToolTipMode.NEVER_DISPLAY);
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {

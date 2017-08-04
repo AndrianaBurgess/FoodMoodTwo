@@ -43,8 +43,7 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
-    @BindView(R.id.settings_login_button)
-    LoginButton settings_login_button;
+    @BindView(R.id.settings_login_button) LoginButton settings_login_button;
     @BindView(R.id.ibEatOut) ImageButton ibEatOut;
     @BindView(R.id.add_geofences_button) Button mAddGeofencesButton;
     @BindView(R.id.remove_geofences_button) Button mRemoveGeofencesButton;
