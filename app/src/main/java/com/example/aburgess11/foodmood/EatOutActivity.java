@@ -83,7 +83,7 @@ public class EatOutActivity extends AppCompatActivity {
     TextView tvGroupSwipingBar;
 
     // load current profile
-    private com.facebook.Profile fbProfile = Profile.getCurrentProfile();
+    private com.facebook.Profile fbProfile;
     private AccessTokenTracker accessTokenTracker;
 
     private SwipePlaceHolderView mySwipeView;
@@ -105,10 +105,11 @@ public class EatOutActivity extends AppCompatActivity {
         Log.d("Sean", "onRestoreInstanceState: " + savedInstanceState.getInt("saved"));
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("LOGIN", "onCreate");
+
         if (savedInstanceState != null) {
             Log.d("Sean", "onCreate: " + savedInstanceState.getInt("saved"));
         }
@@ -307,10 +308,19 @@ public class EatOutActivity extends AppCompatActivity {
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken2) {
+                fbProfile = Profile.getCurrentProfile();
+
                 Log.d(TAG, "onCurrentAccessTokenChanged()");
-                if (accessToken == null) {
+                if (fbProfile != null && accessToken == null) {
                     Log.d(TAG, "user logged in");
-                } else if (accessToken2 == null) {
+                    if (groupToggle.isChecked()) {
+                        // if the user logged in from toggling the groupToggle switch, there was no change in
+                        // groupToggle.isChecked, but the matches still need to be reloaded
+                        tvGroupSwipingBar.setVisibility(TextView.VISIBLE);
+                        reloadMatches(getApplicationContext(), groupMatches);
+                        Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + fbProfile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (fbProfile == null && accessToken2 == null) {
                     Log.d(TAG, "user logged out");
                     if (groupToggle.isChecked()) {
                         // if the user logged out from the settings page, make sure that the groupToggle
@@ -321,11 +331,12 @@ public class EatOutActivity extends AppCompatActivity {
             }
         };
 
+
         // tracks if there are any changes to the groupToggle status
         groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                Log.d("LOGIN STATUS", "isChecked " + isChecked);
                 if (fbProfile == null && isChecked) {
                     Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
                     Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
@@ -342,6 +353,24 @@ public class EatOutActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fbProfile = Profile.getCurrentProfile();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d("LOGIN", "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d("LOGIN", "onStop");
+        super.onStop();
     }
 
     @Override

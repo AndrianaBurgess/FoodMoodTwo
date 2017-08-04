@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -90,6 +91,18 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken2) {
+                Log.d(TAG, "onCurrentAccessTokenChanged()");
+                if (accessToken == null) {
+                    finish();
+                } else if (accessToken2 == null) {
+                    finish();
+                }
+            }
+        };
 
     }
 
