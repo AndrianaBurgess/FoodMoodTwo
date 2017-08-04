@@ -13,6 +13,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,7 +24,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 /**
  * Created by liangelali on 7/24/17.
@@ -37,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     Switch groupToggle;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference();
+    public String fbID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +75,50 @@ public class LoginActivity extends AppCompatActivity {
                 data.putExtra("isDismissed", false);
                 setResult(RESULT_OK, data);
                 handleFacebookAccessToken(loginResult.getAccessToken());
-                FirebaseUser fbUser = mAuth.getCurrentUser();
+
+                loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
+
+                GraphRequest graphRequest = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
+                    @Override
+                    public void onCompleted(JSONArray objects, GraphResponse response) {
+                        try {
+                            JSONObject friendlistObject = objects.getJSONObject(0);
+                            String frienListID = friendlistObject.getString("id");
+                            Log.d("output", response.getJSONObject().toString());
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                  graphRequest.executeAsync();
+
+
+
+                GraphRequest graphRequest1 = GraphRequest.newMeRequest(loginResult.getAccessToken(),new GraphRequest.GraphJSONObjectCallback(){
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        try {
+                            String string = response.getJSONObject().toString();
+                            fbID = response.getJSONObject().getString("id");
+                            FirebaseUser fbUser = mAuth.getCurrentUser();
+                            myRef.child("Users").child(fbID).setValue(fbUser.getDisplayName());
+                           // Toast.makeText(getApplicationContext(), string1, Toast.LENGTH_LONG).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+
+                });
+
+                graphRequest1.executeAsync();
+
+
                 finish();
             }
 

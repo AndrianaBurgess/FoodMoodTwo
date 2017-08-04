@@ -1,48 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rvFriends"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.aburgess11.foodmood.GroupActivity">
 
-    <FrameLayout
+    <!-- TODO: Update blank fragment layout -->
+
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/flProfile"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="match_parent" />
 
-    </FrameLayout>
 
-    <android.support.design.widget.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/flProfile"
-        app:tabIndicatorColor="@color/colorSecondary"
-        android:id="@+id/tabLayout">
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/tiOne"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Left" />
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/tiTwo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Center" />
-
-    </android.support.design.widget.TabLayout>
-
-    <FrameLayout
-        android:id="@+id/groups"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tabLayout">
-
-    </FrameLayout>
 </RelativeLayout>

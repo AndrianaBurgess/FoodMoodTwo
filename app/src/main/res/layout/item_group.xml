@@ -6,19 +6,13 @@
     android:weightSum="1">
 
     <TextView
-        android:id="@+id/tvGroupName"
+        android:id="@+id/tvFriendName"
         android:layout_width="325dp"
         android:layout_height="25dp"
         android:layout_weight="0.07"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/tvGroupCount"
-        android:layout_width="325dp"
-        android:layout_height="25dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvGroupName"
-        android:text="TextView" />
+        android:text="TextView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <ImageButton
         android:id="@+id/imageButton"
@@ -29,7 +23,6 @@
         app:srcCompat="@android:drawable/ic_menu_send"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/tvGroupName"
-        android:layout_alignBottom="@+id/tvGroupCount" />
+        android:layout_toEndOf="@+id/tvFriendName" />
 
 </RelativeLayout>
