@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     Switch groupToggle;
+    private com.facebook.Profile fbProfile = Profile.getCurrentProfile();
+    private TextView tvLoginTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +47,21 @@ public class LoginActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_login);
         info = (TextView)findViewById(R.id.info);
         loginButton = (LoginButton)findViewById(R.id.login_button);
         groupToggle = (Switch) findViewById(R.id.groupToggle);
+        tvLoginTitle = (TextView) findViewById(R.id.tvLoginTitle);
+
+        if (fbProfile == null) {
+            tvLoginTitle.setText("Login with Facebook");
+            info.setVisibility(TextView.VISIBLE);
+        } else {
+            tvLoginTitle.setText("Logged in as: " + fbProfile.getName());
+            info.setVisibility(TextView.GONE);
+        }
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -117,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
                         }else{
                             Toast.makeText(LoginActivity.this, "Authentication error",
                                     Toast.LENGTH_SHORT).show();
-
                         }
 
 

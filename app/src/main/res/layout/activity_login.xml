@@ -6,14 +6,23 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/tvLoginTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="5dp"
+        android:text="Login or Log Out"
+        android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle" />
+
+    <TextView
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="15dp"
         android:text="To use FoodMood features like GroupSwiping, sign into your Facebook account!"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@id/tvLoginTitle" />
 
 
     <com.facebook.login.widget.LoginButton
