@@ -1,6 +1,5 @@
 package com.example.aburgess11.foodmood.models;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,8 +18,5 @@ public class City {
     public City(Map<String, Object> restaurants, Map<String, Object> foodItems) {
         this.restaurants = restaurants;
         this.foodItems = foodItems;
-
-        restaurants = new HashMap<>();
-        foodItems = new HashMap<>();
     }
 }

@@ -25,4 +25,20 @@ public class User {
         this.foodItems = foodItems;
         this.groups = groups;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public Map<String, Object> getRestaurants() {
+        return restaurants;
+    }
+
+    public Map<String, Object> getFoodItems() {
+        return foodItems;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
 }

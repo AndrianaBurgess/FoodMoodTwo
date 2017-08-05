@@ -15,17 +15,18 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aburgess11.foodmood.models.City;
-import com.example.aburgess11.foodmood.models.FoodItem;
 import com.example.aburgess11.foodmood.models.Group;
 import com.example.aburgess11.foodmood.models.Restaurant;
-import com.example.aburgess11.foodmood.models.Session;
 import com.example.aburgess11.foodmood.models.User;
+import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,12 +36,10 @@ import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 import butterknife.BindView;
-
-import static com.example.aburgess11.foodmood.R.id.restaurantMap;
 
 /**
  * Created by liangelali on 7/13/17.
@@ -48,19 +47,23 @@ import static com.example.aburgess11.foodmood.R.id.restaurantMap;
 
 public class EatOutActivity extends AppCompatActivity {
 
-    private boolean isAlone;
-    // the adapter wired to the recycler view
-    public static MatchesAdapter adapter;
-    // boolean to keep track of whether the matches page is expanded or collapsed
-    static boolean isAppBarExpanded = false;
-    public static int swipeCount = 0;
-    public static final String CURRENT_CITY = "Menlo Park";
-    private static final int LOGIN = 1000;
-    // tag for logging from this activity
-    public final static String TAG = "EatOutActivity";
-    Context context;
-
     // instance fields
+    public User user;
+    public Group group;
+    public Context context;
+    public static DatabaseReference userRef;
+    public static DatabaseReference groupRef;
+    public static ArrayList<Restaurant> restaurantList;
+    public static Map<String, Object> restaurantMap;
+    public static MatchesAdapter adapter;
+    public static boolean isAlone;
+    public static boolean isAppBarExpanded = false;
+    public static int swipeCount = 0;
+    public static final int LOGIN = 1000;
+    public static final String CURRENT_CITY = "Menlo Park";
+    public static final String TAG = "EatOutActivity";
+    public static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     @BindView(R.id.appbar) static AppBarLayout appBarLayout;
     @BindView(R.id.rvMatches) RecyclerView rvMatches;
     @BindView(R.id.nestedScrollView) NestedScrollView nestedScrollView;
@@ -73,17 +76,7 @@ public class EatOutActivity extends AppCompatActivity {
     @BindView(R.id.rejectBtn) Button rejectBtn;
     @BindView(R.id.acceptBtn) Button acceptBtn;
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt("onSaveInstanceState", 1);
-        Log.d("Sean", "onSaveInstanceState");
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.d("Sean", "onRestoreInstanceState: " + savedInstanceState.getInt("saved"));
+    public EatOutActivity() {
     }
 
     @Override
@@ -95,36 +88,66 @@ public class EatOutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = this.getApplicationContext();
 
-        for (FoodItem foodItem : tinderPhotos) {
-            mSwipeView.addView(new TinderCard(context, foodItem, mSwipeView));
-        }
+        groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
-        loadMatches(context, restaurantMap);
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        // TODO: groupToggle login on checked is being created here BUT NOTHING IS WORKING
-//                groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//
-//                    @Override
-//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//
-//                        com.facebook.Profile profile = Profile.getCurrentProfile();
-//
-//                        if (profile == null && isChecked) {
-//                            Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
-//                            Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
-//                            EatOutActivity.this.startActivityForResult(i, LOGIN);
-//
-//                        } else if (isChecked) {
-//                            Log.d("LOGIN STATUS:", "user was already logged in");
-//                            Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
+                com.facebook.Profile profile = Profile.getCurrentProfile();
+
+                if(isChecked == true) {
+                    isAlone = false;
+                } else {
+                    isAlone = true;
+                }
+
+                if (profile == null && isChecked) {
+                    Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
+                    Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
+                    EatOutActivity.this.startActivityForResult(i, LOGIN);
+
+                } else if (isChecked) {
+                    Log.d("LOGIN STATUS:", "user was already logged in");
+                    Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
+                }
+
+//                if(profile != null && isChecked) {
+//                    Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
+//                    EatOutActivity.this.startActivity(i);
+//                }
+            }
+        });
 
         initializeDatabase();
-        initializeAdapter();
         initializeUserInterface();
         initializeOnClickListeners();
+    }
+
+    public static void loadMatches(Map<String, Object> restaurants) {
+        for(String restaurantId : restaurants.keySet()) {
+            Restaurant restaurant = (Restaurant) restaurants.get(restaurantId);
+            restaurantList.add(restaurant);
+            adapter.notifyItemInserted(restaurantList.size() - 1);
+        }
+    }
+
+    private void populateUserInterface() {
+        Map<String, Object> foodItems;
+        Map<String, Object> restaurants;
+
+        if(isAlone) {
+            foodItems = user.getFoodItems();
+            restaurants = user.getRestaurants();
+        } else {
+            foodItems = group.getFoodItems();
+            restaurants = group.getRestaurants();
+        }
+
+        for(int i = 0; i < foodItems.size(); i++) {
+            mSwipeView.addView(new TinderCard(context, foodItems.get("" + i), mSwipeView));
+        }
+        restaurantMap = restaurants;
+        loadMatches(restaurants);
     }
 
     private void initializeOnClickListeners() {
@@ -186,40 +209,52 @@ public class EatOutActivity extends AppCompatActivity {
     }
 
     private void initializeAdapter() {
-        // TODO initialize the adapter -- movies array cannot be reinitialized after this point
         try {
-            adapter = new MatchesAdapter(restaurantMap);
+            adapter = new MatchesAdapter(restaurantList);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void initializeDatabase() {
-        //getting an instance of the database and a reference to it
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference sessionRef;
+        //getting reference to the sessions and populating the data
+        //User
+        String userId = "some_user_id";
+        user = new User();
+        user.userId = userId;
+        database.getReference("Users").child(userId).setValue(user);
+        userRef = database.getReference("Users").child(userId);
+        populateDatabase(database, userRef);
+        listenForUpdates(database, userRef);
 
-        //getting reference to the session depending on if it is a group or single user
-        if(isAlone == true) {
-            String userId = "some_user_id";
-            User user = new User();
-            user.userId = userId;
-            database.getReference("Users").child(userId).setValue(user);
+        //Group
+        String groupId = "some_group_id";
+        group = new Group();
+        group.groupId = groupId;
+        database.getReference("Groups").child(groupId).setValue(group);
+        groupRef = database.getReference("Groups").child(groupId);
+        populateDatabase(database, groupRef);
+        listenForUpdates(database, userRef);
+    }
 
-            //getting the references to the user
-            sessionRef = database.getReference("Users").child(userId);
+    private void listenForUpdates(final FirebaseDatabase database, final DatabaseReference sessionRef) {
+        //listening if the values ever change
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                updateLocalData(sessionRef, dataSnapshot);
+            }
 
-        } else {
-            String groupId = "some_group_id";
-            Group group = new Group();
-            group.groupId = groupId;
-            database.getReference("Groups").child(groupId).setValue(group);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("Database", "The database listening update failed: " + databaseError.getCode());
+            }
+        };
+        sessionRef.addValueEventListener(postListener);
+    }
 
-            //getting the references to the group
-            sessionRef = database.getReference("Groups").child(groupId);
-        }
-
-        //getting the references to the data to populate it to the user/group
+    private void populateDatabase(final FirebaseDatabase database, final DatabaseReference sessionRef) {
+        //getting the references to the data once to populate it to the user/group
         String city = "some_city_chosen";
         DatabaseReference cityRef = database.getReference("Cities").child(city);
         cityRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -231,9 +266,12 @@ public class EatOutActivity extends AppCompatActivity {
                 restaurantsRef.setValue(city.restaurants);
 //                restaurantsRef.updateChildren(city.restaurants);
 
+
                 DatabaseReference foodItemsRef = sessionRef.child("Food Items");
                 foodItemsRef.setValue(city.foodItems);
 //                foodItemsRef.updateChildren(city.foodItems);
+
+                updateLocalData(sessionRef, dataSnapshot);
             }
 
             @Override
@@ -243,7 +281,20 @@ public class EatOutActivity extends AppCompatActivity {
         });
     }
 
+    private void updateLocalData(DatabaseReference sessionRef, DataSnapshot dataSnapshot) {
+        //if the session is a single user, update the user info; if a group, update group info
+        if(sessionRef.getParent() == database.getReference("Groups")) {
+            group.foodItems = dataSnapshot.getValue(Map.class);
+            group.restaurants = dataSnapshot.getValue(Map.class);
+        } else {
+            user.foodItems = dataSnapshot.getValue(Map.class);
+            user.restaurants = dataSnapshot.getValue(Map.class);
+        }
+    }
+
     private void initializeUserInterface() {
+        initializeAdapter();
+
         rvMatches.setLayoutManager(new LinearLayoutManager(this));
         // configure recycler view to allow for smooth scrolling
         rvMatches.setNestedScrollingEnabled(false);
@@ -296,6 +347,8 @@ public class EatOutActivity extends AppCompatActivity {
                         .setRelativeScale(0.01f)
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
+        populateUserInterface();
     }
 
 //    public void loadMatches2(Context context, ArrayList<Match> list) {
@@ -323,12 +376,17 @@ public class EatOutActivity extends AppCompatActivity {
 //        }
 //    }
 
-    public void loadMatches(Context context, Map<String, Restaurant> restaurantMap) {
-        for(String restaurantId : restaurantMap.keySet()) {
-            Restaurant restaurant = restaurantMap.get(restaurantId);
-            restaurants.add(restaurant);
-            adapter.notifyItemInserted(restaurants.size() - 1);
-        }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("onSaveInstanceState", 1);
+        Log.d("Sean", "onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("Sean", "onRestoreInstanceState: " + savedInstanceState.getInt("saved"));
     }
 
     @Override

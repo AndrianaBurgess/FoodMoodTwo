@@ -24,4 +24,20 @@ public class Group {
         this.restaurants = restaurants;
         this.foodItems = foodItems;
     }
+
+    public Map<String, Object> getRestaurants() {
+        return restaurants;
+    }
+
+    public Map<String, Object> getFoodItems() {
+        return foodItems;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
 }

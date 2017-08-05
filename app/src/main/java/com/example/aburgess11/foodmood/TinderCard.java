@@ -3,12 +3,10 @@ package com.example.aburgess11.foodmood;
 import android.content.Context;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.aburgess11.foodmood.models.FoodItem;
-import com.example.aburgess11.foodmood.models.Match;
 import com.google.firebase.database.DatabaseReference;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
@@ -21,10 +19,11 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
 import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
-import static com.example.aburgess11.foodmood.EatOutActivity.matches;
-import static com.example.aburgess11.foodmood.EatOutActivity.restaurantMap;
-import static com.example.aburgess11.foodmood.EatOutActivity.restaurantRef;
+import static com.example.aburgess11.foodmood.EatOutActivity.groupRef;
+import static com.example.aburgess11.foodmood.EatOutActivity.isAlone;
 import static com.example.aburgess11.foodmood.EatOutActivity.swipeCount;
+import static com.example.aburgess11.foodmood.EatOutActivity.userRef;
+import static com.example.aburgess11.foodmood.R.id.restaurantMap;
 
 
 /**
@@ -37,36 +36,29 @@ public class TinderCard {
 
     @View(R.id.profileImageView)
     private ImageView profileImageView;
-
-    @View(R.id.nameAgeTxt)
-    private TextView nameAgeTxt;
-
-    @View(R.id.locationNameTxt)
-    private TextView locationNameTxt;
-
     private SwipeProfile mSwipeProfile;
     private FoodItem mFoodItem;
     private Context mContext;
     private SwipePlaceHolderView mSwipeView;
+    private DatabaseReference sessionRef;
 
-//    public TinderCard(Context context, SwipeProfile swipeProfile, SwipePlaceHolderView swipeView) {
-//        mContext = context;
-//        mSwipeProfile = swipeProfile;
-//        mSwipeView = swipeView;
-//    }
-
-    public TinderCard(Context context, FoodItem foodItem, SwipePlaceHolderView swipeView) {
+    public TinderCard(Context context, Object foodItem, SwipePlaceHolderView swipeView) {
         mContext = context;
-        mFoodItem = foodItem;
+        mFoodItem = (FoodItem) foodItem;
         mSwipeView = swipeView;
+
+        if(isAlone) {
+            sessionRef = userRef;
+        } else {
+            sessionRef = groupRef;
+        }
     }
 
     @Resolve
     private void onResolved(){
-//        Glide.with(mContext).load(mSwipeProfile.getImageUrl()).into(profileImageView);
-        Glide.with(mContext).load(mFoodItem.getImageUrl()).into(profileImageView);
-//        nameAgeTxt.setText(mSwipeProfile.getName() + ", " + mSwipeProfile.getTimeofday());
-//        locationNameTxt.setText(mSwipeProfile.getLocation());
+        Glide.with(mContext)
+                .load(mFoodItem.getImageUrl())
+                .into(profileImageView);
     }
 
     @SwipeOut
@@ -82,37 +74,16 @@ public class TinderCard {
 
     @SwipeIn
     private void onSwipeIn() {
-//        if(restaurantMap.containsKey(this.mFoodItem.getRestaurantId())) {
-//            Restaurant restaurant = restaurantMap.get(this.mFoodItem.getRestaurantId());
-//            restaurant.setCounter(restaurant.getCounter() + 1);
-//            restaurantMap.put(restaurant.getRestaurauntId(), restaurant);
-//        } else {
-//            Restaurant restaurant = new Restaurant(this.mFoodItem.getRestaurantId(), 1);
-//            restaurantMap.put(restaurant.getRestaurauntId(), restaurant);
-//        }
-        DatabaseReference currCounter = restaurantRef.child("Restaurants").child(this.mFoodItem.getRestaurantId()).child("counter");
+        DatabaseReference currCounter = sessionRef.child("Restaurants").child(this.mFoodItem.getRestaurantId()).child("counter");
         String currCount = currCounter.toString();
         int countCurr = Integer.getInteger(currCount) + 1;
         currCounter.setValue(countCurr);
 
         popUpList();
-        // Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
-//        findRestAndIncr(this.mSwipeProfile.getLocation());
-//        Collections.sort(matches);
+        Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
+//        Collections.sort(restaurantMap);
         EatOutActivity.adapter.notifyDataSetChanged();
         Log.d("EVENT", "onSwipedIn" + swipeCount);
-    }
-
-
-    public void findRestAndIncr(String name){
-
-        for(Match m: matches){
-            if ( m.getName().equals(name)){
-                m.rank++;
-                Toast.makeText(mContext,  m.rank + "" , Toast.LENGTH_SHORT ).show();
-
-            }
-        }
     }
 
     //Pops up the matches every
@@ -122,12 +93,12 @@ public class TinderCard {
 
         // after 10 swipes, automatically pop up the matches page
         if (swipeCount == 10){
-            EatOutActivity.loadMatches(mContext, restaurantMap);
+            EatOutActivity.loadMatches(restaurantMap);
             EatOutActivity.isAppBarExpanded = true;
             appBarLayout.setExpanded(false);
             appBarLayout.setFitsSystemWindows(true);
 
-            Log.d("EVENT", swipeCount + "" );
+            Log.d("EVENT", swipeCount + "");
             swipeCount=0;
         }
     }
