@@ -32,19 +32,6 @@
             android:background="@drawable/ic_heart" />
     </LinearLayout>
 
-    <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/mySwipeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="25dp" />
-
-    <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/groupSwipeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="25dp"
-        android:visibility="gone" />
-
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -107,6 +94,19 @@
             android:visibility="gone" />
 
     </RelativeLayout>
+
+    <com.mindorks.placeholderview.SwipePlaceHolderView
+        android:id="@+id/mySwipeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationY="15dp"/>
+
+    <com.mindorks.placeholderview.SwipePlaceHolderView
+        android:id="@+id/groupSwipeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationY="15dp"
+        android:visibility="gone" />
 
     <include layout="@layout/activity_matches_list" />
 
