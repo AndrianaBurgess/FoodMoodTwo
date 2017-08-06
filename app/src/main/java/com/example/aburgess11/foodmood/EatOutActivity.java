@@ -79,7 +79,7 @@ public class EatOutActivity extends AppCompatActivity {
     // top toolbar items
     ImageButton profileBtn;
     Switch groupToggle;
-    ImageButton messagesBtn;
+    ImageButton newSwipeSessionBtn;
     TextView tvGroupSwipingBar;
 
     // load current profile
@@ -154,7 +154,7 @@ public class EatOutActivity extends AppCompatActivity {
         profileBtn = (ImageButton) findViewById(R.id.profileBtn);
         groupToggle = (Switch) findViewById(R.id.groupToggle);
         groupToggle.setShowText(true);
-        messagesBtn = (ImageButton) findViewById(R.id.messagesBtn);
+        newSwipeSessionBtn = (ImageButton) findViewById(R.id.newSwipeSessionBtn);
         tvGroupSwipingBar = (TextView) findViewById(R.id.tvGroupSwipingBar);
 
 
