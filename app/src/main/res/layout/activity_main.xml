@@ -32,46 +32,48 @@
             android:background="@drawable/ic_heart" />
     </LinearLayout>
 
-    <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/mySwipeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="25dp" />
-
-    <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/groupSwipeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="25dp"
-        android:visibility="gone" />
-
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/upperToolbar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/profileBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:scaleType="fitXY"
+                android:background="@android:color/transparent"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:tint="@android:color/holo_red_dark"
                 app:srcCompat="@drawable/ic_profile" />
 
-            <Space
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvProfileText"
+                android:layout_width="45dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.34" />
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/profileBtn"
+                android:text="Settings"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/colorSecondary"
+                android:textSize="10sp"
+                android:translationY="-8dp" />
 
             <Switch
                 android:id="@+id/groupToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:showText="true"
                 android:switchMinWidth="20dp"
                 android:switchTextAppearance="@style/SwitchTextAppearance"
@@ -81,18 +83,32 @@
                 android:thumbTextPadding="10dp"
                 android:track="@drawable/switchtrack" />
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.43" />
 
             <ImageButton
-                android:id="@+id/messagesBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_message" />
+                android:id="@+id/newSwipeSessionBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:tint="@android:color/holo_red_dark"
+                app:srcCompat="@android:drawable/ic_menu_add" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tvNewSwipeSessionText"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/newSwipeSessionBtn"
+                android:text="New"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/colorSecondary"
+                android:textSize="10sp"
+                android:translationY="-5dp" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvGroupSwipingBar"
@@ -107,6 +123,19 @@
             android:visibility="gone" />
 
     </RelativeLayout>
+
+    <com.mindorks.placeholderview.SwipePlaceHolderView
+        android:id="@+id/mySwipeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationY="15dp"/>
+
+    <com.mindorks.placeholderview.SwipePlaceHolderView
+        android:id="@+id/groupSwipeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationY="15dp"
+        android:visibility="gone" />
 
     <include layout="@layout/activity_matches_list" />
 

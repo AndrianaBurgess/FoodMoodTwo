@@ -111,6 +111,7 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
             }
         });
 
+
         // Empty list for storing geofences.
         mGeofenceList = new ArrayList<>();
 

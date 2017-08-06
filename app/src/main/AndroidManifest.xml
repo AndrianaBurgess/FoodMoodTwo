@@ -34,8 +34,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="Login with Facebook"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"
+            android:theme="@style/dialogTheme"
             android:screenOrientation="portrait" />
 
 
