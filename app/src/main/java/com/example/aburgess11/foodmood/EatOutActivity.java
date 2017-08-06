@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Match;
 import com.facebook.Profile;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,8 +38,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-import static com.loopj.android.http.AsyncHttpClient.log;
 
 /**
  * Created by liangelali on 7/13/17.
@@ -119,8 +116,8 @@ public class EatOutActivity extends AppCompatActivity {
         }
 
 
-        DatabaseReference fbGroups = database.getReference("Groups");
-        DatabaseReference fbUsers = database.getReference("User");
+
+
 
 
         // resolve the recycler view and connect a layout manager
@@ -153,6 +150,16 @@ public class EatOutActivity extends AppCompatActivity {
         groupToggle.setShowText(true);
         messagesBtn = (ImageButton) findViewById(R.id.messagesBtn);
         
+        messagesBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
+                        startActivity(i);
+                    }
+                });
+
+
 
 
         // offsetChangedListener detects when there is a change in vertical offset (i.e. change from
@@ -354,17 +361,6 @@ public class EatOutActivity extends AppCompatActivity {
 
 
 
-    // handle errors, log and alert user
-    private void logError(String message, Throwable error, boolean alertUser) {
-        // always log the error
-        log.e(TAG, message, error);
-        //alert the user to avoid silent errors
-        if (alertUser) {
-            // show a long toast with the error message
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        }
-    }
-
     @Override
     public void onBackPressed()
     {
@@ -373,7 +369,5 @@ public class EatOutActivity extends AppCompatActivity {
         appBarLayout.setExpanded(true);
         appBarLayout.setFitsSystemWindows(false);
 
-//        Intent i = new Intent(EatOutActivity.this, EatOutActivity.class);
-//        startActivity(i);
     }
 }

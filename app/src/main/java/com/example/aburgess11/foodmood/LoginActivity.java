@@ -27,7 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,23 +77,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
 
-                GraphRequest graphRequest = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
-                    @Override
-                    public void onCompleted(JSONArray objects, GraphResponse response) {
-                        try {
-                            JSONObject friendlistObject = objects.getJSONObject(0);
-                            String frienListID = friendlistObject.getString("id");
-                            Log.d("output", response.getJSONObject().toString());
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                  graphRequest.executeAsync();
-
-
 
                 GraphRequest graphRequest1 = GraphRequest.newMeRequest(loginResult.getAccessToken(),new GraphRequest.GraphJSONObjectCallback(){
                     @Override
@@ -105,11 +87,9 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser fbUser = mAuth.getCurrentUser();
                             myRef.child("Users").child(fbID).setValue(fbUser.getDisplayName());
                            // Toast.makeText(getApplicationContext(), string1, Toast.LENGTH_LONG).show();
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
 
                     }
 
@@ -117,8 +97,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
                 graphRequest1.executeAsync();
-
-
                 finish();
             }
 

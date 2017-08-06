@@ -7,22 +7,31 @@
 
     <TextView
         android:id="@+id/tvFriendName"
-        android:layout_width="325dp"
-        android:layout_height="25dp"
+        android:layout_width="275dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_weight="0.07"
         android:text="TextView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:layout_alignBottom="@+id/ivProfileImage" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/ibAddFriend"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:tint="@color/colorSecondary"
-        app:srcCompat="@android:drawable/ic_menu_send"
-        android:layout_alignParentTop="true"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/tvFriendName"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/tvFriendName" />
+        android:layout_alignParentTop="true"
+        android:tint="@color/colorSecondary"
+        app:srcCompat="@android:drawable/ic_menu_send" />
+
+    <ImageView
+        android:id="@+id/ivProfileImage"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>
