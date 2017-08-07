@@ -1,8 +1,9 @@
-package com.example.aburgess11.foodmood;
+package com.example.aburgess11.foodmood.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
+import com.example.aburgess11.foodmood.R;
 
 
 public class SettingsFragment extends PreferenceFragment {

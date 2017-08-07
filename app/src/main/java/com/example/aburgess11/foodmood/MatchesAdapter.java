@@ -140,7 +140,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         @BindView(R.id.ivMatchImage) ImageView ivMatchImage;
         @BindView(R.id.tvMatchName) TextView tvMatchName;
         @BindView(R.id.tvMatchDetails) TextView tvMatchDetails;
-        @BindView(R.id.tvPercentMatch) TextView tvPercentMatch;
+
 
         public ViewHolder(View itemView) {
             super(itemView);

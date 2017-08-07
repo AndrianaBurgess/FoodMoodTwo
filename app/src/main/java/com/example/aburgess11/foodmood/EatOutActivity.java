@@ -27,6 +27,7 @@ import com.example.aburgess11.foodmood.models.Match;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -39,8 +40,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-import static com.loopj.android.http.AsyncHttpClient.log;
 
 /**
  * Created by liangelali on 7/13/17.
@@ -92,6 +91,8 @@ public class EatOutActivity extends AppCompatActivity {
     private Context mContext;
     public static int swipeCount=0;
 
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt("onSaveInstanceState", 1);
@@ -127,6 +128,11 @@ public class EatOutActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+
+
+
+
         // resolve the recycler view and connect a layout manager
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
         rvMatches.setLayoutManager(new LinearLayoutManager(this));
@@ -155,8 +161,22 @@ public class EatOutActivity extends AppCompatActivity {
         profileBtn = (ImageButton) findViewById(R.id.profileBtn);
         groupToggle = (Switch) findViewById(R.id.groupToggle);
         groupToggle.setShowText(true);
+
         newSwipeSessionBtn = (ImageButton) findViewById(R.id.newSwipeSessionBtn);
         tvGroupSwipingBar = (TextView) findViewById(R.id.tvGroupSwipingBar);
+
+
+        
+        newSwipeSessionBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
+                        startActivity(i);
+                    }
+                });
+
+
 
 
 
@@ -456,22 +476,12 @@ public class EatOutActivity extends AppCompatActivity {
 
 
 
-    // handle errors, log and alert user
-    private void logError(String message, Throwable error, boolean alertUser) {
-        // always log the error
-        log.e(TAG, message, error);
-        //alert the user to avoid silent errors
-        if (alertUser) {
-            // show a long toast with the error message
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        }
-    }
-
     @Override
     public void onBackPressed()
     {
         EatOutActivity.isAppBarExpanded = false;
         appBarLayout.setExpanded(true);
         appBarLayout.setFitsSystemWindows(false);
+
     }
 }

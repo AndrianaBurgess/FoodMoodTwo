@@ -16,6 +16,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +26,14 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 import java.util.Arrays;
 
@@ -40,7 +50,10 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     Switch groupToggle;
     private com.facebook.Profile fbProfile = Profile.getCurrentProfile();
-    private TextView tvLoginTitle;
+    //private TextView tvLoginTitle;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference();
+    public String fbID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +67,13 @@ public class LoginActivity extends AppCompatActivity {
         info = (TextView)findViewById(R.id.info);
         loginButton = (LoginButton)findViewById(R.id.login_button);
         groupToggle = (Switch) findViewById(R.id.groupToggle);
-        tvLoginTitle = (TextView) findViewById(R.id.tvLoginTitle);
+        //tvLoginTitle = (TextView) findViewById(R.id.tvLoginTitle);
 
         if (fbProfile == null) {
-            tvLoginTitle.setText("Login with Facebook");
+           // tvLoginTitle.setText("Login with Facebook");
             info.setVisibility(TextView.VISIBLE);
         } else {
-            tvLoginTitle.setText("Logged in as: " + fbProfile.getName());
+           // tvLoginTitle.setText("Logged in as: " + fbProfile.getName());
             info.setVisibility(TextView.GONE);
         }
 
@@ -79,6 +92,30 @@ public class LoginActivity extends AppCompatActivity {
                 data.putExtra("isDismissed", false);
                 setResult(RESULT_OK, data);
                 handleFacebookAccessToken(loginResult.getAccessToken());
+
+
+                loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
+
+
+                GraphRequest graphRequest1 = GraphRequest.newMeRequest(loginResult.getAccessToken(),new GraphRequest.GraphJSONObjectCallback(){
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        try {
+                            String string = response.getJSONObject().toString();
+                            fbID = response.getJSONObject().getString("id");
+                            FirebaseUser fbUser = mAuth.getCurrentUser();
+                            myRef.child("Users").child(fbID).setValue(fbUser.getDisplayName());
+                           // Toast.makeText(getApplicationContext(), string1, Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+
+                });
+
+                graphRequest1.executeAsync();
 
                 finish();
             }
