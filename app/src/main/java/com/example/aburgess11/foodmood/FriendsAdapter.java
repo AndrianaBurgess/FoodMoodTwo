@@ -66,6 +66,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
             // return a new ViewHolder
             final ViewHolder viewHolder = new ViewHolder(friendView);
+
+            //adds your friend to your group swiping session on firebase
             viewHolder.ibAddFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

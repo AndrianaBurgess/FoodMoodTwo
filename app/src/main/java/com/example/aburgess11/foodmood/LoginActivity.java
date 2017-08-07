@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             tvLoginTitle.setText("Logged in as: " + fbProfile.getName());
             info.setVisibility(TextView.GONE);
+            //fbUser = mAuth.getCurrentUser();
         }
 
         mAuth = FirebaseAuth.getInstance();
@@ -95,16 +96,16 @@ public class LoginActivity extends AppCompatActivity {
 
                 loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
 
-
+                //requests name and facebook id from facebook
                 GraphRequest graphRequest1 = GraphRequest.newMeRequest(loginResult.getAccessToken(),new GraphRequest.GraphJSONObjectCallback(){
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         try {
                             String string = response.getJSONObject().toString();
                             fbID = response.getJSONObject().getString("id");
-                            fbUser = mAuth.getCurrentUser();
+                            FirebaseUser userser = mAuth.getCurrentUser();
+                            fbUser=userser;
                             myRef.child("Users").child(fbID).setValue(fbUser.getDisplayName());
-                           // Toast.makeText(getApplicationContext(), string1, Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

@@ -172,6 +172,7 @@ public class EatOutActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //creates a new group swiping session on firebase with your facebook id being the group identifier
                         DatabaseReference myRef = database.getReference();
                         myRef.child("Groups").child(LoginActivity.fbID).child("Users").child(LoginActivity.fbID).setValue(LoginActivity.fbUser.getDisplayName());
                         Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
