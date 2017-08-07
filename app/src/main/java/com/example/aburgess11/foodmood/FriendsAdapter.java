@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Friend;
+import com.facebook.Profile;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -75,7 +76,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     Log.d(TAG, "onClick: " + position);
                     Friend friend = friendsArray.get(position);
                     DatabaseReference myRef = database.getReference();
-                    myRef.child("Groups").child(LoginActivity.fbID).child("Users").child(friend.getId()).setValue(friend.getName());
+                    String id = Profile.getCurrentProfile().getId();
+                    myRef.child("Groups").child(id).child("Users").child(friend.getId()).setValue(friend.getName());
                 }
             });
             return viewHolder;
