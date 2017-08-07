@@ -9,13 +9,17 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Friend;
 import com.facebook.Profile;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -38,6 +42,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         Context context;
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        DatabaseReference myRef = (DatabaseReference) database.getReference();
+        DatabaseReference groups = (DatabaseReference) myRef.child("Groups");
 
         // init with list
 
@@ -74,10 +81,37 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 public void onClick(View v) {
                     int position = viewHolder.getAdapterPosition();
                     Log.d(TAG, "onClick: " + position);
-                    Friend friend = friendsArray.get(position);
-                    DatabaseReference myRef = database.getReference();
-                    String id = Profile.getCurrentProfile().getId();
-                    myRef.child("Groups").child(id).child("Users").child(friend.getId()).setValue(friend.getName());
+                    final Friend friend = friendsArray.get(position);
+
+
+
+                    groups.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Iterable<DataSnapshot> nodes = dataSnapshot.getChildren();
+                            boolean isInGroup = false;
+                            for (  DataSnapshot d  : nodes ){
+                                if(d.child("Users").hasChild(friend.getId())){
+                                    Toast.makeText(context,friend.getName() + " is already in a group", Toast.LENGTH_LONG).show();
+                                    isInGroup = true;
+                                }
+                            }
+                            if (!isInGroup) {
+                                String id = Profile.getCurrentProfile().getId();
+                                groups.child(id).child("Users").child(friend.getId()).setValue(friend.getName());
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+
+                    });
+
+
                 }
             });
             return viewHolder;
