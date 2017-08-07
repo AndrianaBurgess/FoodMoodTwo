@@ -93,8 +93,9 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
                 android:tint="@android:color/holo_red_dark"
-                app:srcCompat="@android:drawable/ic_menu_add"
-                />
+                android:visibility="gone"
+                app:srcCompat="@android:drawable/ic_menu_add" />
+
 
             <TextView
                 android:id="@+id/tvNewSwipeSessionText"
@@ -107,7 +108,34 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textColor="@color/colorSecondary"
                 android:textSize="10sp"
-                android:translationY="-5dp" />
+                android:translationY="-5dp"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/refreshBtn"
+                android:layout_width="35dp"
+                android:layout_height="37dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:tint="@color/colorSecondaryLight"
+                android:translationX="-2dp"
+                android:visibility="visible"
+                app:srcCompat="@android:drawable/ic_popup_sync" />
+
+            <TextView
+                android:id="@+id/refreshText"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/refreshBtn"
+                android:text="Refresh"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/colorSecondary"
+                android:textSize="10sp"
+                android:translationY="-3dp" />
 
         </RelativeLayout>
 
