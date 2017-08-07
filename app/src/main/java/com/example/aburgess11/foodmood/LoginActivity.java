@@ -79,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
                 data.putExtra("isDismissed", false);
                 setResult(RESULT_OK, data);
                 handleFacebookAccessToken(loginResult.getAccessToken());
-
                 finish();
             }
 
@@ -92,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
                 data.putExtra("isDismissed", true);
                 setResult(RESULT_OK, data);
                 finish();
-
             }
 
             @Override
