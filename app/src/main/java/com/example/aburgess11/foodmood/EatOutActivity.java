@@ -79,7 +79,11 @@ public class EatOutActivity extends AppCompatActivity {
     // top toolbar items
     ImageButton profileBtn;
     Switch groupToggle;
+    ImageButton refreshBtn;
+    TextView refreshText;
     ImageButton newSwipeSessionBtn;
+    TextView newSwipeSessionText;
+
     TextView tvGroupSwipingBar;
 
     // load current profile
@@ -155,7 +159,10 @@ public class EatOutActivity extends AppCompatActivity {
         profileBtn = (ImageButton) findViewById(R.id.profileBtn);
         groupToggle = (Switch) findViewById(R.id.groupToggle);
         groupToggle.setShowText(true);
+        refreshBtn = (ImageButton) findViewById(R.id.refreshBtn);
+        refreshText = (TextView) findViewById(R.id.refreshText);
         newSwipeSessionBtn = (ImageButton) findViewById(R.id.newSwipeSessionBtn);
+        newSwipeSessionText = (TextView) findViewById(R.id.tvNewSwipeSessionText);
         tvGroupSwipingBar = (TextView) findViewById(R.id.tvGroupSwipingBar);
 
 
@@ -403,11 +410,23 @@ public class EatOutActivity extends AppCompatActivity {
         adapter.reloadMatches(matches);
 
         if (mySwipeView.getVisibility() == View.VISIBLE) {
+            // if in individual mode, switch to groupSwiping mode
             mySwipeView.setVisibility(View.GONE);
             groupSwipeView.setVisibility(View.VISIBLE);
+
+            refreshBtn.setVisibility(ImageButton.GONE);
+            refreshText.setVisibility(TextView.GONE);
+            newSwipeSessionBtn.setVisibility(ImageButton.VISIBLE);
+            newSwipeSessionText.setVisibility(TextView.VISIBLE);
         } else {
+            // if in groupSwiping mode, switch to individual mode
             mySwipeView.setVisibility(View.VISIBLE);
             groupSwipeView.setVisibility(View.GONE);
+
+            refreshBtn.setVisibility(ImageButton.VISIBLE);
+            refreshText.setVisibility(TextView.VISIBLE);
+            newSwipeSessionBtn.setVisibility(ImageButton.GONE);
+            newSwipeSessionText.setVisibility(TextView.GONE);
         }
     }
 

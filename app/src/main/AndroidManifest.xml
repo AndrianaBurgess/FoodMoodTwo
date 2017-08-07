@@ -36,6 +36,10 @@
             android:name=".LoginActivity"
             android:theme="@style/dialogTheme"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".RefreshActivity"
+            android:theme="@style/dialogTheme"
+            android:screenOrientation="portrait" />
 
 
         <meta-data
