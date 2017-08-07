@@ -93,7 +93,8 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
                 android:tint="@android:color/holo_red_dark"
-                app:srcCompat="@android:drawable/ic_menu_add" />
+                app:srcCompat="@android:drawable/ic_menu_add"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tvNewSwipeSessionText"

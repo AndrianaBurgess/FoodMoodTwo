@@ -15,9 +15,9 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.Profile;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,8 +35,6 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import java.util.Arrays;
-
 /**
  * Created by liangelali on 7/24/17.
  */
@@ -50,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     Switch groupToggle;
     private com.facebook.Profile fbProfile = Profile.getCurrentProfile();
-    //private TextView tvLoginTitle;
+    private TextView tvLoginTitle;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference();
     public String fbID;
@@ -67,13 +65,13 @@ public class LoginActivity extends AppCompatActivity {
         info = (TextView)findViewById(R.id.info);
         loginButton = (LoginButton)findViewById(R.id.login_button);
         groupToggle = (Switch) findViewById(R.id.groupToggle);
-        //tvLoginTitle = (TextView) findViewById(R.id.tvLoginTitle);
+        tvLoginTitle = (TextView) findViewById(R.id.tvLoginTitle);
 
         if (fbProfile == null) {
-           // tvLoginTitle.setText("Login with Facebook");
+           tvLoginTitle.setText("Login with Facebook");
             info.setVisibility(TextView.VISIBLE);
         } else {
-           // tvLoginTitle.setText("Logged in as: " + fbProfile.getName());
+            tvLoginTitle.setText("Logged in as: " + fbProfile.getName());
             info.setVisibility(TextView.GONE);
         }
 

@@ -77,7 +77,7 @@ public class EatOutActivity extends AppCompatActivity {
 
     // top toolbar items
     ImageButton profileBtn;
-    Switch groupToggle;
+    public Switch groupToggle;
     ImageButton newSwipeSessionBtn;
     TextView tvGroupSwipingBar;
 
