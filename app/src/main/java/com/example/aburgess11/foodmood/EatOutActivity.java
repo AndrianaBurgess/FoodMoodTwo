@@ -78,8 +78,12 @@ public class EatOutActivity extends AppCompatActivity {
 
     // top toolbar items
     ImageButton profileBtn;
-    public Switch groupToggle;
+    Switch groupToggle;
+    ImageButton refreshBtn;
+    TextView refreshText;
     ImageButton newSwipeSessionBtn;
+    TextView newSwipeSessionText;
+
     TextView tvGroupSwipingBar;
 
     // load current profile
@@ -162,8 +166,10 @@ public class EatOutActivity extends AppCompatActivity {
         profileBtn = (ImageButton) findViewById(R.id.profileBtn);
         groupToggle = (Switch) findViewById(R.id.groupToggle);
         groupToggle.setShowText(true);
-
+        refreshBtn = (ImageButton) findViewById(R.id.refreshBtn);
+        refreshText = (TextView) findViewById(R.id.refreshText);
         newSwipeSessionBtn = (ImageButton) findViewById(R.id.newSwipeSessionBtn);
+        newSwipeSessionText = (TextView) findViewById(R.id.tvNewSwipeSessionText);
         tvGroupSwipingBar = (TextView) findViewById(R.id.tvGroupSwipingBar);
 
 
@@ -340,7 +346,7 @@ public class EatOutActivity extends AppCompatActivity {
                         // if the user logged in from toggling the groupToggle switch, there was no change in
                         // groupToggle.isChecked, but the matches still need to be reloaded
                         tvGroupSwipingBar.setVisibility(TextView.VISIBLE);
-                        reloadMatches(getApplicationContext(), groupMatches);
+                        reloadMatches(getApplicationContext(), groupMatches, true);
                         Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + fbProfile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
                     }
                 } else if (fbProfile == null && accessToken2 == null) {
@@ -368,11 +374,11 @@ public class EatOutActivity extends AppCompatActivity {
                 } else if (isChecked){
                     Log.d("LOGIN STATUS:", "user was already logged in");
                     tvGroupSwipingBar.setVisibility(TextView.VISIBLE);
-                    reloadMatches(getApplicationContext(), groupMatches);
+                    reloadMatches(getApplicationContext(), groupMatches, true);
                     Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + fbProfile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
                 } else if (!isChecked) {
-                    reloadMatches(getApplicationContext(), myMatches);
                     tvGroupSwipingBar.setVisibility(TextView.GONE);
+                    reloadMatches(getApplicationContext(), myMatches, false);
                 }
             }
         });
@@ -399,38 +405,45 @@ public class EatOutActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        boolean isDismissed = data.getBooleanExtra("isDismissed", false);
         if (requestCode == LOGIN) {
-            if (resultCode != RESULT_OK) {
-                // login failed
+            if (resultCode != RESULT_OK || isDismissed) {
+                // login failed or canceled
                 groupToggle.setChecked(false);
-                return;
-            }
-
-            boolean isDismissed = data.getBooleanExtra("isDismissed", false);
-            if (isDismissed) {
-                // login canceled
-                groupToggle.setChecked(false);
+                reloadMatches(this.getApplicationContext(), myMatches, false);
                 return;
             }
 
             else if (resultCode == RESULT_OK && !isDismissed){
-                groupToggle.setChecked(true);
-                reloadMatches(this.getApplicationContext(), groupMatches);
+                // if login is successful and the dialog was not dismissed, then groupToggle.setChecked(true);
+                reloadMatches(this.getApplicationContext(), groupMatches, true);
             }
         }
     }
 
-    public void reloadMatches(Context context, ArrayList<Match> matches) {
+    public void reloadMatches(Context context, ArrayList<Match> matches, Boolean isCheckedStatus) {
 
         // set the adapter for the new matches
         adapter.reloadMatches(matches);
 
-        if (mySwipeView.getVisibility() == View.VISIBLE) {
+        if (isCheckedStatus) {
+            // switch to groupSwiping mode
             mySwipeView.setVisibility(View.GONE);
             groupSwipeView.setVisibility(View.VISIBLE);
+
+            refreshBtn.setVisibility(ImageButton.GONE);
+            refreshText.setVisibility(TextView.GONE);
+            newSwipeSessionBtn.setVisibility(ImageButton.VISIBLE);
+            newSwipeSessionText.setVisibility(TextView.VISIBLE);
         } else {
+            // switch to individual mode
             mySwipeView.setVisibility(View.VISIBLE);
             groupSwipeView.setVisibility(View.GONE);
+
+            refreshBtn.setVisibility(ImageButton.VISIBLE);
+            refreshText.setVisibility(TextView.VISIBLE);
+            newSwipeSessionBtn.setVisibility(ImageButton.GONE);
+            newSwipeSessionText.setVisibility(TextView.GONE);
         }
     }
 
