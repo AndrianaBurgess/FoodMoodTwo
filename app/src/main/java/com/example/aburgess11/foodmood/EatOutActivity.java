@@ -27,6 +27,7 @@ import com.example.aburgess11.foodmood.models.Match;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -171,6 +172,8 @@ public class EatOutActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        DatabaseReference myRef = database.getReference();
+                        myRef.child("Groups").child(LoginActivity.fbID).child("Users").child(LoginActivity.fbID).setValue(LoginActivity.fbUser.getDisplayName());
                         Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
                         startActivity(i);
                     }

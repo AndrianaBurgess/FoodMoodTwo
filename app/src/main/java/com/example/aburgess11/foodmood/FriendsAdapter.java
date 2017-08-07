@@ -2,6 +2,7 @@ package com.example.aburgess11.foodmood;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.aburgess11.foodmood.models.Config;
 import com.example.aburgess11.foodmood.models.Friend;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 /**
  * Created by aburgess11 on 8/4/17.
@@ -30,6 +35,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         Config config;
         // context for rendering
         Context context;
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // init with list
 
@@ -56,9 +63,19 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             LayoutInflater inflater = LayoutInflater.from(context);
             // create the view using the item_movie layout
             View friendView = inflater.inflate(R.layout.item_group, parent, false);
+
             // return a new ViewHolder
             final ViewHolder viewHolder = new ViewHolder(friendView);
-
+            viewHolder.ibAddFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = viewHolder.getAdapterPosition();
+                    Log.d(TAG, "onClick: " + position);
+                    Friend friend = friendsArray.get(position);
+                    DatabaseReference myRef = database.getReference();
+                    myRef.child("Groups").child(LoginActivity.fbID).child("Users").child(friend.getId()).setValue(friend.getName());
+                }
+            });
             return viewHolder;
         }
 

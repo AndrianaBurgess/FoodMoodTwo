@@ -51,7 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvLoginTitle;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference();
-    public String fbID;
+    public static String fbID;
+    public static FirebaseUser fbUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             String string = response.getJSONObject().toString();
                             fbID = response.getJSONObject().getString("id");
-                            FirebaseUser fbUser = mAuth.getCurrentUser();
+                            fbUser = mAuth.getCurrentUser();
                             myRef.child("Users").child(fbID).setValue(fbUser.getDisplayName());
                            // Toast.makeText(getApplicationContext(), string1, Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {

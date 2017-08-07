@@ -122,8 +122,4 @@ public class GroupActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-
 }
