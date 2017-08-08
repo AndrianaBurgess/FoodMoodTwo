@@ -55,8 +55,6 @@ public class EatOutActivity extends AppCompatActivity {
 
     public final static String TAG = "EatOutActivity";
 
-    String locationCity;
-    String oldlocationCity;
 
     // instance fields
     AsyncHttpClient client;
@@ -198,34 +196,8 @@ public class EatOutActivity extends AppCompatActivity {
         refreshBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                myMatches = new ArrayList<>();
-                loadMatches(getApplicationContext(), myMatches);
-
-                // delete mySwipeView from its container and create a new one
-                mySwipeViewContainer.removeAllViews();
-                mySwipeView = new SwipePlaceHolderView(EatOutActivity.this);
-                mySwipeViewContainer.addView(mySwipeView);
-
-                swipeCount=0;
-
-                // init the myMatches and groupMatches cards
-                mySwipeView.getBuilder()
-                        .setDisplayViewCount(3)
-                        .setSwipeDecor(new SwipeDecor()
-                                .setPaddingTop(20)
-                                .setRelativeScale(0.01f)
-                                .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
-                                .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
-
-                numViews = 0;
-                for(SwipeProfile profile : Utils.loadProfiles(getApplicationContext())){
-                    numViews += 1;
-                    mySwipeView.addView(new TinderCard(mContext, profile, mySwipeView, myMatches));
-                }
-
+                myMatches = refreshIndividualSwiping(getApplicationContext());
                 reloadMatches(getApplicationContext(), myMatches, false);
-
             }
         });
 
@@ -434,27 +406,50 @@ public class EatOutActivity extends AppCompatActivity {
         });
     }
 
+    private ArrayList<Match> refreshIndividualSwiping(Context context) {
+        myMatches = new ArrayList<>();
+        loadMatches(getApplicationContext(), myMatches);
+
+        // delete mySwipeView from its container and create a new one
+        mySwipeViewContainer.removeAllViews();
+        mySwipeView = new SwipePlaceHolderView(EatOutActivity.this);
+        mySwipeViewContainer.addView(mySwipeView);
+
+        swipeCount=0;
+
+        // init the myMatches and groupMatches cards
+        mySwipeView.getBuilder()
+                .setDisplayViewCount(3)
+                .setSwipeDecor(new SwipeDecor()
+                        .setPaddingTop(20)
+                        .setRelativeScale(0.01f)
+                        .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
+                        .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
+        numViews = 0;
+        for(SwipeProfile profile : Utils.loadProfiles(getApplicationContext())){
+            numViews += 1;
+            mySwipeView.addView(new TinderCard(mContext, profile, mySwipeView, myMatches));
+        }
+
+        return myMatches;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         fbProfile = Profile.getCurrentProfile();
-        locationCity = SettingsActivity.tvLocationCity;
-        if (locationCity != oldlocationCity) {
-            // todo: refresh the layout
-        }
     }
 
     @Override
     protected void onPause() {
         Log.d("LOGIN", "onPause");
-        oldlocationCity = locationCity;
         super.onPause();
     }
 
     @Override
     protected void onStop() {
         Log.d("LOGIN", "onStop");
-        oldlocationCity = locationCity;
         super.onStop();
     }
 
