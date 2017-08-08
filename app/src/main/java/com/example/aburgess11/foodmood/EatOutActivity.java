@@ -55,6 +55,9 @@ public class EatOutActivity extends AppCompatActivity {
 
     public final static String TAG = "EatOutActivity";
 
+    String locationCity;
+    String oldlocationCity;
+
     // instance fields
     AsyncHttpClient client;
     // the list of individual matches
@@ -435,17 +438,23 @@ public class EatOutActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         fbProfile = Profile.getCurrentProfile();
+        locationCity = SettingsActivity.tvLocationCity;
+        if (locationCity != oldlocationCity) {
+            // todo: refresh the layout
+        }
     }
 
     @Override
     protected void onPause() {
         Log.d("LOGIN", "onPause");
+        oldlocationCity = locationCity;
         super.onPause();
     }
 
     @Override
     protected void onStop() {
         Log.d("LOGIN", "onStop");
+        oldlocationCity = locationCity;
         super.onStop();
     }
 
