@@ -16,13 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/settings_login_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:translationY="5dp" />
-
             <ImageButton
                 android:id="@+id/ibEatOut"
                 android:layout_width="35dp"
@@ -52,14 +45,107 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ImageView
-        android:id="@+id/ivProfilePicture"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="44dp"
-        app:srcCompat="@drawable/com_facebook_button_icon_blue" />
+    <RelativeLayout
+        android:id="@+id/settingsPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ivProfilePicture"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/com_facebook_button_icon_blue"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivProfilePicture"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10dp"
+            android:paddingTop="5dp"
+            android:text="First Last"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/cardview_dark_background" />
+
+        <RelativeLayout
+            android:id="@+id/settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvName"
+            android:background="@color/com_facebook_button_login_silver_background_color_pressed">
+
+            <RelativeLayout
+                android:id="@+id/locationSettings"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@color/cardview_light_background"
+                android:paddingLeft="10dp"
+                android:translationY="15dp">
+
+                <TextView
+                    android:id="@+id/tvLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Location"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Notification.Title" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/radiusSettings"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@color/cardview_light_background"
+                android:paddingLeft="10dp"
+                android:paddingEnd="10dp"
+                android:translationY="57dp">
+
+                <TextView
+                    android:id="@+id/tvRadius"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Radius"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Notification.Title" />
+
+                <SeekBar
+                    android:id="@+id/radiusSeekbar"
+                    style="@android:style/Widget.Material.SeekBar"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="227dp"
+                    android:max="20"
+                    android:progress="15"
+                    android:progressTint="@color/colorSecondary"
+                    android:translationX="-40dp" />
+
+                <TextView
+                    android:id="@+id/tvSeekbarNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="15 mi"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Notification.Title"
+                    android:textColor="@color/com_facebook_button_background_color_focused_disabled" />
+
+            </RelativeLayout>
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/settings_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>
