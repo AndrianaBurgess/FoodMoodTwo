@@ -3,11 +3,12 @@ package com.example.aburgess11.foodmood;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.Restaurant;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
 public class RestaurantDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     // the restaurant to display
-    Match restaurant;
+    Restaurant restaurant;
 
     // the view objects
     @BindView(R.id.tvName) TextView tvName;
@@ -49,9 +50,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnMa
         mMapFragment.getMapAsync(this);
 
         restaurant = Parcels.unwrap(getIntent().getParcelableExtra("data"));
-//        Log.d("RestDetailsActivity", String.format("Showing details for '%s'", restaurant.getName()));
+        Log.d("RestDetailsActivity", String.format("Showing details for '%s'", restaurant.getName()));
 
         tvName.setText(restaurant.getName());
+        tvAddress.setText(restaurant.getAddress());
+        tvReviews.setText(restaurant.getRating());
+        tvHours.setText(restaurant.getPhoneNumber());
 
         Glide.with(ivBackDrop.getContext())
                 .load(restaurant.getImageUrl())

@@ -10,7 +10,7 @@ import org.parceler.Parcel;
 public class Restaurant extends Object{
 
     //List of Attributes
-    int counter;
+    String counter;
     String restaurantId;
     String address;
     String reviewCount;
@@ -25,7 +25,7 @@ public class Restaurant extends Object{
         // Default constructor required for calls to DataSnapshot.getValue(Restaurant.class)
     }
 
-    public Restaurant(int counter, String restaurauntId, String address, String reviewCount, String latitude, String longitude, String imageUrl, String phoneNumber, String rating, String name) {
+    public Restaurant(String counter, String restaurauntId, String address, String reviewCount, String latitude, String longitude, String imageUrl, String phoneNumber, String rating, String name) {
         this.counter = counter;
         this.restaurantId = restaurauntId;
         this.address = address;
@@ -74,7 +74,7 @@ public class Restaurant extends Object{
         return rating;
     }
 
-    public int getCounter() {
+    public String getCounter() {
         return counter;
     }
 
@@ -82,4 +82,39 @@ public class Restaurant extends Object{
         return restaurantId;
     }
 
+    public void setCounter(String counter) {
+        this.counter = counter;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setReviewCount(String reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
 }

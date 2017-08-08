@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,7 +21,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aburgess11.foodmood.models.City;
+import com.example.aburgess11.foodmood.models.FoodItem;
 import com.example.aburgess11.foodmood.models.Group;
 import com.example.aburgess11.foodmood.models.Restaurant;
 import com.example.aburgess11.foodmood.models.User;
@@ -37,9 +36,11 @@ import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by liangelali on 7/13/17.
@@ -51,6 +52,7 @@ public class EatOutActivity extends AppCompatActivity {
     public User user;
     public Group group;
     public Context context;
+    public String cityName;
     public static DatabaseReference userRef;
     public static DatabaseReference groupRef;
     public static ArrayList<Restaurant> restaurantList;
@@ -60,21 +62,27 @@ public class EatOutActivity extends AppCompatActivity {
     public static boolean isAppBarExpanded = false;
     public static int swipeCount = 0;
     public static final int LOGIN = 1000;
-    public static final String CURRENT_CITY = "Menlo Park";
+    public static final String CURRENT_CITY = "Austin";
     public static final String TAG = "EatOutActivity";
     public static final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    @BindView(R.id.appbar) static AppBarLayout appBarLayout;
-    @BindView(R.id.rvMatches) RecyclerView rvMatches;
+//    @BindView(R.id.appbar)
+    static AppBarLayout appBarLayout;
+//    @BindView(R.id.rvMatches)
+    RecyclerView rvMatches;
     @BindView(R.id.nestedScrollView) NestedScrollView nestedScrollView;
     @BindView(R.id.profileBtn) ImageButton profileBtn;
-    @BindView(R.id.groupToggle) Switch groupToggle;
-    @BindView(R.id.tvMatchesHeader) TextView matchesHeader;
-    @BindView(R.id.ivUpArrow) ImageView upArrow;
-    @BindView(R.id.swipeView) SwipePlaceHolderView mSwipeView;
+//    @BindView(R.id.groupToggle)
+    Switch groupToggle;
+//    @BindView(R.id.tvMatchesHeader)
+    TextView matchesHeader;
+//    @BindView(R.id.ivUpArrow)
+    ImageView upArrow;
+//    @BindView(R.id.swipeView)
+    SwipePlaceHolderView mSwipeView;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
-    @BindView(R.id.rejectBtn) Button rejectBtn;
-    @BindView(R.id.acceptBtn) Button acceptBtn;
+    @BindView(R.id.rejectBtn) ImageButton rejectBtn;
+    @BindView(R.id.acceptBtn) ImageButton acceptBtn;
 
     public EatOutActivity() {
     }
@@ -86,54 +94,53 @@ public class EatOutActivity extends AppCompatActivity {
             Log.d("Sean", "onCreate: " + savedInstanceState.getInt("saved"));
         }
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         context = this.getApplicationContext();
 
-        groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
+        matchesHeader = (TextView) findViewById(R.id.tvMatchesHeader);
+        upArrow = (ImageView) findViewById(R.id.ivUpArrow);
+        groupToggle = (Switch) findViewById(R.id.groupToggle);
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                com.facebook.Profile profile = Profile.getCurrentProfile();
-
-                if(isChecked == true) {
-                    isAlone = false;
-                } else {
-                    isAlone = true;
-                }
-
-                if (profile == null && isChecked) {
-                    Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
-                    Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
-                    EatOutActivity.this.startActivityForResult(i, LOGIN);
-
-                } else if (isChecked) {
-                    Log.d("LOGIN STATUS:", "user was already logged in");
-                    Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
-                }
-
-//                if(profile != null && isChecked) {
-//                    Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
-//                    EatOutActivity.this.startActivity(i);
-//                }
-            }
-        });
+        restaurantList = new ArrayList<>();
+        isAlone = true;
 
         initializeDatabase();
-        initializeUserInterface();
-        initializeOnClickListeners();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initializeUserInterface();
+//                initializeOnClickListeners();
+            }
+        });
     }
 
     public static void loadMatches(Map<String, Object> restaurants) {
         for(String restaurantId : restaurants.keySet()) {
-            Restaurant restaurant = (Restaurant) restaurants.get(restaurantId);
-            restaurantList.add(restaurant);
+            HashMap<String, Object> restaurant = (HashMap) restaurants.get(restaurantId);
+            Restaurant newRest = new Restaurant();
+            newRest.setName(restaurant.get("name").toString());
+            newRest.setCounter(restaurant.get("counter").toString());
+            newRest.setImageUrl(restaurant.get("image_url").toString());
+            newRest.setRestaurantId(restaurant.get("id").toString());
+            newRest.setPhoneNumber(restaurant.get("phone").toString());
+            newRest.setRating(restaurant.get("rating").toString());
+            newRest.setRating(restaurant.get("review_count").toString());
+
+            HashMap<String, String> coordinates = (HashMap) restaurant.get("coordinates");
+            newRest.setLatitude(coordinates.get("latitude"));
+            newRest.setLongitude(coordinates.get("longitude"));
+
+            restaurantList.add(newRest);
             adapter.notifyItemInserted(restaurantList.size() - 1);
         }
     }
 
+
     private void populateUserInterface() {
-        Map<String, Object> foodItems;
-        Map<String, Object> restaurants;
+        ArrayList<Object> foodItems = new ArrayList<>();
+        Map<String, Object> restaurants = new HashMap<>();
 
         if(isAlone) {
             foodItems = user.getFoodItems();
@@ -142,11 +149,20 @@ public class EatOutActivity extends AppCompatActivity {
             foodItems = group.getFoodItems();
             restaurants = group.getRestaurants();
         }
+        restaurantMap = restaurants;
+
+        if (foodItems == null) {
+            return;
+        }
 
         for(int i = 0; i < foodItems.size(); i++) {
-            mSwipeView.addView(new TinderCard(context, foodItems.get("" + i), mSwipeView));
+            Map<String, String> data = (Map<String, String>) foodItems.get(i);
+            if (data == null) {
+                continue;
+            }
+
+            mSwipeView.addView(new TinderCard(context, new FoodItem(data.get("restaurant"), data.get("image_url")), mSwipeView));
         }
-        restaurantMap = restaurants;
         loadMatches(restaurants);
     }
 
@@ -206,6 +222,35 @@ public class EatOutActivity extends AppCompatActivity {
             }
         });
 
+        groupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                com.facebook.Profile profile = Profile.getCurrentProfile();
+
+                if(isChecked == true) {
+                    isAlone = false;
+                } else {
+                    isAlone = true;
+                }
+
+                if (profile == null && isChecked) {
+                    Log.d("LOGIN STATUS", "user was not logged in. launching LoginActivity");
+                    Intent i = new Intent(EatOutActivity.this, LoginActivity.class);
+                    EatOutActivity.this.startActivityForResult(i, LOGIN);
+
+                } else if (isChecked) {
+                    Log.d("LOGIN STATUS:", "user was already logged in");
+                    Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + profile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
+                }
+
+//                if(profile != null && isChecked) {
+//                    Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
+//                    EatOutActivity.this.startActivity(i);
+//                }
+            }
+        });
     }
 
     private void initializeAdapter() {
@@ -225,16 +270,16 @@ public class EatOutActivity extends AppCompatActivity {
         database.getReference("Users").child(userId).setValue(user);
         userRef = database.getReference("Users").child(userId);
         populateDatabase(database, userRef);
-        listenForUpdates(database, userRef);
+//        listenForUpdates(database, userRef);
 
-        //Group
-        String groupId = "some_group_id";
-        group = new Group();
-        group.groupId = groupId;
-        database.getReference("Groups").child(groupId).setValue(group);
-        groupRef = database.getReference("Groups").child(groupId);
-        populateDatabase(database, groupRef);
-        listenForUpdates(database, userRef);
+//        //Group
+//        String groupId = "some_group_id";
+//        group = new Group();
+//        group.groupId = groupId;
+//        database.getReference("Groups").child(groupId).setValue(group);
+//        groupRef = database.getReference("Groups").child(groupId);
+////        populateDatabase(database, groupRef);
+////        listenForUpdates(database, userRef);
     }
 
     private void listenForUpdates(final FirebaseDatabase database, final DatabaseReference sessionRef) {
@@ -242,7 +287,7 @@ public class EatOutActivity extends AppCompatActivity {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                updateLocalData(sessionRef, dataSnapshot);
+//                updateLocalData(sessionRef, dataSnapshot);
             }
 
             @Override
@@ -255,41 +300,71 @@ public class EatOutActivity extends AppCompatActivity {
 
     private void populateDatabase(final FirebaseDatabase database, final DatabaseReference sessionRef) {
         //getting the references to the data once to populate it to the user/group
-        String city = "some_city_chosen";
-        DatabaseReference cityRef = database.getReference("Cities").child(city);
-        cityRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//        String cityName = getParentActivityIntent().getStringExtra("cityName");
+        cityName = CURRENT_CITY;
+
+        DatabaseReference citiesRef = database.getReference("Cities");
+//        DatabaseReference cityRef = citiesRef.child(cityName);
+//        DatabaseReference restRef = cityRef.child("Restaurants");
+//        DatabaseReference foodRef = cityRef.child("Food Items");
+
+        Log.d("Sean", "citiesRef: " + database.getReference("Cities").child(cityName).toString());
+
+        citiesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                City city = dataSnapshot.getValue(City.class);
-
+                Log.d("Sean", "Restaurants: " + dataSnapshot.child(cityName).child("Restaurants").getValue().toString());
+                Map<String, Object> restaurants = (HashMap) dataSnapshot.child(cityName).child("Restaurants").getValue();
                 DatabaseReference restaurantsRef = sessionRef.child("Restaurants");
-                restaurantsRef.setValue(city.restaurants);
-//                restaurantsRef.updateChildren(city.restaurants);
+                restaurantsRef.setValue(restaurants);
 
+                Log.d("Sean", "Food Items: " + dataSnapshot.child(cityName).child("Food Items").getValue().toString());
+                Log.d("Sean", "Food Items Class: " + dataSnapshot.child(cityName).child("Food Items").getClass().toString());
 
+                ArrayList<Object> foodItems = (ArrayList) dataSnapshot.child(cityName).child("Food Items").getValue();
                 DatabaseReference foodItemsRef = sessionRef.child("Food Items");
-                foodItemsRef.setValue(city.foodItems);
-//                foodItemsRef.updateChildren(city.foodItems);
-
+                foodItemsRef.setValue(foodItems);
                 updateLocalData(sessionRef, dataSnapshot);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("Database", "The database read failed: " + databaseError.getCode());
+                Log.d("Sean", "The database failed to read: " + databaseError.getCode());
             }
         });
+
+//        citiesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Log.d("Sean", "Restaurants: " + dataSnapshot.child("Restaurants").getValue().toString());
+//                DatabaseReference restaurantsRef = sessionRef.child("Restaurants");
+//                restaurantsRef.setValue(dataSnapshot.child("Restaurants").getValue());
+//
+//                DatabaseReference foodItemsRef = sessionRef.child("Food Items");
+//                foodItemsRef.setValue(dataSnapshot.child("Food Items").getValue());
+//
+//                updateLocalData(sessionRef, dataSnapshot);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.d("Database", "The database read failed: " + databaseError.getCode());
+//            }
+//        });
     }
 
     private void updateLocalData(DatabaseReference sessionRef, DataSnapshot dataSnapshot) {
         //if the session is a single user, update the user info; if a group, update group info
         if(sessionRef.getParent() == database.getReference("Groups")) {
-            group.foodItems = dataSnapshot.getValue(Map.class);
-            group.restaurants = dataSnapshot.getValue(Map.class);
+            group.foodItems = (ArrayList) dataSnapshot.child(cityName).child("Food Items").getValue();
+            group.restaurants = (HashMap) dataSnapshot.child(cityName).child("Restaurants").getValue();
         } else {
-            user.foodItems = dataSnapshot.getValue(Map.class);
-            user.restaurants = dataSnapshot.getValue(Map.class);
+            user.foodItems = (ArrayList) dataSnapshot.child(cityName).child("Food Items").getValue();
+            user.restaurants = (HashMap) dataSnapshot.child(cityName).child("Restaurants").getValue();
         }
+
+        // notify the adapter
+        populateUserInterface();
     }
 
     private void initializeUserInterface() {
@@ -348,7 +423,7 @@ public class EatOutActivity extends AppCompatActivity {
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
 
-        populateUserInterface();
+//        populateUserInterface();
     }
 
 //    public void loadMatches2(Context context, ArrayList<Match> list) {

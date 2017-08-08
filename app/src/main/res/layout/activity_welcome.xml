@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:alpha=".5"
         app:srcCompat="@color/colorSecondaryDark" />
 
     <ImageView
@@ -22,15 +21,22 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="103dp"
+        android:elevation="24dp"
+        android:tint="@android:color/white"
         app:srcCompat="@drawable/cloud" />
 
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to FoodMood"
         android:layout_below="@+id/ivLogo"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:elevation="24dp"
+        android:fontFamily="cursive"
+        android:lineSpacingExtra="12sp"
+        android:text="Welcome to FoodMood"
+        android:textColor="@android:color/white"
+        android:textSize="36sp" />
 
     <Button
         android:id="@+id/btnEatAlone"
@@ -39,7 +45,10 @@
         android:layout_below="@+id/tvWelcome"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="62dp"
-        android:text="Eating Alone?" />
+        android:background="@android:color/white"
+        android:elevation="24dp"
+        android:text="Eating Alone?"
+        android:textColor="@color/colorSecondary" />
 
     <Button
         android:id="@+id/btnWithFriends"
@@ -48,5 +57,8 @@
         android:layout_below="@+id/btnEatAlone"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="68dp"
-        android:text="Eating with Friends?" />
+        android:background="@android:color/white"
+        android:elevation="24dp"
+        android:text="Eating with Friends?"
+        android:textColor="@color/colorSecondary" />
 </RelativeLayout>

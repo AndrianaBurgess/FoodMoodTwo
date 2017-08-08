@@ -50,19 +50,19 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            int position = viewHolder.getAdapterPosition();
-            Log.d(TAG, "onClick: " + position);
-            // make sure the position is valid, i.e. actually exists in the view
-            if (position != RecyclerView.NO_POSITION) {
-                // get the match at the position, this won't work if the class is static
-                Restaurant restaurant = restaurantList.get(position);
-                // create intent for the new activity
-                Intent intent = new Intent(context, RestaurantDetailsActivity.class);
-                // serialize the Restaurant using parceler, use its restaurantId as a key
-                intent.putExtra("data", Parcels.wrap(restaurant));
-                // show the activity
-                context.startActivity(intent);
-            }
+                int position = viewHolder.getAdapterPosition();
+                Log.d(TAG, "onClick: " + position);
+                // make sure the position is valid, i.e. actually exists in the view
+                if (position != RecyclerView.NO_POSITION) {
+                    // get the match at the position, this won't work if the class is static
+                    Restaurant restaurant = restaurantList.get(position);
+                    // create intent for the new activity
+                    Intent intent = new Intent(context, RestaurantDetailsActivity.class);
+                    // serialize the Restaurant using parceler, use its restaurantId as a key
+                    intent.putExtra("data", Parcels.wrap(restaurant));
+                    // show the activity
+                    context.startActivity(intent);
+                }
             }
         });
         return viewHolder;
@@ -106,7 +106,6 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         @BindView(R.id.ivMatchImage) ImageView ivMatchImage;
         @BindView(R.id.tvMatchName) TextView tvMatchName;
         @BindView(R.id.tvMatchDetails) TextView tvMatchDetails;
-        @BindView(R.id.tvPercentMatch) TextView tvPercentMatch;
 
         public ViewHolder(View itemView) {
             super(itemView);

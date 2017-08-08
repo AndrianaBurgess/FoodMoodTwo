@@ -13,7 +13,14 @@ public class FoodItem {
     String restaurantId;
     String imageUrl;
 
-    public FoodItem() {}
+    public FoodItem() {
+
+    }
+
+    public FoodItem(String restaurantId, String imageUrl) {
+        this.restaurantId = restaurantId;
+        this.imageUrl = imageUrl;
+    }
 
     public FoodItem(JSONObject object) throws JSONException {
         restaurantId = object.getString("id");

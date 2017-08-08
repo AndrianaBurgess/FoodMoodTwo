@@ -23,7 +23,6 @@ import static com.example.aburgess11.foodmood.EatOutActivity.groupRef;
 import static com.example.aburgess11.foodmood.EatOutActivity.isAlone;
 import static com.example.aburgess11.foodmood.EatOutActivity.swipeCount;
 import static com.example.aburgess11.foodmood.EatOutActivity.userRef;
-import static com.example.aburgess11.foodmood.R.id.restaurantMap;
 
 
 /**
@@ -42,9 +41,9 @@ public class TinderCard {
     private SwipePlaceHolderView mSwipeView;
     private DatabaseReference sessionRef;
 
-    public TinderCard(Context context, Object foodItem, SwipePlaceHolderView swipeView) {
+    public TinderCard(Context context, FoodItem foodItem, SwipePlaceHolderView swipeView) {
         mContext = context;
-        mFoodItem = (FoodItem) foodItem;
+        mFoodItem = foodItem;
         mSwipeView = swipeView;
 
         if(isAlone) {
@@ -93,7 +92,7 @@ public class TinderCard {
 
         // after 10 swipes, automatically pop up the matches page
         if (swipeCount == 10){
-            EatOutActivity.loadMatches(restaurantMap);
+            EatOutActivity.loadMatches(EatOutActivity.restaurantMap);
             EatOutActivity.isAppBarExpanded = true;
             appBarLayout.setExpanded(false);
             appBarLayout.setFitsSystemWindows(true);

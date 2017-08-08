@@ -1,5 +1,6 @@
 package com.example.aburgess11.foodmood.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,8 @@ public class User {
 
     public String userId;
     public Map<String, Object> restaurants;
-    public Map<String, Object> foodItems;
+//    public Map<String, Object> foodItems;
+    public ArrayList<Object> foodItems;
     public List<Group> groups;
 
 
@@ -19,7 +21,7 @@ public class User {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String userId, List<Group> groups, Map<String, Object> restaurants, Map<String, Object> foodItems) {
+    public User(String userId, List<Group> groups, Map<String, Object> restaurants, ArrayList<Object> foodItems) {
         this.userId = userId;
         this.restaurants = restaurants;
         this.foodItems = foodItems;
@@ -34,7 +36,7 @@ public class User {
         return restaurants;
     }
 
-    public Map<String, Object> getFoodItems() {
+    public ArrayList<Object> getFoodItems() {
         return foodItems;
     }
 

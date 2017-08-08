@@ -64,5 +64,4 @@ public class Match implements Comparable<Match>{
     public int compareTo(@NonNull Match match) {
         return Integer.compare(match.rank, this.rank);
     }
-
 }
