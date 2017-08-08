@@ -135,9 +135,6 @@ public class EatOutActivity extends AppCompatActivity {
 
 
 
-
-
-
         // resolve the recycler view and connect a layout manager
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
         rvMatches.setLayoutManager(new LinearLayoutManager(this));
