@@ -158,7 +158,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
             @BindView(R.id.tvFriendName) TextView tvFriendName;
             @BindView(R.id.ibAddFriend) ImageButton ibAddFriend;
-            
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
