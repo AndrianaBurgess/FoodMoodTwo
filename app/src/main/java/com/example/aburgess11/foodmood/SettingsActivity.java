@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -47,8 +46,8 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
     @BindView(R.id.settings_login_button)
     LoginButton settings_login_button;
     @BindView(R.id.ibEatOut) ImageButton ibEatOut;
-    @BindView(R.id.add_geofences_button) Button mAddGeofencesButton;
-    @BindView(R.id.remove_geofences_button) Button mRemoveGeofencesButton;
+   // @BindView(R.id.add_geofences_button) Button mAddGeofencesButton;
+   // @BindView(R.id.remove_geofences_button) Button mRemoveGeofencesButton;
 
     /**
      * Tracks whether the user requested to add or remove geofences, or to do neither.
@@ -83,7 +82,7 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
         if (savedInstanceState == null) {
             Fragment preferenceFragment = new PreferenceFragmentCustom();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.pref_container, preferenceFragment);
+            //ft.add(R.id.pref_container, preferenceFragment);
             ft.commit();
         }
 
@@ -293,11 +292,11 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
      */
     private void setButtonsEnabledState() {
         if (getGeofencesAdded()) {
-            mAddGeofencesButton.setEnabled(false);
-            mRemoveGeofencesButton.setEnabled(true);
+            //mAddGeofencesButton.setEnabled(false);
+           // mRemoveGeofencesButton.setEnabled(true);
         } else {
-            mAddGeofencesButton.setEnabled(true);
-            mRemoveGeofencesButton.setEnabled(false);
+           // mAddGeofencesButton.setEnabled(true);
+           // mRemoveGeofencesButton.setEnabled(false);
         }
     }
 

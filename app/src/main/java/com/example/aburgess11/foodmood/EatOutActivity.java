@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -49,6 +50,8 @@ import java.util.ArrayList;
 public class EatOutActivity extends AppCompatActivity {
     private static final int LOGIN = 1000;
     // constants
+
+    int numViews = 0;
 
     public final static String TAG = "EatOutActivity";
 
@@ -91,7 +94,9 @@ public class EatOutActivity extends AppCompatActivity {
     private AccessTokenTracker accessTokenTracker;
 
     private SwipePlaceHolderView mySwipeView;
+    private FrameLayout mySwipeViewContainer;
     private SwipePlaceHolderView groupSwipeView;
+    private FrameLayout groupSwipeViewContainer;
 
     private Context mContext;
     public static int swipeCount=0;
@@ -186,6 +191,41 @@ public class EatOutActivity extends AppCompatActivity {
                 });
 
 
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                myMatches = new ArrayList<>();
+                loadMatches(getApplicationContext(), myMatches);
+
+                // delete mySwipeView from its container and create a new one
+                mySwipeViewContainer.removeAllViews();
+                mySwipeView = new SwipePlaceHolderView(EatOutActivity.this);
+                mySwipeViewContainer.addView(mySwipeView);
+
+                swipeCount=0;
+
+                // init the myMatches and groupMatches cards
+                mySwipeView.getBuilder()
+                        .setDisplayViewCount(3)
+                        .setSwipeDecor(new SwipeDecor()
+                                .setPaddingTop(20)
+                                .setRelativeScale(0.01f)
+                                .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
+                                .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
+                numViews = 0;
+                for(SwipeProfile profile : Utils.loadProfiles(getApplicationContext())){
+                    numViews += 1;
+                    mySwipeView.addView(new TinderCard(mContext, profile, mySwipeView, myMatches));
+                }
+
+                reloadMatches(getApplicationContext(), myMatches, false);
+
+            }
+        });
+
+
 
 
 
@@ -253,14 +293,15 @@ public class EatOutActivity extends AppCompatActivity {
         });
 
 
-        // get the configuration on app creation
-        //getConfiguration();
+
 
         loadMatches(this.getApplicationContext(), myMatches);
         loadMatches(this.getApplicationContext(), groupMatches);
 
-
+        mySwipeViewContainer = (FrameLayout)findViewById(R.id.mySwipeViewContainer);
         mySwipeView = (SwipePlaceHolderView)findViewById(R.id.mySwipeView);
+
+        groupSwipeViewContainer = (FrameLayout) findViewById(R.id.groupSwipeViewContainer);
         groupSwipeView = (SwipePlaceHolderView)findViewById(R.id.groupSwipeView);
 
         mContext = getApplicationContext();
@@ -276,9 +317,12 @@ public class EatOutActivity extends AppCompatActivity {
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
 
+
         for(SwipeProfile profile : Utils.loadProfiles(this.getApplicationContext())){
+            numViews += 1;
             mySwipeView.addView(new TinderCard(mContext, profile, mySwipeView, myMatches));
         }
+
 
         groupSwipeView.getBuilder()
                 .setDisplayViewCount(3)
@@ -300,6 +344,7 @@ public class EatOutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(!groupToggle.isChecked()) {
                     mySwipeView.doSwipe(false);
+                    numViews -= 1;
                     Log.d("EVENT",  "swipeCount" );
                 } else {
                     groupSwipeView.doSwipe(false);
@@ -313,6 +358,7 @@ public class EatOutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(!groupToggle.isChecked()) {
                     mySwipeView.doSwipe(true);
+                    numViews -= 1;
                     Log.d("EVENT",  "swipeCount" );
                 } else {
                     groupSwipeView.doSwipe(true);
