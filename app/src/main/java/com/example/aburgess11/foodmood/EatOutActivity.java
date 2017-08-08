@@ -111,7 +111,7 @@ public class EatOutActivity extends AppCompatActivity {
             @Override
             public void run() {
                 initializeUserInterface();
-//                initializeOnClickListeners();
+                initializeOnClickListeners();
             }
         });
     }
@@ -270,7 +270,7 @@ public class EatOutActivity extends AppCompatActivity {
         database.getReference("Users").child(userId).setValue(user);
         userRef = database.getReference("Users").child(userId);
         populateDatabase(database, userRef);
-//        listenForUpdates(database, userRef);
+        listenForUpdates(database, userRef);
 
 //        //Group
 //        String groupId = "some_group_id";
@@ -287,7 +287,7 @@ public class EatOutActivity extends AppCompatActivity {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                updateLocalData(sessionRef, dataSnapshot);
+                updateLocalData(sessionRef, dataSnapshot);
             }
 
             @Override

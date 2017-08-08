@@ -33,7 +33,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnMa
     @BindView(R.id.tvAddress) TextView tvAddress;
     @BindView(R.id.ivBackdrop) ImageView ivBackDrop;
     @BindView(R.id.ratingBar) RatingBar ratingBar;
-//    @BindView(R.id.map) MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

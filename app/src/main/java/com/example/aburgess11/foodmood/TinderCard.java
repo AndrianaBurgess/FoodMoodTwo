@@ -7,7 +7,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.aburgess11.foodmood.models.FoodItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
@@ -73,10 +76,21 @@ public class TinderCard {
 
     @SwipeIn
     private void onSwipeIn() {
-        DatabaseReference currCounter = sessionRef.child("Restaurants").child(this.mFoodItem.getRestaurantId()).child("counter");
-        String currCount = currCounter.toString();
-        int countCurr = Integer.getInteger(currCount) + 1;
-        currCounter.setValue(countCurr);
+        final DatabaseReference currCounter = sessionRef.child("Restaurants").child(this.mFoodItem.getRestaurantId()).child("counter");
+        currCounter.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String currCount = dataSnapshot.getValue().toString();
+                int countCurr = Integer.parseInt(currCount) + 1;
+                currCounter.setValue(countCurr);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         popUpList();
         Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
