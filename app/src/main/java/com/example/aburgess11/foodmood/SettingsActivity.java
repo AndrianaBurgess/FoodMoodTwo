@@ -6,20 +6,23 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.facebook.Profile;
-import com.facebook.login.widget.LoginButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SettingsActivity extends AppCompatActivity implements OnSeekBarChangeListener {
+public class SettingsActivity extends AppCompatActivity implements OnSeekBarChangeListener, AdapterView.OnItemSelectedListener {
 
     private static final int LOGIN = 1000;
     private static final String TAG = "SettingsActivity";
@@ -29,20 +32,25 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
 
     private com.facebook.Profile fbProfile;
 
-    @BindView(R.id.settings_login_button)
-    LoginButton settings_login_button;
+    @BindView(R.id.loginSettings)
+    RelativeLayout loginSettings;
     @BindView(R.id.ibEatOut)
     ImageButton ibEatOut;
 
     CircleImageView ivProfilePicture;
     TextView tvName;
 
+    Spinner locationDropdown;
+    static String tvLocationCity;
+
     SeekBar radiusSeekbar;
+    int seekbarProgress;
     TextView tvSeekbarNumber;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt("onSaveInstanceState", 1);
+        outState.putInt("onSaveInstanceState", 2);
+        outState.putInt("progress", seekbarProgress);
         Log.d(TAG, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
     }
@@ -50,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        seekbarProgress = savedInstanceState.getInt("progress");
         Log.d(TAG, "onRestoreInstanceState: " + savedInstanceState.getInt("saved"));
     }
 
@@ -84,18 +93,28 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
         Uri uri = fbProfile.getProfilePictureUri(150,150);
         Glide.with(this).load(uri).into(ivProfilePicture);
 
+        locationDropdown = (Spinner) findViewById(R.id.locationDropDown);
+        String[] locations = new String[]{"Menlo Park, CA", "New York, NY", "Austin, TX", "Boston, MA"};
+        ArrayAdapter<String>adapter = new ArrayAdapter<String>(SettingsActivity.this,
+                android.R.layout.simple_spinner_item, locations);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        locationDropdown.setAdapter(adapter);
+        locationDropdown.setOnItemSelectedListener(this);
+
 
         // seekbar
         radiusSeekbar = (SeekBar) findViewById(R.id.radiusSeekbar);
         radiusSeekbar.setOnSeekBarChangeListener(this);
         tvSeekbarNumber = (TextView) findViewById(R.id.tvSeekbarNumber);
-        tvSeekbarNumber.setText(radiusSeekbar.getProgress() + " mi");
+        seekbarProgress = radiusSeekbar.getProgress();
+        tvSeekbarNumber.setText(seekbarProgress + " mi");
 
 
-        settings_login_button.setToolTipMode(LoginButton.ToolTipMode.NEVER_DISPLAY);
+
 
         // create onClick for Login Button
-        settings_login_button.setOnClickListener(new View.OnClickListener() {
+        loginSettings.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -107,8 +126,15 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
         fbProfile = Profile.getCurrentProfile();
     }
 
@@ -126,7 +152,8 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        tvSeekbarNumber.setText(progress + " mi");
+        int seekbarProgress = progress;
+        tvSeekbarNumber.setText(seekbarProgress + " mi");
     }
 
     @Override
@@ -135,4 +162,13 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {}
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        tvLocationCity = (String) parent.getItemAtPosition(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
