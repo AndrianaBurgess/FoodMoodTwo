@@ -26,7 +26,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:tint="@color/colorSecondary"
-        app:srcCompat="@android:drawable/ic_menu_send" />
+        app:srcCompat="@android:drawable/ic_menu_send"
+        />
 
     <ImageView
         android:id="@+id/ivProfileImage"

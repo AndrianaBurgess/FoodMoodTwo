@@ -82,7 +82,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     int position = viewHolder.getAdapterPosition();
                     Log.d(TAG, "onClick: " + position);
                     final Friend friend = friendsArray.get(position);
-
+                    //viewHolder.ibAddFriend.setVisibility(View.VISIBLE);
 
 
                     groups.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -99,6 +99,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                             if (!isInGroup) {
                                 String id = Profile.getCurrentProfile().getId();
                                 groups.child(id).child("Users").child(friend.getId()).setValue(friend.getName());
+
                             }
 
                         }
@@ -157,9 +158,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
             @BindView(R.id.tvFriendName) TextView tvFriendName;
             @BindView(R.id.ibAddFriend) ImageButton ibAddFriend;
-
-
-
+            
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);

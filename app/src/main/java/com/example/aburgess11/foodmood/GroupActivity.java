@@ -122,4 +122,33 @@ public class GroupActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("onSaveInstanceState", 1);
+        Log.d("Group", "onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("Group", "onRestoreInstanceState: " + savedInstanceState.getInt("saved"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d("LOGIN", "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d("LOGIN", "onStop");
+        super.onStop();
+    }
 }

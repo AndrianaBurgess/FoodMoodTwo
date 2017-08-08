@@ -194,7 +194,7 @@ public class EatOutActivity extends AppCompatActivity {
                                 Iterable<DataSnapshot> nodes = dataSnapshot.getChildren();
                                 boolean isInGroup = false;
                                 for (  DataSnapshot d  : nodes ){
-                                    if(d.child("Users").hasChild(id)){
+                                    if(!d.getKey().equals(id) && d.child("Users").hasChild(id)){
                                         Toast.makeText(getApplicationContext(),"You are already in a group", Toast.LENGTH_LONG).show();
                                         isInGroup = true;
                                     }
