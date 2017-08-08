@@ -28,8 +28,11 @@ import com.example.aburgess11.foodmood.models.Match;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -141,7 +144,6 @@ public class EatOutActivity extends AppCompatActivity {
 
 
 
-
         // resolve the recycler view and connect a layout manager
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
         rvMatches.setLayoutManager(new LinearLayoutManager(this));
@@ -183,12 +185,40 @@ public class EatOutActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         //creates a new group swiping session on firebase with your facebook id being the group identifier
-                        DatabaseReference myRef = database.getReference();
-                        String id = Profile.getCurrentProfile().getId();
-                        String name =  Profile.getCurrentProfile().getName();
-                        myRef.child("Groups").child(id).child("Users").child(id).setValue(name);
-                        Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
-                        startActivity(i);
+
+                        final String id = Profile.getCurrentProfile().getId();
+                        DatabaseReference groups = database.getReference().child("Groups");
+
+                        groups.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Iterable<DataSnapshot> nodes = dataSnapshot.getChildren();
+                                boolean isInGroup = false;
+                                for (  DataSnapshot d  : nodes ){
+                                    if(d.child("Users").hasChild(id)){
+                                        Toast.makeText(getApplicationContext(),"You are already in a group", Toast.LENGTH_LONG).show();
+                                        isInGroup = true;
+                                    }
+                                }
+                                if (!isInGroup) {
+                                    String name =  Profile.getCurrentProfile().getName();
+                                    DatabaseReference myRef = database.getReference();
+                                    myRef.child("Groups").child(id).child("Users").child(id).setValue(name);
+                                    Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
+                                    startActivity(i);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+
+
+                        });
+
+
                     }
                 });
 

@@ -37,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
     @BindView(R.id.ibEatOut)
     ImageButton ibEatOut;
 
+
     CircleImageView ivProfilePicture;
     TextView tvName;
 
@@ -71,6 +72,7 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
 
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
+
 
         // create onClick for EatOut button
         ibEatOut.setOnClickListener(new View.OnClickListener() {
@@ -109,8 +111,6 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
         tvSeekbarNumber = (TextView) findViewById(R.id.tvSeekbarNumber);
         seekbarProgress = radiusSeekbar.getProgress();
         tvSeekbarNumber.setText(seekbarProgress + " mi");
-
-
 
 
         // create onClick for Login Button
