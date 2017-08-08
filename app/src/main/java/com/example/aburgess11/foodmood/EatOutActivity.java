@@ -126,7 +126,7 @@ public class EatOutActivity extends AppCompatActivity {
             newRest.setRestaurantId(restaurant.get("id").toString());
             newRest.setPhoneNumber(restaurant.get("phone").toString());
             newRest.setRating(restaurant.get("rating").toString());
-            newRest.setRating(restaurant.get("review_count").toString());
+            newRest.setReviewCount(restaurant.get("review_count").toString());
 
             HashMap<String, String> coordinates = (HashMap) restaurant.get("coordinates");
             newRest.setLatitude(coordinates.get("latitude"));

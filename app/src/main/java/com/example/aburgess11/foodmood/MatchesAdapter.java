@@ -78,6 +78,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         holder.tvMatchName.setText(restaurant.getName());
         holder.tvMatchDetails.setText(restaurant.getAddress());
 
+
         // load backdrop
         String imageUrl = restaurant.getImageUrl();
 

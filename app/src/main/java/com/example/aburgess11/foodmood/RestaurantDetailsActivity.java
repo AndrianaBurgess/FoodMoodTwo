@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,12 +28,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnMa
 
     // the view objects
     @BindView(R.id.tvName) TextView tvName;
-    @BindView(R.id.tvCost) TextView tvCost;
     @BindView(R.id.tvDistance) TextView tvDistance;
-    @BindView(R.id.tvHours) TextView tvHours;
     @BindView(R.id.tvReviews) TextView tvReviews;
     @BindView(R.id.tvAddress) TextView tvAddress;
     @BindView(R.id.ivBackdrop) ImageView ivBackDrop;
+    @BindView(R.id.ratingBar) RatingBar ratingBar;
 //    @BindView(R.id.map) MapFragment mapFragment;
 
     @Override
@@ -54,8 +54,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnMa
 
         tvName.setText(restaurant.getName());
         tvAddress.setText(restaurant.getAddress());
-        tvReviews.setText(restaurant.getRating());
-        tvHours.setText(restaurant.getPhoneNumber());
+        tvReviews.setText(restaurant.getReviewCount());
+        ratingBar.setRating((float) Double.parseDouble(restaurant.getRating()));
 
         Glide.with(ivBackDrop.getContext())
                 .load(restaurant.getImageUrl())

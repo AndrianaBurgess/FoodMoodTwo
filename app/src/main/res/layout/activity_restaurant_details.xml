@@ -12,20 +12,36 @@
         android:layout_height="170dp"
         app:srcCompat="@android:color/transparent" />
 
+    <ImageView
+        android:id="@+id/ivColorRectangle"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_alignBottom="@+id/ivMatchImage"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/image_overlay" />
+
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="cursive"
         android:text="Restaurant Name"
         android:textAppearance="@android:style/TextAppearance.Material.Title"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
         android:layout_above="@+id/ratingBar"
         android:layout_alignParentStart="true" />
 
     <RatingBar
         android:id="@+id/ratingBar"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/tvHours"
+        android:layout_above="@+id/relativeLayout2"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -34,37 +50,25 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/ratingBar"
         android:layout_toEndOf="@+id/ratingBar"
-        android:text="0 Reviews" />
+        android:text="0 Reviews"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/tvDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0.5 mi"
-        android:layout_alignTop="@+id/tvName"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:id="@+id/tvCost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/tvDistance"
-        android:text="$$" />
-
-    <TextView
-        android:id="@+id/tvHours"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hours Today:"
-        android:layout_alignBottom="@+id/ivBackdrop"
-        android:layout_alignParentStart="true" />
+        android:layout_alignTop="@+id/tvName"
+        android:text="0.5 mi"
+        android:textColor="@android:color/white" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/ivBackdrop">
+        android:layout_below="@+id/ivBackdrop"
+        android:id="@+id/relativeLayout2">
 
         <FrameLayout
             android:id="@+id/framelayout"
@@ -94,5 +98,16 @@
             android:text="Directions" />
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvReviewWord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayout2"
+        android:layout_toEndOf="@+id/tvReviews"
+        android:text="Reviews"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp" />
 
 </RelativeLayout>
