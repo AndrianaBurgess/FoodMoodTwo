@@ -28,6 +28,7 @@
         android:tint="@color/colorSecondary"
         app:srcCompat="@android:drawable/ic_input_add" />
 
+
     <ImageView
         android:id="@+id/ivProfileImage"
         android:layout_width="50dp"

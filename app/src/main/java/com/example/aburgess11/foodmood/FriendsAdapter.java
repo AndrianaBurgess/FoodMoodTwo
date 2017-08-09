@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.http.HEAD;
 
 import static com.facebook.login.widget.ProfilePictureView.TAG;
 
@@ -87,6 +88,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
 
 
+
                     groups.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,6 +103,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                             if (!isInGroup) {
                                 String id = Profile.getCurrentProfile().getId();
                                 groups.child(id).child("Users").child(friend.getId()).setValue(friend.getName());
+
                             }
                         }
 
