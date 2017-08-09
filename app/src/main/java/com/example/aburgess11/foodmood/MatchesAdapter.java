@@ -30,7 +30,7 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHolder> {
 
     // list of matches
-    List<Restaurant> restaurantList;
+    public List<Restaurant> restaurantList;
     // context for rendering
     Context context;
 
@@ -80,7 +80,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
 
 
         // load backdrop
-        String imageUrl = restaurant.getImageUrl();
+        String imageUrl = restaurant.getImage_url();
 
         // load the poster
         ImageView imageview = holder.ivMatchImage;

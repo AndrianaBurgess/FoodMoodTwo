@@ -26,6 +26,7 @@ import com.example.aburgess11.foodmood.models.Group;
 import com.example.aburgess11.foodmood.models.Restaurant;
 import com.example.aburgess11.foodmood.models.User;
 import com.facebook.Profile;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +37,8 @@ import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,30 +65,22 @@ public class EatOutActivity extends AppCompatActivity {
     public static boolean isAppBarExpanded = false;
     public static int swipeCount = 0;
     public static final int LOGIN = 1000;
-    public static final String CURRENT_CITY = "Austin";
     public static final String TAG = "EatOutActivity";
     public static final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-//    @BindView(R.id.appbar)
     static AppBarLayout appBarLayout;
-//    @BindView(R.id.rvMatches)
     RecyclerView rvMatches;
-    @BindView(R.id.nestedScrollView) NestedScrollView nestedScrollView;
-    @BindView(R.id.profileBtn) ImageButton profileBtn;
-//    @BindView(R.id.groupToggle)
     Switch groupToggle;
-//    @BindView(R.id.tvMatchesHeader)
     TextView matchesHeader;
-//    @BindView(R.id.ivUpArrow)
     ImageView upArrow;
-//    @BindView(R.id.swipeView)
     SwipePlaceHolderView mSwipeView;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.rejectBtn) ImageButton rejectBtn;
     @BindView(R.id.acceptBtn) ImageButton acceptBtn;
+    @BindView(R.id.nestedScrollView) NestedScrollView nestedScrollView;
+    @BindView(R.id.profileBtn) ImageButton profileBtn;
 
-    public EatOutActivity() {
-    }
+    public EatOutActivity() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +92,7 @@ public class EatOutActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         context = this.getApplicationContext();
 
+        //initialize objects that cant use Butterknife
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         rvMatches = (RecyclerView) findViewById(R.id.rvMatches);
         matchesHeader = (TextView) findViewById(R.id.tvMatchesHeader);
@@ -116,31 +112,44 @@ public class EatOutActivity extends AppCompatActivity {
         });
     }
 
-    public static void loadMatches(Map<String, Object> restaurants) {
+    public static void loadMatches(Map<String, Restaurant> restaurants) {
         for(String restaurantId : restaurants.keySet()) {
-            HashMap<String, Object> restaurant = (HashMap) restaurants.get(restaurantId);
-            Restaurant newRest = new Restaurant();
-            newRest.setName(restaurant.get("name").toString());
-            newRest.setCounter(restaurant.get("counter").toString());
-            newRest.setImageUrl(restaurant.get("image_url").toString());
-            newRest.setRestaurantId(restaurant.get("id").toString());
-            newRest.setPhoneNumber(restaurant.get("phone").toString());
-            newRest.setRating(restaurant.get("rating").toString());
-            newRest.setReviewCount(restaurant.get("review_count").toString());
+//            HashMap<String, Object> restaurant = (HashMap) restaurants.get(restaurantId);
+            Restaurant restaurant1 = restaurants.get(restaurantId);
+//            Restaurant newRest = new Restaurant();
+//            newRest.setName(restaurant.get("name").toString());
+//            newRest.setCounter(restaurant.get("counter").toString());
+//            newRest.setImageUrl(restaurant.get("image_url").toString());
+//            newRest.setRestaurantId(restaurant.get("id").toString());
+//            newRest.setPhoneNumber(restaurant.get("phone").toString());
+//            newRest.setRating(restaurant.get("rating").toString());
+//            newRest.setReviewCount(restaurant.get("review_count").toString());
+//
+//            HashMap<String, String> coordinates = (HashMap) restaurant.get("coordinates");
+//            newRest.setLatitude(coordinates.get("latitude"));
+//            newRest.setLongitude(coordinates.get("longitude"));
 
-            HashMap<String, String> coordinates = (HashMap) restaurant.get("coordinates");
-            newRest.setLatitude(coordinates.get("latitude"));
-            newRest.setLongitude(coordinates.get("longitude"));
+            restaurantList.add(restaurant1);
 
-            restaurantList.add(newRest);
-            adapter.notifyItemInserted(restaurantList.size() - 1);
+//            adapter.notifyItemInserted(restaurantList.size() - 1);
         }
+        Collections.sort(restaurantList, new Comparator<Restaurant>() {
+            @Override
+            public int compare(Restaurant o1, Restaurant o2) {
+                Integer o1Counter = Integer.valueOf(o1.getCounter());
+                Integer o2Counter = Integer.valueOf(o2.getCounter());
+
+                return o2Counter - o1Counter;
+            }
+        });
+        adapter.notifyDataSetChanged();
+
     }
 
 
     private void populateUserInterface() {
         ArrayList<Object> foodItems = new ArrayList<>();
-        Map<String, Object> restaurants = new HashMap<>();
+        Map<String, Restaurant> restaurants = new HashMap<>();
 
         if(isAlone) {
             foodItems = user.getFoodItems();
@@ -149,7 +158,7 @@ public class EatOutActivity extends AppCompatActivity {
             foodItems = group.getFoodItems();
             restaurants = group.getRestaurants();
         }
-        restaurantMap = restaurants;
+//        restaurantMap = restaurants;
 
         if (foodItems == null) {
             return;
@@ -272,41 +281,67 @@ public class EatOutActivity extends AppCompatActivity {
         populateDatabase(database, userRef);
         listenForUpdates(database, userRef);
 
-//        //Group
-//        String groupId = "some_group_id";
-//        group = new Group();
-//        group.groupId = groupId;
-//        database.getReference("Groups").child(groupId).setValue(group);
-//        groupRef = database.getReference("Groups").child(groupId);
-////        populateDatabase(database, groupRef);
-////        listenForUpdates(database, userRef);
+        //Group
+        String groupId = "some_group_id";
+        group = new Group();
+        group.groupId = groupId;
+        database.getReference("Groups").child(groupId).setValue(group);
+        groupRef = database.getReference("Groups").child(groupId);
+        populateDatabase(database, groupRef);
+        listenForUpdates(database, groupRef);
     }
 
     private void listenForUpdates(final FirebaseDatabase database, final DatabaseReference sessionRef) {
-        //listening if the values ever change
-        ValueEventListener postListener = new ValueEventListener() {
+        final DatabaseReference restaurantRef = sessionRef.child("Restaurants");
+//        //listening if the values ever change
+//        ValueEventListener postListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                populateLocalData(sessionRef, dataSnapshot);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.d("Database", "The database listening update failed: " + databaseError.getCode());
+//            }
+//        };
+//        sessionRef.addValueEventListener(postListener);
+        restaurantRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("Child", "Child added: " + s);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 updateLocalData(sessionRef, dataSnapshot);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("Database", "The database listening update failed: " + databaseError.getCode());
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d("Child", "Child removed: " + dataSnapshot.toString());
+
             }
-        };
-        sessionRef.addValueEventListener(postListener);
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Log.d("Child", "Child moved: " + s);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("Child", "Child error: " + databaseError.getCode());
+
+            }
+        });
     }
 
     private void populateDatabase(final FirebaseDatabase database, final DatabaseReference sessionRef) {
         //getting the references to the data once to populate it to the user/group
-//        String cityName = getParentActivityIntent().getStringExtra("cityName");
-        cityName = CURRENT_CITY;
+        cityName = getIntent().getStringExtra("cityName");
 
         DatabaseReference citiesRef = database.getReference("Cities");
-//        DatabaseReference cityRef = citiesRef.child(cityName);
-//        DatabaseReference restRef = cityRef.child("Restaurants");
-//        DatabaseReference foodRef = cityRef.child("Food Items");
 
         Log.d("Sean", "citiesRef: " + database.getReference("Cities").child(cityName).toString());
 
@@ -314,7 +349,10 @@ public class EatOutActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Sean", "Restaurants: " + dataSnapshot.child(cityName).child("Restaurants").getValue().toString());
-                Map<String, Object> restaurants = (HashMap) dataSnapshot.child(cityName).child("Restaurants").getValue();
+                Map<String, Restaurant> restaurants = new HashMap();
+                for (DataSnapshot restaurantData : dataSnapshot.child(cityName).child("Restaurants").getChildren()) {
+                    restaurants.put(restaurantData.getKey(), restaurantData.getValue(Restaurant.class));
+                }
                 DatabaseReference restaurantsRef = sessionRef.child("Restaurants");
                 restaurantsRef.setValue(restaurants);
 
@@ -324,7 +362,8 @@ public class EatOutActivity extends AppCompatActivity {
                 ArrayList<Object> foodItems = (ArrayList) dataSnapshot.child(cityName).child("Food Items").getValue();
                 DatabaseReference foodItemsRef = sessionRef.child("Food Items");
                 foodItemsRef.setValue(foodItems);
-                updateLocalData(sessionRef, dataSnapshot);
+
+                populateLocalData(sessionRef, dataSnapshot);
             }
 
             @Override
@@ -332,35 +371,50 @@ public class EatOutActivity extends AppCompatActivity {
                 Log.d("Sean", "The database failed to read: " + databaseError.getCode());
             }
         });
-
-//        citiesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Log.d("Sean", "Restaurants: " + dataSnapshot.child("Restaurants").getValue().toString());
-//                DatabaseReference restaurantsRef = sessionRef.child("Restaurants");
-//                restaurantsRef.setValue(dataSnapshot.child("Restaurants").getValue());
-//
-//                DatabaseReference foodItemsRef = sessionRef.child("Food Items");
-//                foodItemsRef.setValue(dataSnapshot.child("Food Items").getValue());
-//
-//                updateLocalData(sessionRef, dataSnapshot);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.d("Database", "The database read failed: " + databaseError.getCode());
-//            }
-//        });
     }
 
-    private void updateLocalData(DatabaseReference sessionRef, DataSnapshot dataSnapshot) {
+    public void updateLocalData(DatabaseReference sessionRef, DataSnapshot dataSnapshot) {
         //if the session is a single user, update the user info; if a group, update group info
         if(sessionRef.getParent() == database.getReference("Groups")) {
+            Restaurant rest = group.restaurants.get(dataSnapshot.getKey());
+            rest.setCounter(dataSnapshot.child("counter").getValue().toString());
+            group.restaurants.put(dataSnapshot.child("id").getValue().toString(), rest);
+            restaurantList.clear();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadMatches(group.restaurants);
+                }
+            });
+        } else {
+            Restaurant rest = user.restaurants.get(dataSnapshot.getKey());
+            rest.setCounter(dataSnapshot.child("counter").getValue().toString());
+            user.restaurants.put(dataSnapshot.child("id").getValue().toString(), rest);
+            restaurantList.clear();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadMatches(user.restaurants);
+                }
+            });
+        }
+    }
+
+    public void populateLocalData(DatabaseReference sessionRef, DataSnapshot dataSnapshot) {
+        if(sessionRef.getParent() == database.getReference("Groups")) {
             group.foodItems = (ArrayList) dataSnapshot.child(cityName).child("Food Items").getValue();
-            group.restaurants = (HashMap) dataSnapshot.child(cityName).child("Restaurants").getValue();
+            //group.restaurants = (HashMap) dataSnapshot.child(cityName).child("Restaurants").getValue();
+            group.restaurants = new HashMap<>();
+            for (DataSnapshot restaurantData : dataSnapshot.child(cityName).child("Restaurants").getChildren()) {
+                group.restaurants.put(restaurantData.getKey(), restaurantData.getValue(Restaurant.class));
+            }
         } else {
             user.foodItems = (ArrayList) dataSnapshot.child(cityName).child("Food Items").getValue();
-            user.restaurants = (HashMap) dataSnapshot.child(cityName).child("Restaurants").getValue();
+            //user.restaurants = (HashMap) dataSnapshot.child(cityName).child("Restaurants").getValue();
+            user.restaurants = new HashMap<>();
+            for (DataSnapshot restaurantData : dataSnapshot.child(cityName).child("Restaurants").getChildren()) {
+                user.restaurants.put(restaurantData.getKey(), restaurantData.getValue(Restaurant.class));
+            }
         }
 
         // notify the adapter

@@ -2,6 +2,8 @@ package com.example.aburgess11.foodmood.models;
 
 import org.parceler.Parcel;
 
+import java.util.List;
+
 /**
  * Created by snhoward on 8/1/17.
  */
@@ -11,31 +13,47 @@ public class Restaurant extends Object{
 
     //List of Attributes
     String counter;
-    String restaurantId;
+    String id;
     String address;
-    String reviewCount;
-    String latitude;
-    String longitude;
-    String imageUrl;
-    String phoneNumber;
+    String review_count;
+    String image_url;
+    String phone;
     String rating;
     String name;
+    Coordinates coordinates;
+    List<String> photos;
 
     public Restaurant() {
         // Default constructor required for calls to DataSnapshot.getValue(Restaurant.class)
     }
 
-    public Restaurant(String counter, String restaurauntId, String address, String reviewCount, String latitude, String longitude, String imageUrl, String phoneNumber, String rating, String name) {
+    public Restaurant(String counter, String id, String address, String review_count, String image_url, String phone, String rating, String name, Coordinates coordinates, List<String> photos) {
         this.counter = counter;
-        this.restaurantId = restaurauntId;
+        this.id = id;
         this.address = address;
-        this.reviewCount = reviewCount;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.imageUrl = imageUrl;
-        this.phoneNumber = phoneNumber;
+        this.review_count = review_count;
+        this.image_url = image_url;
+        this.phone = phone;
         this.rating = rating;
         this.name = name;
+        this.coordinates = coordinates;
+        this.photos = photos;
+    }
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
     }
 
     public String getName() {
@@ -50,24 +68,17 @@ public class Restaurant extends Object{
         return address;
     }
 
-    public String getReviewCount() {
-        return reviewCount;
+    public String getReview_count() {
+        return review_count;
     }
 
-    public String getLatitude() {
-        return latitude;
+
+    public String getImage_url() {
+        return image_url;
     }
 
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
     public String getRating() {
@@ -78,40 +89,32 @@ public class Restaurant extends Object{
         return counter;
     }
 
-    public String getRestaurantId() {
-        return restaurantId;
+    public String getId() {
+        return id;
     }
 
     public void setCounter(String counter) {
         this.counter = counter;
     }
 
-    public void setRestaurantId(String restaurantId) {
-        this.restaurantId = restaurantId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setAddress(String address) {
         this.address = address;
     }
 
-    public void setReviewCount(String reviewCount) {
-        this.reviewCount = reviewCount;
+    public void setReview_count(String review_count) {
+        this.review_count = review_count;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public void setRating(String rating) {

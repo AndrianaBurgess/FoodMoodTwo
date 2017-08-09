@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +26,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @BindView(R.id.btnEatAlone) Button btnEatAlone;
     @BindView(R.id.btnWithFriends) Button btnWithFriends;
-    @BindView(R.id.ivBackground) ImageView ivBackground;
+//    @BindView(R.id.ivBackground) ImageView ivBackground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +35,7 @@ public class WelcomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         images = new ArrayList<>();
+
 
         populateImages();
         initializeOnClickListeners();
@@ -72,7 +72,6 @@ public class WelcomeActivity extends AppCompatActivity {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                images = dataSnapshot.getValue(ArrayList.class);
                 for (int i = 0; i < 4; i++) {
                     final String imageUrl = (String) dataSnapshot.child("" + i).getValue();
                     images.add(imageUrl);
@@ -90,26 +89,6 @@ public class WelcomeActivity extends AppCompatActivity {
 //                .load(imageUrl)
 //                .centerCrop()
 //                .into(ivBackground);
-
-
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-////                while(true) {
-////                    for(int i = 0; i < images.size(); i++) {
-//                        imageUrl = images.get(0);
-//                        Glide.with(getApplicationContext())
-//                                .load(imageUrl)
-//                                .into(ivBackground);
-////                        try {
-////                            wait(1000);
-////                        } catch (InterruptedException e) {
-////                            e.printStackTrace();
-////                        }
-////                    }
-////                }
-//            }
-//        });
     }
 
 }

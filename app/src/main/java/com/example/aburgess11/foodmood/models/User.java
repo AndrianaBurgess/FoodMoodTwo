@@ -11,7 +11,7 @@ import java.util.Map;
 public class User {
 
     public String userId;
-    public Map<String, Object> restaurants;
+    public Map<String, Restaurant> restaurants;
 //    public Map<String, Object> foodItems;
     public ArrayList<Object> foodItems;
     public List<Group> groups;
@@ -21,7 +21,7 @@ public class User {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String userId, List<Group> groups, Map<String, Object> restaurants, ArrayList<Object> foodItems) {
+    public User(String userId, List<Group> groups, Map<String, Restaurant> restaurants, ArrayList<Object> foodItems) {
         this.userId = userId;
         this.restaurants = restaurants;
         this.foodItems = foodItems;
@@ -32,7 +32,7 @@ public class User {
         return userId;
     }
 
-    public Map<String, Object> getRestaurants() {
+    public Map<String, Restaurant> getRestaurants() {
         return restaurants;
     }
 

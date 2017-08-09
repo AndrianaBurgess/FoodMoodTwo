@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Group {
 
-    public Map<String, Object> restaurants;
+    public Map<String, Restaurant> restaurants;
     public ArrayList<Object> foodItems;
     public List<User> users;
     public String groupId;
@@ -19,14 +19,14 @@ public class Group {
         // Default constructor required for calls to DataSnapshot.getValue(Group.class)
     }
 
-    public Group(String groupId, List<User> users, Map<String, Object> restaurants, ArrayList<Object> foodItems) {
+    public Group(String groupId, List<User> users, Map<String, Restaurant> restaurants, ArrayList<Object> foodItems) {
         this.users = users;
         this.groupId = groupId;
         this.restaurants = restaurants;
         this.foodItems = foodItems;
     }
 
-    public Map<String, Object> getRestaurants() {
+    public Map<String, Restaurant> getRestaurants() {
         return restaurants;
     }
 

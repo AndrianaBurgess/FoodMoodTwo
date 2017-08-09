@@ -82,7 +82,9 @@ public class TinderCard {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String currCount = dataSnapshot.getValue().toString();
                 int countCurr = Integer.parseInt(currCount) + 1;
-                currCounter.setValue(countCurr);
+                currCounter.setValue(String.valueOf(countCurr));
+
+
 
             }
 
@@ -106,7 +108,7 @@ public class TinderCard {
 
         // after 10 swipes, automatically pop up the matches page
         if (swipeCount == 10){
-            EatOutActivity.loadMatches(EatOutActivity.restaurantMap);
+//            EatOutActivity.loadMatches(EatOutActivity.restaurantMap);
             EatOutActivity.isAppBarExpanded = true;
             appBarLayout.setExpanded(false);
             appBarLayout.setFitsSystemWindows(true);
