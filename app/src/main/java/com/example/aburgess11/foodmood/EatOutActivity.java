@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 
 public class EatOutActivity extends AppCompatActivity {
     private static final int LOGIN = 1000;
+    private static final int GROUPSESSION = 888;
     // constants
 
     int numViews = 0;
@@ -195,7 +197,7 @@ public class EatOutActivity extends AppCompatActivity {
                                 Iterable<DataSnapshot> nodes = dataSnapshot.getChildren();
                                 boolean isInGroup = false;
                                 for (  DataSnapshot d  : nodes ){
-                                    if(d.child("Users").hasChild(id)){
+                                    if(!d.getKey().equals(id) && d.child("Users").hasChild(id)){
                                         Toast.makeText(getApplicationContext(),"You are already in a group", Toast.LENGTH_LONG).show();
                                         isInGroup = true;
                                     }
@@ -205,7 +207,7 @@ public class EatOutActivity extends AppCompatActivity {
                                     DatabaseReference myRef = database.getReference();
                                     myRef.child("Groups").child(id).child("Users").child(id).setValue(name);
                                     Intent i = new Intent(EatOutActivity.this, GroupActivity.class);
-                                    startActivity(i);
+                                    startActivityForResult(i, GROUPSESSION);
                                 }
 
                             }
@@ -397,7 +399,6 @@ public class EatOutActivity extends AppCompatActivity {
                     if (groupToggle.isChecked()) {
                         // if the user logged in from toggling the groupToggle switch, there was no change in
                         // groupToggle.isChecked, but the matches still need to be reloaded
-                        tvGroupSwipingBar.setVisibility(TextView.VISIBLE);
                         reloadMatches(getApplicationContext(), groupMatches, true);
                         Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + fbProfile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
                     }
@@ -425,11 +426,9 @@ public class EatOutActivity extends AppCompatActivity {
 
                 } else if (isChecked){
                     Log.d("LOGIN STATUS:", "user was already logged in");
-                    tvGroupSwipingBar.setVisibility(TextView.VISIBLE);
                     reloadMatches(getApplicationContext(), groupMatches, true);
                     Toast.makeText(getApplicationContext(), "Welcome to GroupSwiping, " + fbProfile.getFirstName() + "!", Toast.LENGTH_SHORT).show();
                 } else if (!isChecked) {
-                    tvGroupSwipingBar.setVisibility(TextView.GONE);
                     reloadMatches(getApplicationContext(), myMatches, false);
                 }
             }
@@ -486,8 +485,16 @@ public class EatOutActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        boolean isDismissed = data.getBooleanExtra("isDismissed", false);
+
         if (requestCode == LOGIN) {
+
+            boolean isDismissed;
+            if (data == null) {
+                isDismissed = true;
+            } else {
+                isDismissed = data.getBooleanExtra("isDismissed", false);
+            }
+
             if (resultCode != RESULT_OK || isDismissed) {
                 // login failed or canceled
                 groupToggle.setChecked(false);
@@ -498,6 +505,53 @@ public class EatOutActivity extends AppCompatActivity {
             else if (resultCode == RESULT_OK && !isDismissed){
                 // if login is successful and the dialog was not dismissed, then groupToggle.setChecked(true);
                 reloadMatches(this.getApplicationContext(), groupMatches, true);
+            }
+        }
+
+        if (requestCode == GROUPSESSION) {
+
+            boolean sessionStarted = (data != null) && data.getBooleanExtra("sessionStarted", false);
+
+            if (resultCode != RESULT_OK || !sessionStarted) {
+                // session failed or canceled
+                Toast.makeText(getApplicationContext(), "session failed or cancelled", Toast.LENGTH_LONG).show();
+            }
+
+            else if (resultCode == RESULT_OK && sessionStarted){
+                // if login is successful and the dialog was not dismissed, then groupToggle.setChecked(true);
+
+                int hours = GroupActivity.numHours;
+                final int mins = GroupActivity.numMins;
+
+                long millisUntilFinished = (long) (3600000 * hours) + (60000 * mins);
+
+                new CountDownTimer(millisUntilFinished, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        int seconds = (int) (millisUntilFinished / 1000) % 60 ;
+                        int minutes = (int) ((millisUntilFinished / (1000*60)) % 60);
+                        int hours   = (int) ((millisUntilFinished / (1000*60*60)) % 24);
+
+                        String remainingTime;
+
+                        if (hours != 0) {
+                            remainingTime = hours + "hr " + minutes + "min " + seconds + "s ";
+                        } else if (minutes != 0) {
+                            remainingTime = minutes + "min " + seconds + "s ";
+                        } else {
+                            remainingTime = seconds + "s ";
+                        }
+
+                        tvGroupSwipingBar.setVisibility(View.VISIBLE);
+                        tvGroupSwipingBar.setText("Swipe session in progress! " + remainingTime + "left");
+                    }
+
+                    public void onFinish() {
+                        // TODO: notify user that session is done
+
+                        tvGroupSwipingBar.setVisibility(View.GONE);
+                    }
+                }.start();
             }
         }
     }

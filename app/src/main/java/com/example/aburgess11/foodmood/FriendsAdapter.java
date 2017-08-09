@@ -41,6 +41,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         // context for rendering
         Context context;
 
+        public ImageButton ibAddFriend;
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         DatabaseReference myRef = (DatabaseReference) database.getReference();
@@ -52,8 +54,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public FriendsAdapter(ArrayList<Friend> friends) {
         this.friendsArray = friends;
     }
-
-
 
         public Config getConfig() {
             return config;
@@ -71,17 +71,19 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             LayoutInflater inflater = LayoutInflater.from(context);
             // create the view using the item_movie layout
             View friendView = inflater.inflate(R.layout.item_group, parent, false);
+            final ImageButton ibAddFriend =(ImageButton) friendView.findViewById(R.id.ibAddFriend);
 
             // return a new ViewHolder
             final ViewHolder viewHolder = new ViewHolder(friendView);
 
             //adds your friend to your group swiping session on firebase
-            viewHolder.ibAddFriend.setOnClickListener(new View.OnClickListener() {
+            ibAddFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = viewHolder.getAdapterPosition();
                     Log.d(TAG, "onClick: " + position);
                     final Friend friend = friendsArray.get(position);
+                    ibAddFriend.setImageResource(R.drawable.ic_heart);
 
 
 
@@ -100,15 +102,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                                 String id = Profile.getCurrentProfile().getId();
                                 groups.child(id).child("Users").child(friend.getId()).setValue(friend.getName());
                             }
-
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-
-
+                        public void onCancelled(DatabaseError databaseError) { }
                     });
 
 
@@ -156,9 +153,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             // track view objects
             @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
             @BindView(R.id.tvFriendName) TextView tvFriendName;
-            @BindView(R.id.ibAddFriend) ImageButton ibAddFriend;
-
-
 
             public ViewHolder(View itemView) {
                 super(itemView);
