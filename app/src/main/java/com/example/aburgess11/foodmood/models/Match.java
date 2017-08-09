@@ -42,6 +42,13 @@ public class Match implements Comparable<Match>{
         location = object.getString("location");
     }
 
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -51,10 +58,7 @@ public class Match implements Comparable<Match>{
         return imageUrl;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
+    public String getLocation() { return location; }
 
     @Override
     public int compareTo(@NonNull Match match) {

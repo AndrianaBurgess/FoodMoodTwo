@@ -29,24 +29,18 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
 
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
     private com.facebook.Profile fbProfile;
 
-    @BindView(R.id.loginSettings)
-    RelativeLayout loginSettings;
-    @BindView(R.id.ibEatOut)
-    ImageButton ibEatOut;
+    @BindView(R.id.loginSettings) RelativeLayout loginSettings;
+    @BindView(R.id.ibEatOut) ImageButton ibEatOut;
+    @BindView(R.id.ivProfilePicture) CircleImageView ivProfilePicture;
+    @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.radiusSeekbar) SeekBar radiusSeekbar;
+    @BindView(R.id.tvSeekbarNumber) TextView tvSeekbarNumber;
+    @BindView(R.id.locationDropDown) Spinner locationDropdown;
 
-
-    CircleImageView ivProfilePicture;
-    TextView tvName;
-
-    Spinner locationDropdown;
     static String tvLocationCity;
-
-    SeekBar radiusSeekbar;
     int seekbarProgress;
-    TextView tvSeekbarNumber;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -76,7 +70,6 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
 
         // create onClick for EatOut button
         ibEatOut.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SettingsActivity.this, EatOutActivity.class);
@@ -89,13 +82,13 @@ public class SettingsActivity extends AppCompatActivity implements OnSeekBarChan
 
         // profile
         fbProfile = Profile.getCurrentProfile();
-        tvName = (TextView) findViewById(R.id.tvName);
+//        tvName = (TextView) findViewById(R.id.tvName);
         tvName.setText(fbProfile.getName());
-        ivProfilePicture = (CircleImageView) findViewById(R.id.ivProfilePicture);
+//        ivProfilePicture = (CircleImageView) findViewById(R.id.ivProfilePicture);
         Uri uri = fbProfile.getProfilePictureUri(150,150);
         Glide.with(this).load(uri).into(ivProfilePicture);
 
-        locationDropdown = (Spinner) findViewById(R.id.locationDropDown);
+//        locationDropdown = (Spinner) findViewById(R.id.locationDropDown);
         String[] locations = new String[]{"Menlo Park, CA", "New York, NY", "Austin, TX", "Boston, MA"};
         ArrayAdapter<String>adapter = new ArrayAdapter<String>(SettingsActivity.this,
                 android.R.layout.simple_spinner_item, locations);

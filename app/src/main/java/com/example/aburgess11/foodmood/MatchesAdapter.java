@@ -11,19 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.aburgess11.foodmood.models.Config;
-import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.Restaurant;
 
 import org.parceler.Parcels;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.facebook.login.widget.ProfilePictureView.TAG;
-
 
 /**
  * Created by liangelali on 7/12/17.
@@ -31,36 +29,12 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHolder> {
 
-    private static final String clientId = "FJbrnaXwVmgGJTk1xd2jwA";
-    private static final String clientSecret = "fAwIdrHUUvrHpbMbyOp4gVASjtH0TvJzj56TGgrXeyg3q994Nb6HWRgFGNWXTQ7z";
-
     // list of matches
-    ArrayList<Match> matches;
-    // config needed for image urls
-    Config config;
+    public List<Restaurant> restaurantList;
     // context for rendering
     Context context;
 
-    // init with list
-    public MatchesAdapter(ArrayList<Match> matches) throws IOException {
-
-        this.matches = matches;
-//        this.businesses = businesses;
-
-    }
-
-    public void reloadMatches(ArrayList<Match> matches) {
-        this.matches = matches;
-        notifyDataSetChanged();
-    }
-
-    public Config getConfig() {
-        return config;
-    }
-
-    public void setConfig(Config config) {
-        this.config = config;
-    }
+    public MatchesAdapter(List<Restaurant> restaurantList) throws IOException { this.restaurantList = restaurantList; }
 
     // creates and inflates a new view
     @Override
@@ -70,6 +44,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         LayoutInflater inflater = LayoutInflater.from(context);
         // create the view using the item_movie layout
         View matchView = inflater.inflate(R.layout.item_match, parent, false);
+
         // return a new ViewHolder
         final ViewHolder viewHolder = new ViewHolder(matchView);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -78,42 +53,34 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
                 int position = viewHolder.getAdapterPosition();
                 Log.d(TAG, "onClick: " + position);
                 // make sure the position is valid, i.e. actually exists in the view
-//            if (position2 != RecyclerView.NO_POSITION) {
-                // get the match at the position, this won't work if the class is static
-                Match match = matches.get(position);
-//                TODO YELPED STUFF
-//                Business business = businesses.get(position);
-                // create intent for the new activity
-                Intent intent = new Intent(context, RestaurantDetailsActivity.class);
-//                // serialize the movie using parceler, use its short name as a key
-                intent.putExtra("data", Parcels.wrap(match));
-                // show the activity
-                context.startActivity(intent);
-//            }
+                if (position != RecyclerView.NO_POSITION) {
+                    // get the match at the position, this won't work if the class is static
+                    Restaurant restaurant = restaurantList.get(position);
+                    // create intent for the new activity
+                    Intent intent = new Intent(context, RestaurantDetailsActivity.class);
+                    // serialize the Restaurant using parceler, use its restaurantId as a key
+                    intent.putExtra("data", Parcels.wrap(restaurant));
+                    // show the activity
+                    context.startActivity(intent);
+                }
             }
         });
-
         return viewHolder;
     }
 
     // binds an inflated view to a new item
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        // get the movie data at the specified position
-        Match match = matches.get(position);
-//        Business business = businesses.get(position);
-        //populate the view with the movie data
-        holder.tvMatchName.setText(match.getName());
-//        holder.tvMatchName.setText(business.getName());
+        // get the restaurant data at the specified position
+        Restaurant restaurant = restaurantList.get(position);
 
-        holder.tvMatchDetails.setText(match.getLocation());
-//        holder.tvMatchDetails.setText(business.getText());
-       // holder.tvPercentMatch.setText(match.getRank() + "%  •");
+        //populate the view with the movie data
+        holder.tvMatchName.setText(restaurant.getName());
+        holder.tvMatchDetails.setText(restaurant.getAddress());
+
 
         // load backdrop
-        String imageUrl = match.getImageUrl();
-//        String imageUrl = business.getImageUrl();
-
+        String imageUrl = restaurant.getImage_url();
 
         // load the poster
         ImageView imageview = holder.ivMatchImage;
@@ -128,7 +95,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
     // returns the total number of items in the list
     @Override
     public int getItemCount() {
-        return matches.size();
+        return restaurantList.size();
     }
 
     // create the viewholder as an inner class
@@ -141,10 +108,14 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.ViewHold
         @BindView(R.id.tvMatchName) TextView tvMatchName;
         @BindView(R.id.tvMatchDetails) TextView tvMatchDetails;
 
-
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public void reloadMatches(List<Restaurant> restaurantList) {
+        this.restaurantList = restaurantList;
+        notifyDataSetChanged();
     }
 }

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.http.HEAD;
 
 import static com.facebook.login.widget.ProfilePictureView.TAG;
 
@@ -95,15 +94,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                             Iterable<DataSnapshot> nodes = dataSnapshot.getChildren();
                             boolean isInGroup = false;
                             for (  DataSnapshot d  : nodes ){
-                                if(d.child("Users").hasChild(friend.getId())){
+                                if(d.child("users").hasChild(friend.getId())){
                                     Toast.makeText(context,friend.getName() + " is already in a group", Toast.LENGTH_LONG).show();
                                     isInGroup = true;
                                 }
                             }
                             if (!isInGroup) {
                                 String id = Profile.getCurrentProfile().getId();
-                                groups.child(id).child("Users").child(friend.getId()).setValue(friend.getName());
-
+                                groups.child(id).child("users").child(friend.getId()).setValue(friend.getName());
                             }
                         }
 

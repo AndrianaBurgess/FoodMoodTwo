@@ -15,8 +15,6 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -29,9 +27,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -63,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_login);
+
         info = (TextView)findViewById(R.id.info);
         loginButton = (LoginButton)findViewById(R.id.login_button);
         groupToggle = (Switch) findViewById(R.id.groupToggle);
@@ -74,13 +70,11 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             tvLoginTitle.setText("Logged in as: " + fbProfile.getName());
             info.setVisibility(TextView.GONE);
-            //fbUser = mAuth.getCurrentUser();
         }
 
         mAuth = FirebaseAuth.getInstance();
 
         info.setText("To use FoodMood features like GroupSwiping, sign into your Facebook account!");
-
         loginButton.setToolTipMode(LoginButton.ToolTipMode.NEVER_DISPLAY);
 
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
@@ -88,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
-                Intent data = new Intent();
+                Intent data = new Intent(LoginActivity.this, EatOutActivity.class);
                 data.putExtra("isDismissed", false);
                 setResult(RESULT_OK, data);
                 handleFacebookAccessToken(loginResult.getAccessToken());
@@ -97,27 +91,28 @@ public class LoginActivity extends AppCompatActivity {
                 loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
 
                 //requests name and facebook id from facebook
-                GraphRequest graphRequest1 = GraphRequest.newMeRequest(loginResult.getAccessToken(),new GraphRequest.GraphJSONObjectCallback(){
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        try {
-                            String string = response.getJSONObject().toString();
-                            fbID = response.getJSONObject().getString("id");
-                            FirebaseUser userser = mAuth.getCurrentUser();
-                            fbUser=userser;
-                            myRef.child("Users").child(fbID).setValue(fbUser.getDisplayName());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+//                GraphRequest graphRequest1 = GraphRequest.newMeRequest(loginResult.getAccessToken(),new GraphRequest.GraphJSONObjectCallback(){
+//                    @Override
+//                    public void onCompleted(JSONObject object, GraphResponse response) {
+//                        try {
+//                            String string = response.getJSONObject().toString();
+//                            fbID = response.getJSONObject().getString("id");
+//                            FirebaseUser userser = mAuth.getCurrentUser();
+//                            fbUser=userser;
+//                            myRef.child("Users").child(fbID).setValue(fbUser.getDisplayName());
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//
+//
+//                });
 
-                    }
+//                graphRequest1.executeAsync();
 
-
-                });
-
-                graphRequest1.executeAsync();
-
-                finish();
+                //finish();
+                startActivity(data);
             }
 
             @Override

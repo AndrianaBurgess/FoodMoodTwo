@@ -3,11 +3,14 @@ package com.example.aburgess11.foodmood;
 import android.content.Context;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.aburgess11.foodmood.models.Match;
+import com.example.aburgess11.foodmood.models.FoodItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
@@ -21,44 +24,45 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
-import static com.example.aburgess11.foodmood.EatOutActivity.swipeCount;
+import retrofit2.http.HEAD;
 
+import static com.example.aburgess11.foodmood.EatOutActivity.appBarLayout;
+import static com.example.aburgess11.foodmood.EatOutActivity.groupRef;
+import static com.example.aburgess11.foodmood.EatOutActivity.isAlone;
+import static com.example.aburgess11.foodmood.EatOutActivity.swipeCount;
+import static com.example.aburgess11.foodmood.EatOutActivity.userRef;
 
 /**
  * Created by aburgess11 on 7/12/17.
  */
-
 
 @Layout(R.layout.tinder_card_view)
 public class TinderCard {
 
     @View(R.id.profileImageView)
     private ImageView profileImageView;
-
-    @View(R.id.nameAgeTxt)
-    private TextView nameAgeTxt;
-
-    @View(R.id.locationNameTxt)
-    private TextView locationNameTxt;
-
-    private SwipeProfile mSwipeProfile;
+    private FoodItem mFoodItem;
     private Context mContext;
     private SwipePlaceHolderView mSwipeView;
-    private ArrayList<Match> mMatches;
+    private DatabaseReference sessionRef;
 
-    public TinderCard(Context context, SwipeProfile swipeProfile, SwipePlaceHolderView swipeView, ArrayList<Match> matches) {
+    public TinderCard(Context context, FoodItem foodItem, SwipePlaceHolderView swipeView) {
         mContext = context;
-        mSwipeProfile = swipeProfile;
+        mFoodItem = foodItem;
         mSwipeView = swipeView;
-        mMatches = matches;
+
+        if(isAlone) {
+            sessionRef = userRef;
+        } else {
+            sessionRef = groupRef;
+        }
     }
 
     @Resolve
     private void onResolved(){
-        Glide.with(mContext).load(mSwipeProfile.getImageUrl()).into(profileImageView);
-        nameAgeTxt.setText(mSwipeProfile.getName() + ", " + mSwipeProfile.getTimeofday());
-        locationNameTxt.setText(mSwipeProfile.getLocation());
+        Glide.with(mContext)
+                .load(mFoodItem.getImageUrl())
+                .into(profileImageView);
     }
 
     @SwipeOut
@@ -73,26 +77,25 @@ public class TinderCard {
     }
 
     @SwipeIn
-    public void onSwipeIn(){
-        popUpList();
-       // Toast.makeText(mContext, this.mSwipeProfile.getLocation(), Toast.LENGTH_SHORT ).show();
-        findRestAndIncr(this.mSwipeProfile.getLocation());
-        Collections.sort(mMatches);
-        EatOutActivity.adapter.notifyDataSetChanged();
-        Log.d("EVENT", "onSwipedIn" + swipeCount);
-    }
+    private void onSwipeIn() {
+        final DatabaseReference currCounter = sessionRef.child("Restaurants").child(this.mFoodItem.getRestaurantId()).child("counter");
+        currCounter.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String currCount = dataSnapshot.getValue().toString();
+                int countCurr = Integer.parseInt(currCount) + 1;
+                currCounter.setValue(String.valueOf(countCurr));
+            }
 
-
-    public void findRestAndIncr(String name){
-
-        for(Match m: mMatches){
-            if ( m.getName().equals(name)){
-                m.rank++;
-                Toast.makeText(mContext,  m.rank + "" , Toast.LENGTH_SHORT ).show();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
-        }
+        });
 
+        popUpList();
+        EatOutActivity.adapter.notifyDataSetChanged();
+        Log.d("EVENT", "onSwipedIn" + swipeCount);
     }
 
     //Pops up the matches every
@@ -102,12 +105,11 @@ public class TinderCard {
 
         // after 10 swipes, automatically pop up the matches page
         if (swipeCount == 10){
-
             EatOutActivity.isAppBarExpanded = true;
             appBarLayout.setExpanded(false);
             appBarLayout.setFitsSystemWindows(true);
 
-            Log.d("EVENT", swipeCount + "" );
+            Log.d("EVENT", swipeCount + "");
             swipeCount=0;
         }
     }

@@ -7,6 +7,10 @@
 
     //MAPS
     <string name="api_key">AIzaSyCHfceufwTNTXPi0GUCXg2cuGmCjKImon8</string>
+    <string name="maps_api_key">AIzaSyApoMtMLFL3EF1NBRmd8u5DdhfW4dRnl3w</string>
+    <string name="cannot_get_address_">"Cannot get address! "</string>
+    <string name="no_addresses_retrieved">No addresses retrieved</string>
+
 
     //PREFERENCES
     <string name="preferences_category_one">Category 1</string>
